@@ -1,0 +1,341 @@
+igt_syncobj.lo: igt_syncobj.c /usr/include/stdc-predef.h \
+ /usr/include/errno.h /usr/include/features.h \
+ /usr/include/x86_64-linux-gnu/sys/cdefs.h \
+ /usr/include/x86_64-linux-gnu/bits/wordsize.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs.h \
+ /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
+ /usr/include/x86_64-linux-gnu/bits/errno.h /usr/include/linux/errno.h \
+ /usr/include/x86_64-linux-gnu/asm/errno.h \
+ /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /usr/include/xf86drm.h /usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h \
+ /usr/include/x86_64-linux-gnu/sys/types.h \
+ /usr/include/x86_64-linux-gnu/bits/types.h \
+ /usr/include/x86_64-linux-gnu/bits/typesizes.h /usr/include/time.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h /usr/include/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/endian.h \
+ /usr/include/x86_64-linux-gnu/bits/byteswap.h \
+ /usr/include/x86_64-linux-gnu/bits/byteswap-16.h \
+ /usr/include/x86_64-linux-gnu/sys/select.h \
+ /usr/include/x86_64-linux-gnu/bits/select.h \
+ /usr/include/x86_64-linux-gnu/bits/sigset.h \
+ /usr/include/x86_64-linux-gnu/bits/time.h \
+ /usr/include/x86_64-linux-gnu/sys/sysmacros.h \
+ /usr/include/x86_64-linux-gnu/bits/pthreadtypes.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stdint.h /usr/include/stdint.h \
+ /usr/include/x86_64-linux-gnu/bits/wchar.h /usr/include/libdrm/drm.h \
+ /usr/include/linux/types.h /usr/include/x86_64-linux-gnu/asm/types.h \
+ /usr/include/asm-generic/types.h /usr/include/asm-generic/int-ll64.h \
+ /usr/include/x86_64-linux-gnu/asm/bitsperlong.h \
+ /usr/include/asm-generic/bitsperlong.h /usr/include/linux/posix_types.h \
+ /usr/include/linux/stddef.h \
+ /usr/include/x86_64-linux-gnu/asm/posix_types.h \
+ /usr/include/x86_64-linux-gnu/asm/posix_types_64.h \
+ /usr/include/asm-generic/posix_types.h \
+ /usr/include/x86_64-linux-gnu/asm/ioctl.h \
+ /usr/include/asm-generic/ioctl.h /usr/include/libdrm/drm_mode.h \
+ /usr/include/libdrm/drm.h igt.h drmtest.h /usr/include/unistd.h \
+ /usr/include/x86_64-linux-gnu/bits/posix_opt.h \
+ /usr/include/x86_64-linux-gnu/bits/environments.h \
+ /usr/include/x86_64-linux-gnu/bits/confname.h /usr/include/getopt.h \
+ /usr/lib/gcc/x86_64-linux-gnu/7/include/stdbool.h \
+ /usr/include/x86_64-linux-gnu/sys/mman.h \
+ /usr/include/x86_64-linux-gnu/bits/mman.h \
+ /usr/include/x86_64-linux-gnu/bits/mman-linux.h intel_batchbuffer.h \
+ /usr/include/libdrm/intel_bufmgr.h /usr/include/stdio.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio_lim.h \
+ /usr/include/x86_64-linux-gnu/bits/sys_errlist.h \
+ /usr/include/x86_64-linux-gnu/bits/stdio.h \
+ /usr/include/libdrm/i915_drm.h igt_core.h /usr/include/setjmp.h \
+ /usr/include/x86_64-linux-gnu/bits/setjmp.h /usr/include/stdlib.h \
+ /usr/include/x86_64-linux-gnu/bits/waitflags.h \
+ /usr/include/x86_64-linux-gnu/bits/waitstatus.h /usr/include/xlocale.h \
+ /usr/include/alloca.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h \
+ /usr/include/x86_64-linux-gnu/bits/stdlib-float.h /usr/include/string.h \
+ /usr/include/x86_64-linux-gnu/bits/string.h \
+ /usr/include/x86_64-linux-gnu/bits/string2.h intel_reg.h i915_3d.h \
+ i915_pciids.h igt_aux.h /usr/include/x86_64-linux-gnu/sys/time.h \
+ i915/gem_submission.h igt_debugfs.h igt_draw.h igt_fb.h \
+ /usr/include/cairo/cairo.h /usr/include/cairo/cairo-version.h \
+ /usr/include/cairo/cairo-features.h \
+ /usr/include/cairo/cairo-deprecated.h /usr/include/libdrm/drm_fourcc.h \
+ /usr/include/xf86drmMode.h igt_dummyload.h \
+ /usr/include/x86_64-linux-gnu/bits/timex.h igt_frame.h ../config.h \
+ igt_alsa.h igt_audio.h igt_gt.h igt_kms.h /usr/include/assert.h \
+ ioctl_wrappers.h i915/gem_context.h i915/gem_scheduler.h igt_pm.h \
+ igt_stats.h /usr/include/math.h \
+ /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+ /usr/include/x86_64-linux-gnu/bits/huge_val.h \
+ /usr/include/x86_64-linux-gnu/bits/huge_valf.h \
+ /usr/include/x86_64-linux-gnu/bits/huge_vall.h \
+ /usr/include/x86_64-linux-gnu/bits/inf.h \
+ /usr/include/x86_64-linux-gnu/bits/nan.h \
+ /usr/include/x86_64-linux-gnu/bits/mathdef.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+ /usr/include/x86_64-linux-gnu/bits/mathinline.h instdone.h \
+ intel_chipset.h /usr/include/pciaccess.h /usr/include/inttypes.h \
+ intel_io.h media_fill.h media_spin.h rendercopy.h igt_syncobj.h
+
+/usr/include/stdc-predef.h:
+
+/usr/include/errno.h:
+
+/usr/include/features.h:
+
+/usr/include/x86_64-linux-gnu/sys/cdefs.h:
+
+/usr/include/x86_64-linux-gnu/bits/wordsize.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs.h:
+
+/usr/include/x86_64-linux-gnu/gnu/stubs-64.h:
+
+/usr/include/x86_64-linux-gnu/bits/errno.h:
+
+/usr/include/linux/errno.h:
+
+/usr/include/x86_64-linux-gnu/asm/errno.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/xf86drm.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/7/include/stdarg.h:
+
+/usr/include/x86_64-linux-gnu/sys/types.h:
+
+/usr/include/x86_64-linux-gnu/bits/types.h:
+
+/usr/include/x86_64-linux-gnu/bits/typesizes.h:
+
+/usr/include/time.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/7/include/stddef.h:
+
+/usr/include/endian.h:
+
+/usr/include/x86_64-linux-gnu/bits/endian.h:
+
+/usr/include/x86_64-linux-gnu/bits/byteswap.h:
+
+/usr/include/x86_64-linux-gnu/bits/byteswap-16.h:
+
+/usr/include/x86_64-linux-gnu/sys/select.h:
+
+/usr/include/x86_64-linux-gnu/bits/select.h:
+
+/usr/include/x86_64-linux-gnu/bits/sigset.h:
+
+/usr/include/x86_64-linux-gnu/bits/time.h:
+
+/usr/include/x86_64-linux-gnu/sys/sysmacros.h:
+
+/usr/include/x86_64-linux-gnu/bits/pthreadtypes.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/7/include/stdint.h:
+
+/usr/include/stdint.h:
+
+/usr/include/x86_64-linux-gnu/bits/wchar.h:
+
+/usr/include/libdrm/drm.h:
+
+/usr/include/linux/types.h:
+
+/usr/include/x86_64-linux-gnu/asm/types.h:
+
+/usr/include/asm-generic/types.h:
+
+/usr/include/asm-generic/int-ll64.h:
+
+/usr/include/x86_64-linux-gnu/asm/bitsperlong.h:
+
+/usr/include/asm-generic/bitsperlong.h:
+
+/usr/include/linux/posix_types.h:
+
+/usr/include/linux/stddef.h:
+
+/usr/include/x86_64-linux-gnu/asm/posix_types.h:
+
+/usr/include/x86_64-linux-gnu/asm/posix_types_64.h:
+
+/usr/include/asm-generic/posix_types.h:
+
+/usr/include/x86_64-linux-gnu/asm/ioctl.h:
+
+/usr/include/asm-generic/ioctl.h:
+
+/usr/include/libdrm/drm_mode.h:
+
+/usr/include/libdrm/drm.h:
+
+igt.h:
+
+drmtest.h:
+
+/usr/include/unistd.h:
+
+/usr/include/x86_64-linux-gnu/bits/posix_opt.h:
+
+/usr/include/x86_64-linux-gnu/bits/environments.h:
+
+/usr/include/x86_64-linux-gnu/bits/confname.h:
+
+/usr/include/getopt.h:
+
+/usr/lib/gcc/x86_64-linux-gnu/7/include/stdbool.h:
+
+/usr/include/x86_64-linux-gnu/sys/mman.h:
+
+/usr/include/x86_64-linux-gnu/bits/mman.h:
+
+/usr/include/x86_64-linux-gnu/bits/mman-linux.h:
+
+intel_batchbuffer.h:
+
+/usr/include/libdrm/intel_bufmgr.h:
+
+/usr/include/stdio.h:
+
+/usr/include/libio.h:
+
+/usr/include/_G_config.h:
+
+/usr/include/wchar.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdio_lim.h:
+
+/usr/include/x86_64-linux-gnu/bits/sys_errlist.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdio.h:
+
+/usr/include/libdrm/i915_drm.h:
+
+igt_core.h:
+
+/usr/include/setjmp.h:
+
+/usr/include/x86_64-linux-gnu/bits/setjmp.h:
+
+/usr/include/stdlib.h:
+
+/usr/include/x86_64-linux-gnu/bits/waitflags.h:
+
+/usr/include/x86_64-linux-gnu/bits/waitstatus.h:
+
+/usr/include/xlocale.h:
+
+/usr/include/alloca.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-bsearch.h:
+
+/usr/include/x86_64-linux-gnu/bits/stdlib-float.h:
+
+/usr/include/string.h:
+
+/usr/include/x86_64-linux-gnu/bits/string.h:
+
+/usr/include/x86_64-linux-gnu/bits/string2.h:
+
+intel_reg.h:
+
+i915_3d.h:
+
+i915_pciids.h:
+
+igt_aux.h:
+
+/usr/include/x86_64-linux-gnu/sys/time.h:
+
+i915/gem_submission.h:
+
+igt_debugfs.h:
+
+igt_draw.h:
+
+igt_fb.h:
+
+/usr/include/cairo/cairo.h:
+
+/usr/include/cairo/cairo-version.h:
+
+/usr/include/cairo/cairo-features.h:
+
+/usr/include/cairo/cairo-deprecated.h:
+
+/usr/include/libdrm/drm_fourcc.h:
+
+/usr/include/xf86drmMode.h:
+
+igt_dummyload.h:
+
+/usr/include/x86_64-linux-gnu/bits/timex.h:
+
+igt_frame.h:
+
+../config.h:
+
+igt_alsa.h:
+
+igt_audio.h:
+
+igt_gt.h:
+
+igt_kms.h:
+
+/usr/include/assert.h:
+
+ioctl_wrappers.h:
+
+i915/gem_context.h:
+
+i915/gem_scheduler.h:
+
+igt_pm.h:
+
+igt_stats.h:
+
+/usr/include/math.h:
+
+/usr/include/x86_64-linux-gnu/bits/math-vector.h:
+
+/usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h:
+
+/usr/include/x86_64-linux-gnu/bits/huge_val.h:
+
+/usr/include/x86_64-linux-gnu/bits/huge_valf.h:
+
+/usr/include/x86_64-linux-gnu/bits/huge_vall.h:
+
+/usr/include/x86_64-linux-gnu/bits/inf.h:
+
+/usr/include/x86_64-linux-gnu/bits/nan.h:
+
+/usr/include/x86_64-linux-gnu/bits/mathdef.h:
+
+/usr/include/x86_64-linux-gnu/bits/mathcalls.h:
+
+/usr/include/x86_64-linux-gnu/bits/mathinline.h:
+
+instdone.h:
+
+intel_chipset.h:
+
+/usr/include/pciaccess.h:
+
+/usr/include/inttypes.h:
+
+intel_io.h:
+
+media_fill.h:
+
+media_spin.h:
+
+rendercopy.h:
+
+igt_syncobj.h:
