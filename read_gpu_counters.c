@@ -297,8 +297,9 @@ int main(int argc, char** argv) {
 	//test_whitelisted_registers_userspace_config();
 
 	for(j = 0; j < repeat; j++) {
-		hsw_test_single_ctx_counters(dump);
-		//test_counters_with_opencl(dump);
+		//hsw_test_single_ctx_counters(dump);
+		test_counters_with_opencl(dump);
+		//test_counters_with_opencl_one_context(dump);
 	}
 
 

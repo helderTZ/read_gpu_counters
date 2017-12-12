@@ -823,12 +823,12 @@ static bool init_sys_info(void) {
 /* print_reports
  * calculates deltas between two OA reports and displays them
  */
-static void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long long int cpu_ticks0, long long int cpu_ticks1, uint64_t cpu_cur_freq, int dump) {
+static void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long long int cpu_ticks0, long long int cpu_ticks1, uint64_t cpu_cur_freq, uint64_t gpu_cur_freq, int dump) {
 
 	FILE *f_output = NULL;
 	struct oa_format format = get_oa_format(fmt);
-	uint32_t clock0;
-	uint32_t clock1;
+	uint32_t gpu_ticks0;
+	uint32_t gpu_ticks1;
 
 	if (dump) {
 		f_output = fopen("counters.csv", "a");
@@ -836,7 +836,7 @@ static void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, l
 
 	int i;
 	if ((size_t) ftell(f_output) == 0 && dump) {
-		fprintf(f_output, "TIMESTAMP\tGPU_TICKS\tCPU_TICKS\tCTX_ID\tSLICE_CLK[mhz]\tUNSLICE_CLK[mhz]\tCPU_CLK[khz]\tGPU_TIME[s]\tCPU_TIME[s]\tREASON\t");
+		fprintf(f_output, "TIMESTAMP\tGPU_TICKS\tCPU_TICKS\tCTX_ID\tSLICE_CLK[mhz]\tUNSLICE_CLK[mhz]\tGPU_CLK[mhz]\tCPU_CLK[khz]\tGPU_TIME[s]\tCPU_TIME[s]\tREASON\t");
 		for(i=0; i<format.n_a40; i++) {
 			if (undefined_a_counters[i]) continue; 
 			else fprintf(f_output, "A%d\t", i);
@@ -844,7 +844,7 @@ static void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, l
 		for(i=0; i<format.n_a; i++) {
 			int a_id = format.first_a + i;
 			if (undefined_a_counters[a_id]) continue;
-			else fprintf(f_output, "A%d\t", i);
+			else fprintf(f_output, "A%d\t", a_id);
 		}
 		for(i=0; i<format.n_b; i++)
 			fprintf(f_output, "B%d\t", i);
@@ -861,11 +861,11 @@ static void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, l
 	if (IS_HASWELL(devid) && format.n_c == 0) {
 		printf("HASWELL does no support GPU_TICKS\n");	//this doesnt make sense, they have a separate function for reading this, wth ????
 	} else {
-		clock0 = read_report_ticks(oa_report0, fmt);
-		clock1 = read_report_ticks(oa_report1, fmt);
+		gpu_ticks0 = read_report_ticks(oa_report0, fmt);
+		gpu_ticks1 = read_report_ticks(oa_report1, fmt);
 
-		printf("CLOCK TICKS: 1st = %u, 2nd = %u, delta = %u\n", clock0, clock1, clock1 - clock0);
-		if (dump) fprintf(f_output, "%u\t", clock1-clock0);
+		printf("CLOCK TICKS: 1st = %u, 2nd = %u, delta = %u\n", gpu_ticks0, gpu_ticks1, gpu_ticks1 - gpu_ticks0);
+		if (dump) fprintf(f_output, "%u\t", gpu_ticks1-gpu_ticks0);
 		if (dump) fprintf(f_output, "%u\t", cpu_ticks1-cpu_ticks0);
 
 	}
@@ -875,10 +875,12 @@ static void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, l
 		uint32_t slice_freq0, slice_freq1, unslice_freq0, unslice_freq1;
 		const char *reason0 = gen8_read_report_reason(oa_report0);
 		const char *reason1 = gen8_read_report_reason(oa_report1);
+		char reasons[20];
+		sprintf(reasons, "%s,%s", reason0, reason1);
 
 		// context id
 		printf("CTX_ID: 1st = %u, 2nd = %u\n", oa_report0[2], oa_report1[2]);
-		if (dump) fprintf(f_output, "%u\t", oa_report1[2]-oa_report0[2]);
+		if (dump) fprintf(f_output, "%u\t", oa_report1[2]);
 
 		// frequency
 		gen8_read_report_clock_ratios(oa_report0, &slice_freq0, &unslice_freq0);
@@ -889,12 +891,25 @@ static void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, l
 		// reason
 		printf("REASONS: \"%s\", 2nd = \"%s\"\n", reason0, reason1);
 
+		// have comma as decimal separator instead of dot
+		float gpu_time_s = (float)(gpu_ticks1-gpu_ticks0) * (1/((float)gpu_cur_freq*1e6));
+		float cpu_time_s = (float)(cpu_ticks1-cpu_ticks0) * (1/((float)cpu_cur_freq*1e3));
+		char gpu_time_string[20];
+		char cpu_time_string[20];
+		sprintf(gpu_time_string, "%f", gpu_time_s);
+		sprintf(cpu_time_string, "%f", cpu_time_s);
+		for(i = 0; i< 20; i++) {
+			if (gpu_time_string[i] == '.') gpu_time_string[i] = ',';
+			if (cpu_time_string[i] == '.') cpu_time_string[i] = ',';
+		}
+
 		if (dump) fprintf(f_output, "%u\t", slice_freq1);
 		if (dump) fprintf(f_output, "%u\t", unslice_freq1);
+		if (dump) fprintf(f_output, "%u\t", gpu_cur_freq);
 		if (dump) fprintf(f_output, "%u\t", cpu_cur_freq);
-		if (dump) fprintf(f_output, "%f\t", (float)(clock1-clock0) * (1/((float)slice_freq1*1e6)));
-		if (dump) fprintf(f_output, "%f\t", (float)(cpu_ticks1-cpu_ticks0) * (1/((float)cpu_cur_freq*1e3)));
-		if (dump) fprintf(f_output, "%s\t", reason1);
+		if (dump) fprintf(f_output, "%s\t", gpu_time_string);
+		if (dump) fprintf(f_output, "%s\t", cpu_time_string);
+		if (dump) fprintf(f_output, "%s\t", reasons);
 
 	}
 
@@ -944,13 +959,145 @@ static void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, l
 		if (dump) fprintf(f_output, "%lu\t", c1[j]- c0[j]);
 	}
 
-	fprintf(f_output, "\n");
+	
 
 	if (dump) {
+		fprintf(f_output, "\n");
 		fclose(f_output);
 	}
 
 }
+
+
+
+
+
+
+static void test_counters_with_opencl_one_context(int dump) {
+
+	uint64_t properties[] = {
+
+		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
+
+		/* no samples, but we have to specify at least one sample property */
+		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
+
+		/* OA unit configuration */
+		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
+		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
+
+		/* Note: no OA exponent specified in this case */
+	};
+
+	struct drm_i915_perf_open_param param = {
+		.flags = I915_PERF_FLAG_FD_CLOEXEC,
+		.num_properties = sizeof(properties) / 16,
+		.properties_ptr = (uintptr_t) properties
+	};
+
+	drm_intel_bufmgr *bufmgr;
+	drm_intel_context *context;
+	struct intel_batchbuffer *batch;
+	struct igt_buf src[3], dst[3];
+	drm_intel_bo *bo;
+	uint32_t *report0_32, *report1_32;
+	int width = 800;
+	int height = 600;
+	uint32_t ctx_id = 0xffffffff;	// invalid id
+	int ret;
+	long long int cpu_ticks0, cpu_ticks1;
+
+	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
+	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
+
+	for(int i = 0; i < ARRAY_SIZE(src); i++) {
+		scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
+		scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
+	}
+
+	batch = intel_batchbuffer_alloc(bufmgr, devid);
+
+	context = drm_intel_gem_context_create(bufmgr);
+
+	ret = drm_intel_gem_context_get_id(context, &ctx_id);
+
+	properties[1] = ctx_id;
+
+	intel_batchbuffer_flush_with_context(batch, context);
+
+	scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
+	scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
+
+	stream_fd = __perf_open(drm_fd, &param, false);
+
+	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
+
+	ret = drm_intel_bo_map(bo, true /* write enable */);
+
+	emit_report_perf_count(batch,
+							bo,
+							0,  		 /* report dst offset */
+							0xdeadbeef); /* report id */ 
+
+	/* Explicitly flush here (even though the render_copy() call
+	 * will itself flush before/after the copy) to clarify that
+	 * that the PIPE_CONTROL + MI_RPC commands will be in a
+	 * separate batch from the copy.
+	 */
+	intel_batchbuffer_flush_with_context(batch, context);
+
+	cpu_ticks0 = read_tsc_start();
+
+	// do work
+    ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
+    clFlush(command_queue);
+    clFinish(command_queue);
+
+    cpu_ticks1 = read_tsc_end();
+
+	/* Another redundant flush to clarify batch bo is free to reuse */
+	intel_batchbuffer_flush_with_context(batch, context);
+
+	emit_report_perf_count(batch,
+							bo,
+							256,   		 /* report dst offset */
+							0xbeefbeef); /* report id */
+
+	ret = drm_intel_bo_map(bo, false /* write enable */);
+
+	report0_32 = bo->virtual;
+
+	report1_32 = report0_32 + 64;
+
+	// read cpu frequency
+	uint64_t cpu_cur_freq;
+	int cur_cpu = 0;
+	char buf[512];
+	snprintf(buf, sizeof(buf), "/sys/devices/system/cpu/cpu%u/cpufreq/scaling_cur_freq", cur_cpu);
+	ret = read_u64_file(buf, &cpu_cur_freq);
+
+	// read gpu frequency
+	uint64_t gpu_cur_freq;
+	snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_cur_freq_mhz", card);
+	ret = read_u64_file(buf, &gpu_cur_freq);
+
+	print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, dump);
+
+	for (int i = 0; i < ARRAY_SIZE(src); i++) {
+		drm_intel_bo_unreference(src[i].bo);
+		drm_intel_bo_unreference(dst[i].bo);
+	}
+
+	drm_intel_bo_unmap(bo);
+	drm_intel_bo_unreference(bo);
+	intel_batchbuffer_free(batch);
+	drm_intel_gem_context_destroy(context);
+	drm_intel_bufmgr_destroy(bufmgr);
+	__perf_close(stream_fd);
+
+}
+
+
 
 static void test_counters_with_opencl(int dump) {
 
@@ -980,11 +1127,6 @@ static void test_counters_with_opencl(int dump) {
 	struct igt_buf src[3], dst[3];
 	drm_intel_bo *bo;
 	uint32_t *report0_32, *report1_32;
-	uint64_t timestamp0_64, timestamp1_64;
-	uint32_t delta_ts64, delta_oa32;
-	uint64_t delta_ts64_ns, delta_oa32_ns;
-	uint32_t delta_delta;
-	int n_samples_written;
 	int width = 800;
 	int height = 600;
 	uint32_t ctx_id = 0xffffffff;	// invalid id
@@ -1019,12 +1161,10 @@ static void test_counters_with_opencl(int dump) {
 
 	ret = drm_intel_bo_map(bo, true /* write enable */);
 
-	emit_stall_timestamp_and_rpc(batch,
-								 bo,
-								 512, /* timestamp offset */
-								 0,   /* report dst offset */
-								 0xdeadbeef, /* report id */
-								 false); 
+	emit_report_perf_count(batch,
+							bo,
+							0,  		 /* report dst offset */
+							0xdeadbeef); /* report id */ 
 
 	/* Explicitly flush here (even though the render_copy() call
 	 * will itself flush before/after the copy) to clarify that
@@ -1045,12 +1185,10 @@ static void test_counters_with_opencl(int dump) {
 	/* Another redundant flush to clarify batch bo is free to reuse */
 	intel_batchbuffer_flush_with_context(batch, context0);
 
-	emit_stall_timestamp_and_rpc(batch,
-								 bo,
-								 520, /* timestamp offset */
-								 256,   /* report dst offset */
-								 0xbeefbeef, /* report id */
-								 false); 
+	emit_report_perf_count(batch,
+							bo,
+							256,   		 /* report dst offset */
+							0xbeefbeef); /* report id */
 
 	intel_batchbuffer_flush_with_context(batch, context1);
 
@@ -1067,7 +1205,12 @@ static void test_counters_with_opencl(int dump) {
 	snprintf(buf, sizeof(buf), "/sys/devices/system/cpu/cpu%u/cpufreq/scaling_cur_freq", cur_cpu);
 	ret = read_u64_file(buf, &cpu_cur_freq);
 
-	print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, dump);
+	// read gpu frequency
+	uint64_t gpu_cur_freq;
+	snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_cur_freq_mhz", card);
+	ret = read_u64_file(buf, &gpu_cur_freq);
+
+	print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, dump);
 
 	for (int i = 0; i < ARRAY_SIZE(src); i++) {
 		drm_intel_bo_unreference(src[i].bo);
@@ -1191,12 +1334,16 @@ static void hsw_test_single_ctx_counters(int dump) {
 
 
 
-	emit_stall_timestamp_and_rpc(batch,
-								 bo,
-								 512, /* timestamp offset */
-								 0,   /* report dst offset */
-								 0xdeadbeef, /* report id */
-								 false); 
+	//emit_stall_timestamp_and_rpc(batch,
+	//							 bo,
+	//							 512, /* timestamp offset */
+	//							 0,   /* report dst offset */
+	//							 0xdeadbeef, /* report id */
+	//							 false); 
+	emit_report_perf_count(batch,
+							bo,
+							0,
+							0xdeadbeef);
 
 	/* Explicitly flush here (even though the render_copy() call
 	 * will itself flush before/after the copy) to clarify that
@@ -1231,12 +1378,16 @@ static void hsw_test_single_ctx_counters(int dump) {
 	/* And another */
 	//intel_batchbuffer_flush_with_context(batch, context1);
 
-	emit_stall_timestamp_and_rpc(batch,
-								 bo,
-								 520, /* timestamp offset */
-								 256,   /* report dst offset */
-								 0xbeefbeef, /* report id */
-								 false); 
+	//emit_stall_timestamp_and_rpc(batch,
+	//							 bo,
+	//							 520, /* timestamp offset */
+	//							 256,   /* report dst offset */
+	//							 0xbeefbeef, /* report id */
+	//							 false); 
+	emit_report_perf_count(batch,
+							bo,
+							256,
+							0xbeefbeef);
 
 	intel_batchbuffer_flush_with_context(batch, context1);
 
@@ -1246,6 +1397,11 @@ static void hsw_test_single_ctx_counters(int dump) {
 	char buf[512];
 	snprintf(buf, sizeof(buf), "/sys/devices/system/cpu/cpu%u/cpufreq/scaling_cur_freq", cur_cpu);
 	ret = read_u64_file(buf, &cpu_cur_freq);
+
+	// read gpu frequency
+	uint64_t gpu_cur_freq;
+	snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_cur_freq_mhz", card);
+	ret = read_u64_file(buf, &gpu_cur_freq);
 
 	ret = drm_intel_bo_map(bo, false /* write enable */);
 	if (ret < 0) { printf(KRED "Error at line: %d\n" KNRM, __LINE__); exit(1); }
@@ -1262,7 +1418,7 @@ static void hsw_test_single_ctx_counters(int dump) {
 
 
 	// PRINTS ALL COUNTERS !!!!!!!!!!!!!!
-	print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, dump);
+	print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, dump);
 
 	/* A40 == N samples written to all render targets */
 	n_samples_written = report1_32[43] - report0_32[43];
