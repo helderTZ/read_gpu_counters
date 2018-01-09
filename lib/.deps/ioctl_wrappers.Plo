@@ -81,8 +81,9 @@ ioctl_wrappers.lo: ioctl_wrappers.c /usr/include/stdc-predef.h \
  /usr/include/libdrm/intel_bufmgr.h /usr/include/libdrm/i915_drm.h \
  igt_core.h /usr/include/setjmp.h \
  /usr/include/x86_64-linux-gnu/bits/setjmp.h intel_reg.h intel_chipset.h \
- intel_io.h igt_debugfs.h ../config.h ioctl_wrappers.h i915/gem_context.h \
- i915/gem_scheduler.h
+ intel_io.h igt_debugfs.h ../config.h /usr/include/valgrind/valgrind.h \
+ /usr/include/valgrind/memcheck.h /usr/include/valgrind/valgrind.h \
+ ioctl_wrappers.h i915/gem_context.h i915/gem_scheduler.h
 
 /usr/include/stdc-predef.h:
 
@@ -319,6 +320,12 @@ intel_io.h:
 igt_debugfs.h:
 
 ../config.h:
+
+/usr/include/valgrind/valgrind.h:
+
+/usr/include/valgrind/memcheck.h:
+
+/usr/include/valgrind/valgrind.h:
 
 ioctl_wrappers.h:
 

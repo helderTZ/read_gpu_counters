@@ -1,0 +1,23 @@
+\begin{theindex}
+
+  \item {accumulator}, \hyperpage{5}
+
+  \indexspace
+
+  \item {drm\+\_\+i915\+\_\+perf\+\_\+oa\+\_\+config}, \hyperpage{5}
+    \subitem {uuid}, \hyperpage{6}
+  \item {drm\+\_\+i915\+\_\+perf\+\_\+open\+\_\+param}, \hyperpage{6}
+  \item {drm\+\_\+i915\+\_\+perf\+\_\+record\+\_\+header}, 
+		\hyperpage{6}
+
+  \indexspace
+
+  \item {oa\+\_\+format}, \hyperpage{7}
+
+  \indexspace
+
+  \item {uuid}
+    \subitem {drm\+\_\+i915\+\_\+perf\+\_\+oa\+\_\+config}, 
+		\hyperpage{6}
+
+\end{theindex}

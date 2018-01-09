@@ -97,10 +97,7 @@ subdir = lib/tests
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/as-compiler-flag.m4 \
 	$(top_srcdir)/m4/ax_gcc_func_attribute.m4 \
-	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/gtk-doc.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
@@ -530,7 +527,7 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.sources \
 	$(top_srcdir)/build-aux/depcomp \
 	$(top_srcdir)/build-aux/test-driver
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /home/helder/intel-gpu-tools2/build-aux/missing aclocal-1.15
+ACLOCAL = ${SHELL} /home/helder/intel-gpu-tools/build-aux/missing aclocal-1.15
 ADMIN_MAN_DIR = $(mandir)/man$(ADMIN_MAN_SUFFIX)
 ADMIN_MAN_SUFFIX = 8
 ALSA_CFLAGS = -I/usr/include/alsa
@@ -541,10 +538,10 @@ APP_MAN_DIR = $(mandir)/man$(APP_MAN_SUFFIX)
 APP_MAN_SUFFIX = 1
 AR = ar
 ASSEMBLER_WARN_CFLAGS = -Wall -Wstrict-prototypes 	-Wmissing-prototypes -Wmissing-declarations 	-Wnested-externs -fno-strict-aliasing
-AUTOCONF = ${SHELL} /home/helder/intel-gpu-tools2/build-aux/missing autoconf
-AUTOHEADER = ${SHELL} /home/helder/intel-gpu-tools2/build-aux/missing autoheader
-AUTOMAKE = ${SHELL} /home/helder/intel-gpu-tools2/build-aux/missing automake-1.15
-AWK = mawk
+AUTOCONF = ${SHELL} /home/helder/intel-gpu-tools/build-aux/missing autoconf
+AUTOHEADER = ${SHELL} /home/helder/intel-gpu-tools/build-aux/missing autoheader
+AUTOMAKE = ${SHELL} /home/helder/intel-gpu-tools/build-aux/missing automake-1.15
+AWK = gawk
 BASE_CFLAGS =  -Wall -Wpointer-arith -Wmissing-declarations -Wformat=2 -Wstrict-prototypes -Wmissing-prototypes -Wnested-externs -Wbad-function-cast -Wold-style-definition -Wdeclaration-after-statement -Wunused -Wuninitialized -Wshadow -Wmissing-noreturn -Wmissing-format-attribute -Wredundant-decls -Wlogical-op -Werror=implicit -Werror=nonnull -Werror=init-self -Werror=main -Werror=missing-braces -Werror=sequence-point -Werror=return-type -Werror=trigraphs -Werror=array-bounds -Werror=write-strings -Werror=address -Werror=int-to-pointer-cast -Werror=pointer-to-int-cast
 CAIRO_CFLAGS = -I/usr/include/cairo -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/pixman-1 -I/usr/include/freetype2 -I/usr/include/libpng16
 CAIRO_LIBS = -lcairo
@@ -605,9 +602,9 @@ KMOD_CFLAGS =
 KMOD_LIBS = -lkmod
 LD = /usr/bin/ld -m elf_x86_64
 LDFLAGS = 
-LEX = :
+LEX = flex
 LEXLIB = 
-LEX_OUTPUT_ROOT = 
+LEX_OUTPUT_ROOT = lex.yy
 LIBOBJS = 
 LIBS = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
@@ -621,7 +618,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} /home/helder/intel-gpu-tools2/build-aux/missing makeinfo
+MAKEINFO = ${SHELL} /home/helder/intel-gpu-tools/build-aux/missing makeinfo
 MANIFEST_TOOL = :
 MAN_SUBSTS = 	-e 's|__vendorversion__|"$(PACKAGE_STRING)" "$(XORG_MAN_PAGE)"|' 	-e 's|__xorgversion__|"$(PACKAGE_STRING)" "$(XORG_MAN_PAGE)"|' 	-e 's|__xservername__|Xorg|g' 	-e 's|__xconfigfile__|xorg.conf|g' 	-e 's|__projectroot__|$(prefix)|g' 	-e 's|__apploaddir__|$(appdefaultdir)|g' 	-e 's|__appmansuffix__|$(APP_MAN_SUFFIX)|g' 	-e 's|__drivermansuffix__|$(DRIVER_MAN_SUFFIX)|g' 	-e 's|__adminmansuffix__|$(ADMIN_MAN_SUFFIX)|g' 	-e 's|__libmansuffix__|$(LIB_MAN_SUFFIX)|g' 	-e 's|__miscmansuffix__|$(MISC_MAN_SUFFIX)|g' 	-e 's|__filemansuffix__|$(FILE_MAN_SUFFIX)|g'
 MISC_MAN_DIR = $(mandir)/man$(MISC_MAN_SUFFIX)
@@ -670,8 +667,8 @@ STRICT_CFLAGS =  -pedantic -Werror -Werror=attributes
 STRIP = strip
 THREAD_CFLAGS =  -pthread
 TIMER_LIBS = -lrt
-VALGRIND_CFLAGS = 
-VALGRIND_LIBS = 
+VALGRIND_CFLAGS = -I/usr/include/valgrind
+VALGRIND_LIBS = -L/usr/lib/valgrind -lcoregrind-amd64-linux -lvex-amd64-linux -lgcc
 VERSION = 1.20
 XMLRPC_CFLAGS = 
 XMLRPC_C_CONFIG = 
@@ -679,12 +676,12 @@ XMLRPC_LIBS =
 XORG_MAN_PAGE = X Version 11
 XRANDR_CFLAGS = 
 XRANDR_LIBS = 
-YACC = yacc
+YACC = bison -y
 YFLAGS = 
-abs_builddir = /home/helder/intel-gpu-tools2/lib/tests
-abs_srcdir = /home/helder/intel-gpu-tools2/lib/tests
-abs_top_builddir = /home/helder/intel-gpu-tools2
-abs_top_srcdir = /home/helder/intel-gpu-tools2
+abs_builddir = /home/helder/intel-gpu-tools/lib/tests
+abs_srcdir = /home/helder/intel-gpu-tools/lib/tests
+abs_top_builddir = /home/helder/intel-gpu-tools
+abs_top_srcdir = /home/helder/intel-gpu-tools
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_DUMPBIN = 
@@ -713,7 +710,7 @@ host_vendor = pc
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/helder/intel-gpu-tools2/build-aux/install-sh
+install_sh = ${SHELL} /home/helder/intel-gpu-tools/build-aux/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -724,7 +721,7 @@ oldincludedir = /usr/include
 pdfdir = ${docdir}
 pkgpyexecdir = ${pyexecdir}/intel-gpu-tools
 pkgpythondir = ${pythondir}/intel-gpu-tools
-prefix = /usr/local
+prefix = /home/helder/intel-gpu-tools/bin
 program_transform_name = s,x,x,
 psdir = ${docdir}
 pyexecdir = ${exec_prefix}/lib/python3.6/site-packages
