@@ -274,6 +274,21 @@ int main(int argc, char** argv) {
 	write_u64_file("/proc/sys/dev/i915/perf_stream_paranoid", 1);
 	write_u64_file("/proc/sys/dev/i915/oa_max_sample_rate", 100000);
 
+
+	// see if ggtt or ppgtt
+	// 0 - global gtt
+ 	// 1 - aliasing ppgtt
+ 	// 2 - full ppgtt, limited to 32bit address space
+ 	// 3 - full ppgtt, 64bit address space
+	int gtt_type = gem_gtt_type(drm_fd);
+	if (gtt_type == 0) 	printf(KGRN "GTT type: global gtt\n" KNRM);
+	if (gtt_type == 1) 	printf(KGRN "GTT type: aliasing ppgtt\n" KNRM);
+	if (gtt_type == 2) 	printf(KGRN "GTT type: full ppgtt, limited to 32bit address space\n" KNRM);
+	if (gtt_type == 3) 	printf(KGRN "GTT type: full ppgtt, 64bit address space\n" KNRM);
+	else				printf(KRED "GGT type: Invalid\n" KNRM);
+
+
+
 	// get gpu max frequency
 	//char buf[512];
 	//snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_boost_freq_mhz", card);

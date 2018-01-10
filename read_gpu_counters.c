@@ -1150,7 +1150,9 @@ void print_binary(int val, int len) {
 }
 
 
-
+#define GGTT 0	// uses full ppgtt 64 bits, so this should be zero (?)
+#define ASYNC_MODE 0
+#define PRED_ENABLE 0
 
 #define BAR 0x161580DC
 
@@ -1183,7 +1185,7 @@ void send_mi_load_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_address,
 	uint64_t command_dword2_3 = 0;
 
 	command_dword0 = command_dword0 | 2;
-	command_dword0 = command_dword0 | ( (ggtt | async_mode) << 21);
+	command_dword0 = command_dword0 | ( ( (ggtt << 1) | async_mode) << 21);
 	command_dword0 = command_dword0 | (0x29 << 23);
 	
 	command_dword1 = command_dword1 | (reg_address << 2);
@@ -1194,14 +1196,16 @@ void send_mi_load_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_address,
 	command_dword3 = (uint32_t)   (command_dword2_3 & 0x00007fff);
 
 	// setup batch
-	BEGIN_BATCH(5, 0);
+	BEGIN_BATCH(4, 0);
 	OUT_BATCH(command_dword0);
 	OUT_BATCH(command_dword1);
 	OUT_BATCH(command_dword2);
 	OUT_BATCH(command_dword3);
 	//OUT_RELOC(bo, I915_GEM_DOMAIN_INSTRUCTION, I915_GEM_DOMAIN_INSTRUCTION, 0);
-	OUT_BATCH(0);
+	//OUT_BATCH(0);
 	ADVANCE_BATCH();
+
+	sleep(1);
 
 }
 
@@ -1236,7 +1240,7 @@ uint32_t send_mi_store_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_add
 	uint64_t command_dword2_3 = 0;
 
 	command_dword0 = command_dword0 | 2;
-	command_dword0 = command_dword0 | ( (ggtt | pred_enable) << 22);
+	command_dword0 = command_dword0 | ( ( (ggtt << 1) | pred_enable) << 22);
 	command_dword0 = command_dword0 | (0x24 << 23);
 
 	command_dword1 = command_dword1 | (reg_address << 2);
@@ -1247,14 +1251,16 @@ uint32_t send_mi_store_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_add
 	command_dword3 = (uint32_t)   (command_dword2_3 & 0x00007fff);
 
 	// setup batch
-	BEGIN_BATCH(5, 0);
+	BEGIN_BATCH(4, 0);
 	OUT_BATCH(command_dword0);
 	OUT_BATCH(command_dword1);
 	OUT_BATCH(command_dword2);
 	OUT_BATCH(command_dword3);
 	//OUT_RELOC(bo, I915_GEM_DOMAIN_INSTRUCTION, I915_GEM_DOMAIN_INSTRUCTION, 0);
-	OUT_BATCH(0);
+	//OUT_BATCH(0);
 	ADVANCE_BATCH();
+
+	sleep(1);
 
 	return value;
 
@@ -1365,30 +1371,6 @@ void write_to_flexible_eu_registers(void) {
 	// ======================== MI_LOAD_REGISTER_MEM ======================== //
 	// ====================================================================== //
 
-	// setup command
-	// MI_LOAD_REGISTER_MEM
-
-	// dword 0
-	// bits 31:29 --> 0x0 = 0b000
-	// bits 28:23 --> 0x29 = 0b101001
-	// bit 22     --> use global GTT (?)
-	// bit 21     --> Async Mode Enable (?)
-	// bits 20:8  --> Reserved
-	// bits 7:0   --> 0x2 == 0b00000010 (excludes dword (0,1))
-
-	// dword 1
-	// bits 31:23 --> Reserved
-	// bits 22:2  --> Register Address
-	// bits 1:0   --> MBZ (?????)
-
-	// dword 2 e 3
-	// bits 63:2 --> Memory Address
-	// bits 1:0  --> MBZ (?????)
-
-	#define GGTT 0
-	#define ASYNC_MODE 0
-	#define PRED_ENABLE 0
-
 	//uint32_t command_dword0 = 0;
 	//command_dword0 = command_dword0 | 2;
 	//command_dword0 = command_dword0 | ( (GGTT | ASYNC_MODE) << 21);
@@ -1416,26 +1398,6 @@ void write_to_flexible_eu_registers(void) {
 	// ======================== MI_STORE_REGISTER_MEM ======================= //
 	// ====================================================================== //
 
-	// read register to see if it was written properly
-	// MI_STORE_REGISTER_MEM
-
-	// dword 0
-	// bits 31:29 --> 0x0 = 0b000
-	// bits 28:23 --> 0x24 = 0b100100
-	// bit 22     --> use global GTT (?)
-	// bit 21     --> Reserved / Predicate Enable (?)
-	// bits 20:8  --> Reserved
-	// bits 7:0   --> 0x2 == 0b00000010 (excludes dword (0,1))
-
-	// dword 1
-	// bits 31:23 --> Reserved
-	// bits 22:2  --> Register Address
-	// bits 1:0   --> Reserved
-
-	// dword 2 e 3
-	// bits 63:2 --> Memory Address
-	// bits 1:0  --> MBZ (?????)
-
 	//command_dword0 = 0;
 	//command_dword0 = command_dword0 | 2;
 	//command_dword0 = command_dword0 | ( (GGTT | PRED_ENABLE) << 22);
@@ -1458,7 +1420,8 @@ void write_to_flexible_eu_registers(void) {
 	reg_contents = send_mi_store_reg_mem(batch, reg_address, GGTT, PRED_ENABLE);
 
 
-	printf("EU_PERF_CNT_CTL0: %d\n", reg_contents);
+	printf("EU_PERF_CNT_CTL0: ");
+	print_binary((int)reg_contents, 32);
 
 
 
