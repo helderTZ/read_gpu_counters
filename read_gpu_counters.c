@@ -1150,6 +1150,117 @@ void print_binary(int val, int len) {
 }
 
 
+
+
+#define BAR 0x161580DC
+
+void send_mi_load_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_address, uint32_t *memory_address, uint32_t ggtt, uint32_t async_mode) {
+
+	// setup command
+	// MI_LOAD_REGISTER_MEM
+
+	// dword 0
+	// bits 31:29 --> 0x0 = 0b000
+	// bits 28:23 --> 0x29 = 0b101001
+	// bit 22     --> use global GTT (?)
+	// bit 21     --> Async Mode Enable (?)
+	// bits 20:8  --> Reserved
+	// bits 7:0   --> 0x2 == 0b00000010 (excludes dword (0,1))
+
+	// dword 1
+	// bits 31:23 --> Reserved
+	// bits 22:2  --> Register Address
+	// bits 1:0   --> MBZ (?????)
+
+	// dword 2 e 3
+	// bits 63:2 --> Memory Address
+	// bits 1:0  --> MBZ (?????)
+
+	uint32_t command_dword0 = 0;
+	uint32_t command_dword1 = 0;
+	uint32_t command_dword2 = 0;
+	uint32_t command_dword3 = 0;
+	uint64_t command_dword2_3 = 0;
+
+	command_dword0 = command_dword0 | 2;
+	command_dword0 = command_dword0 | ( (ggtt | async_mode) << 21);
+	command_dword0 = command_dword0 | (0x29 << 23);
+	
+	command_dword1 = command_dword1 | (reg_address << 2);
+
+	command_dword2_3 = command_dword2_3 | ( (uint64_t)memory_address << 2 );
+
+	command_dword2 = (uint32_t) ( (command_dword2_3 & 0x7fff0000) >> 32 );
+	command_dword3 = (uint32_t)   (command_dword2_3 & 0x00007fff);
+
+	// setup batch
+	BEGIN_BATCH(5, 0);
+	OUT_BATCH(command_dword0);
+	OUT_BATCH(command_dword1);
+	OUT_BATCH(command_dword2);
+	OUT_BATCH(command_dword3);
+	//OUT_RELOC(bo, I915_GEM_DOMAIN_INSTRUCTION, I915_GEM_DOMAIN_INSTRUCTION, 0);
+	OUT_BATCH(0);
+	ADVANCE_BATCH();
+
+}
+
+uint32_t send_mi_store_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_address, uint32_t ggtt,uint32_t pred_enable) {
+
+	// setup command
+	// MI_STORE_REGISTER_MEM
+
+	// dword 0
+	// bits 31:29 --> 0x0 = 0b000
+	// bits 28:23 --> 0x24 = 0b100100
+	// bit 22     --> use global GTT (?)
+	// bit 21     --> Reserved / Predicate Enable (?)
+	// bits 20:8  --> Reserved
+	// bits 7:0   --> 0x2 == 0b00000010 (excludes dword (0,1))
+
+	// dword 1
+	// bits 31:23 --> Reserved
+	// bits 22:2  --> Register Address
+	// bits 1:0   --> Reserved
+
+	// dword 2 e 3
+	// bits 63:2 --> Memory Address
+	// bits 1:0  --> MBZ (?????)
+
+	uint32_t value = 0;
+
+	uint32_t command_dword0 = 0;
+	uint32_t command_dword1 = 0;
+	uint32_t command_dword2 = 0;
+	uint32_t command_dword3 = 0;
+	uint64_t command_dword2_3 = 0;
+
+	command_dword0 = command_dword0 | 2;
+	command_dword0 = command_dword0 | ( (ggtt | pred_enable) << 22);
+	command_dword0 = command_dword0 | (0x24 << 23);
+
+	command_dword1 = command_dword1 | (reg_address << 2);
+
+	command_dword2_3 = command_dword2_3 | ( (uint64_t)&value << 2 );
+
+	command_dword2 = (uint32_t) ( (command_dword2_3 & 0x7fff0000) >> 32 ); 
+	command_dword3 = (uint32_t)   (command_dword2_3 & 0x00007fff);
+
+	// setup batch
+	BEGIN_BATCH(5, 0);
+	OUT_BATCH(command_dword0);
+	OUT_BATCH(command_dword1);
+	OUT_BATCH(command_dword2);
+	OUT_BATCH(command_dword3);
+	//OUT_RELOC(bo, I915_GEM_DOMAIN_INSTRUCTION, I915_GEM_DOMAIN_INSTRUCTION, 0);
+	OUT_BATCH(0);
+	ADVANCE_BATCH();
+
+	return value;
+
+}
+
+
 void write_to_flexible_eu_registers(void) {
 
 	printf("\n\n");
@@ -1157,17 +1268,16 @@ void write_to_flexible_eu_registers(void) {
 	printf("=================== EU_PERF_CNT_CTL0 ===================\n");
 	printf("========================================================\n");
 
+
+
+	// setup necessary driver stuff
 	uint64_t properties[] = {
-
 		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
-
 		/* no samples, but we have to specify at least one sample property */
 		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
-
 		/* OA unit configuration */
 		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
 		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
-
 		/* Note: no OA exponent specified in this case */
 	};
 
@@ -1240,22 +1350,16 @@ void write_to_flexible_eu_registers(void) {
 
 	// print binary word for debug
 	printf("EU_PERF_CNT_CTL0: ");
-	print_binary(dword, 32);
+	print_binary((int)dword, 32);
 
 
 	// get mmio aperture address of EU_PERF_CNT_CTL0
 	// (I have no idea what I'm doing)
-	uint64_t mmio_address = 0xE458;
-	uint64_t bar = 0x161580DC;
-	uint64_t graphics_address = mmio_address + bar;
+	uint32_t reg_address = 0xE458 + BAR;
 
-	graphics_address = mmio_address;
-	uint32_t reg_address = 0xE458;
+	uint32_t reg_contents;
 
-	printf("Apertured EU_PERF_CNT_CTL0 address: 0x%x\n", graphics_address);
 
-	printf("address of dword: %u\n", &dword);
-	print_binary(&dword, 32);
 
 	// ====================================================================== //
 	// ======================== MI_LOAD_REGISTER_MEM ======================== //
@@ -1263,10 +1367,6 @@ void write_to_flexible_eu_registers(void) {
 
 	// setup command
 	// MI_LOAD_REGISTER_MEM
-	// The following addresses should NOT be used for MMIO writes:
-	// 0x8800 - 0x88FF
-	// >= 0xC0000
-	// so this shouldn't work, because 0xE458
 
 	// dword 0
 	// bits 31:29 --> 0x0 = 0b000
@@ -1287,40 +1387,33 @@ void write_to_flexible_eu_registers(void) {
 
 	#define GGTT 0
 	#define ASYNC_MODE 0
+	#define PRED_ENABLE 0
 
-	uint32_t command_dword0 = 0;
-	command_dword0 = command_dword0 | 2;
-	command_dword0 = command_dword0 | ( (GGTT | ASYNC_MODE) << 21);
-	command_dword0 = command_dword0 | (0x29 << 23);
+	//uint32_t command_dword0 = 0;
+	//command_dword0 = command_dword0 | 2;
+	//command_dword0 = command_dword0 | ( (GGTT | ASYNC_MODE) << 21);
+	//command_dword0 = command_dword0 | (0x29 << 23);
+	//
+	//uint32_t command_dword1 = 0;
+	//command_dword1 = command_dword1 | (graphics_address << 2);
+	//
+	//uint64_t command_dword2_3 = 0;
+	//command_dword2_3 = command_dword2_3 | ((uint64_t)&dword << 2);
+	//uint32_t command_dword2 = (uint32_t)((command_dword2_3 & 0x7fff0000) >> 32);
+	//uint32_t command_dword3 = (uint32_t)(command_dword2_3 & 0x00007fff);
+	//
+	//printf("MI_LOAD_REGISTER_MEM: \n");
+	//print_binary(command_dword0, 32);
+	//print_binary(command_dword1, 32);
+	//print_binary(command_dword2, 32);
+	//print_binary(command_dword3, 32);
 
-	uint32_t command_dword1 = 0;
-	command_dword1 = command_dword1 | (graphics_address << 2);
-
-	uint64_t command_dword2_3 = 0;
-	command_dword2_3 = command_dword2_3 | ((uint64_t)&dword << 2);
-	uint32_t command_dword2 = (uint32_t)((command_dword2_3 & 0x7fff0000) >> 32);
-	uint32_t command_dword3 = (uint32_t)(command_dword2_3 & 0x00007fff);
-
-	printf("MI_LOAD_REGISTER_MEM: \n");
-	print_binary(command_dword0, 32);
-	print_binary(command_dword1, 32);
-	print_binary(command_dword2, 32);
-	print_binary(command_dword3, 32);
-
-	// setup batch
-	BEGIN_BATCH(5, 0);
-	OUT_BATCH(command_dword0);
-	OUT_BATCH(command_dword1);
-	OUT_BATCH(command_dword2);
-	OUT_BATCH(command_dword3);
-	//OUT_RELOC(bo, I915_GEM_DOMAIN_INSTRUCTION, I915_GEM_DOMAIN_INSTRUCTION, 0);
-	OUT_BATCH(0);
-	ADVANCE_BATCH();
+	send_mi_load_reg_mem(batch, reg_address, &dword, GGTT, ASYNC_MODE);
 
 
 
 	// ====================================================================== //
-	// ======================== MI_LOAD_REGISTER_MEM ======================== //
+	// ======================== MI_STORE_REGISTER_MEM ======================= //
 	// ====================================================================== //
 
 	// read register to see if it was written properly
@@ -1343,43 +1436,32 @@ void write_to_flexible_eu_registers(void) {
 	// bits 63:2 --> Memory Address
 	// bits 1:0  --> MBZ (?????)
 
-	uint32_t reg_contents;
+	//command_dword0 = 0;
+	//command_dword0 = command_dword0 | 2;
+	//command_dword0 = command_dword0 | ( (GGTT | PRED_ENABLE) << 22);
+	//command_dword0 = command_dword0 | (0x24 << 23);
+	//
+	//command_dword1 = 0;
+	//command_dword1 = command_dword1 | (graphics_address << 2);
+	//
+	//command_dword2_3 = 0;
+	//command_dword2_3 = command_dword2_3 | ((uint64_t)&reg_contents << 2);
+	//command_dword2 = (uint32_t)((command_dword2_3 & 0x7fff0000) >> 32); 
+	//command_dword3 = (uint32_t)(command_dword2_3 & 0x00007fff);
+	//
+	//printf("MI_STORE_REGISTER_MEM: \n");
+	//print_binary(command_dword0, 32);
+	//print_binary(command_dword1, 32);
+	//print_binary(command_dword2, 32);
+	//print_binary(command_dword3, 32);
 
-	command_dword0 = 0;
-	command_dword0 = command_dword0 | 2;
-	command_dword0 = command_dword0 | (GGTT << 22);
-	command_dword0 = command_dword0 | (0x24 << 23);
-
-	command_dword1 = 0;
-	command_dword1 = command_dword1 | (graphics_address << 2);
-
-	command_dword2_3 = 0;
-	command_dword2_3 = command_dword2_3 | ((uint64_t)&reg_contents << 2);
-	command_dword2 = (uint32_t)((command_dword2_3 & 0x7fff0000) >> 32); 
-	command_dword3 = (uint32_t)(command_dword2_3 & 0x00007fff);
-
-	printf("MI_STORE_REGISTER_MEM: \n");
-	print_binary(command_dword0, 32);
-	print_binary(command_dword1, 32);
-	print_binary(command_dword2, 32);
-	print_binary(command_dword3, 32);
-	
-
-
-	// setup batch
-	BEGIN_BATCH(5, 0);
-	OUT_BATCH(command_dword0);
-	OUT_BATCH(command_dword1);
-	OUT_BATCH(command_dword2);
-	OUT_BATCH(command_dword3);
-	//OUT_RELOC(bo, I915_GEM_DOMAIN_INSTRUCTION, I915_GEM_DOMAIN_INSTRUCTION, 0);
-	OUT_BATCH(0);
-	ADVANCE_BATCH();
-
+	reg_contents = send_mi_store_reg_mem(batch, reg_address, GGTT, PRED_ENABLE);
 
 
 	printf("EU_PERF_CNT_CTL0: %d\n", reg_contents);
- 
+
+
+
 
 
 	drm_intel_bo_unmap(bo);

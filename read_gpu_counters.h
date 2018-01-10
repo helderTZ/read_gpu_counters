@@ -418,6 +418,10 @@ void test_whitelisted_registers_userspace_config(void);
 
 void print_binary(int val, int len);
 
+void send_mi_load_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_address, uint32_t *memory_address, uint32_t ggtt, uint32_t async_mode);
+
+uint32_t send_mi_store_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_address, uint32_t ggtt,uint32_t pred_enable);
+
 void write_to_flexible_eu_registers(void);
 
 
