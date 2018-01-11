@@ -15,4 +15,4 @@ do
 done
 
 # create include graph
-./cinclude2dot.pl 2> /dev/null | dot -Tsvg -o read_gpu_counters_include_graph.svg
+./cinclude2dot.pl --groups 2> /dev/null | dot -Tsvg -o read_gpu_counters_include_graph.svg

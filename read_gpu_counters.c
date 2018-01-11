@@ -852,6 +852,44 @@ void test_counters_with_opencl(int dump) {
 
 	ret = drm_intel_bo_map(bo, true /* write enable */);
 
+
+
+
+
+
+	// ==================================//
+
+	// count flops
+	enum increment_event_filter inc_event = EU_FPU0_FPU1_PIPELINES_CONCURRENTLY_ACTIVE;
+	enum coarse_event_filter coarse_event = NO_COARSE_FILTER;
+	enum fine_event_filter fine_event = NO_FINE_FILTER;
+
+	// setup dword to write to register
+	uint32_t dword = 0;
+	dword = dword | (uint32_t) inc_event;
+	dword = dword | ( (uint32_t) coarse_event << 4);
+	dword = dword | ( (uint32_t) fine_event << 8);
+
+	int err;
+	uint32_t reg_value;
+
+	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
+
+	// write EU_PERF_CNT_CTL0
+	intel_register_write(0xE458, dword);
+
+	// read
+	reg_value = intel_register_read(0xE458);
+	printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
+
+	intel_register_access_fini();
+
+	// ==================================//
+
+
+
+
+
 	emit_report_perf_count(batch,
 							bo,
 							0,  		 /* report dst offset */
@@ -1151,8 +1189,8 @@ void print_binary(int val, int len) {
 
 
 #define GGTT 0	// uses full ppgtt 64 bits, so this should be zero (?)
-#define ASYNC_MODE 0
-#define PRED_ENABLE 0
+#define ASYNC_MODE 1
+#define PRED_ENABLE 1
 
 #define BAR 0x161580DC
 
@@ -1332,6 +1370,10 @@ void write_to_flexible_eu_registers(void) {
 
 
 
+
+
+
+
 	// ====================================================================== //
 	// =================== setup bits for EU_PERF_CNT_CTL0 ================== //
 	// ====================================================================== //
@@ -1361,9 +1403,68 @@ void write_to_flexible_eu_registers(void) {
 
 	// get mmio aperture address of EU_PERF_CNT_CTL0
 	// (I have no idea what I'm doing)
+	//uint32_t reg_address = 0xE458;
 	uint32_t reg_address = 0xE458 + BAR;
 
 	uint32_t reg_contents;
+
+
+
+
+	// ====================================================================== //
+	// this is not working
+
+	//uint32_t handle = gem_create(drm_fd, 4096);
+	//
+	////uint32_t* reg = (uint32_t*) gem_mmap__cpu(drm_fd, handle, 0, 4096, 0);
+	//uint32_t* reg = (uint32_t*) gem_mmap__wc(drm_fd, handle, 0, 4096, 0);
+	////uint32_t* reg = (uint32_t*) gem_mmap__gtt(drm_fd, handle, 4096, 0);
+	//
+	//int drm_fd_rdwr = prime_handle_to_fd_for_mmap(drm_fd, handle);
+	//
+	//prime_sync_start(drm_fd_rdwr, true);
+	//
+	//prime_sync_end(drm_fd_rdwr, true);
+	//
+	////*reg = dword;
+	//gem_write(drm_fd_rdwr, handle, 0, &dword, sizeof(dword));
+	// ====================================================================== //
+
+	int err = 0;
+	uint32_t reg_value = 0;
+
+	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
+	
+	// read EU_PERF_CNT_CTL0, should be 0
+	reg_value = intel_register_read(0xE458);
+	printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
+
+	// write EU_PERF_CNT_CTL0
+	intel_register_write(0xE458, dword);
+
+	// read again
+	reg_value = intel_register_read(0xE458);
+	printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
+
+	intel_register_access_fini();
+
+	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
+	reg_value = intel_register_read(0xE458);
+	printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
+	intel_register_access_fini();
+
+	// read free running counters
+	uint32_t free_running_a_counters[8] = {0};
+	uint32_t free_running_a_addresses[8] = {0x2960, 0x2964, 0x2968, 0x296C, 0x2970, 0x2974, 0x2978, 0x297C};
+	uint32_t free_running_a_names[8] = {4, 4, 6, 6, 19, 19, 20, 20};
+
+	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
+	for (int i = 0; i < 8; i++) {
+		free_running_a_counters[i] = intel_register_read(free_running_a_addresses[i]);
+		printf("A%d: %u\n", free_running_a_names[i], free_running_a_counters[i]);
+	}
+	intel_register_access_fini();
+
 
 
 
@@ -1390,7 +1491,7 @@ void write_to_flexible_eu_registers(void) {
 	//print_binary(command_dword2, 32);
 	//print_binary(command_dword3, 32);
 
-	send_mi_load_reg_mem(batch, reg_address, &dword, GGTT, ASYNC_MODE);
+	//send_mi_load_reg_mem(batch, reg_address, &dword, GGTT, ASYNC_MODE);
 
 
 
@@ -1422,6 +1523,7 @@ void write_to_flexible_eu_registers(void) {
 
 	printf("EU_PERF_CNT_CTL0: ");
 	print_binary((int)reg_contents, 32);
+	printf("                = %u\n", reg_contents);
 
 
 

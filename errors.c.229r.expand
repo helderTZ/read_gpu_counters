@@ -1841,7 +1841,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 317 316 318 145 117 (nil) [1 uses])
 (note 318 317 319 145 [bb 145] NOTE_INSN_BASIC_BLOCK)
 (insn 319 318 320 145 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC0") [flags 0x2]  <var_decl 0x7f68b5719120 *.LC0>)) "errors.c":9 -1
+        (symbol_ref/f:DI ("*.LC0") [flags 0x2]  <var_decl 0x7efc5510c120 *.LC0>)) "errors.c":9 -1
      (nil))
 (jump_insn 320 319 321 145 (set (pc)
         (label_ref 765)) "errors.c":9 -1
@@ -1851,7 +1851,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 322 321 323 146 116 (nil) [1 uses])
 (note 323 322 324 146 [bb 146] NOTE_INSN_BASIC_BLOCK)
 (insn 324 323 325 146 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC1") [flags 0x2]  <var_decl 0x7f68b57191b0 *.LC1>)) "errors.c":10 -1
+        (symbol_ref/f:DI ("*.LC1") [flags 0x2]  <var_decl 0x7efc5510c1b0 *.LC1>)) "errors.c":10 -1
      (nil))
 (jump_insn 325 324 326 146 (set (pc)
         (label_ref 765)) "errors.c":10 -1
@@ -1861,7 +1861,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 327 326 328 147 112 (nil) [1 uses])
 (note 328 327 329 147 [bb 147] NOTE_INSN_BASIC_BLOCK)
 (insn 329 328 330 147 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC2") [flags 0x2]  <var_decl 0x7f68b5719240 *.LC2>)) "errors.c":11 -1
+        (symbol_ref/f:DI ("*.LC2") [flags 0x2]  <var_decl 0x7efc5510c240 *.LC2>)) "errors.c":11 -1
      (nil))
 (jump_insn 330 329 331 147 (set (pc)
         (label_ref 765)) "errors.c":11 -1
@@ -1871,7 +1871,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 332 331 333 148 115 (nil) [1 uses])
 (note 333 332 334 148 [bb 148] NOTE_INSN_BASIC_BLOCK)
 (insn 334 333 335 148 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC3") [flags 0x2]  <var_decl 0x7f68b57192d0 *.LC3>)) "errors.c":12 -1
+        (symbol_ref/f:DI ("*.LC3") [flags 0x2]  <var_decl 0x7efc5510c2d0 *.LC3>)) "errors.c":12 -1
      (nil))
 (jump_insn 335 334 336 148 (set (pc)
         (label_ref 765)) "errors.c":12 -1
@@ -1881,7 +1881,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 337 336 338 149 114 (nil) [1 uses])
 (note 338 337 339 149 [bb 149] NOTE_INSN_BASIC_BLOCK)
 (insn 339 338 340 149 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC4") [flags 0x2]  <var_decl 0x7f68b5719360 *.LC4>)) "errors.c":13 -1
+        (symbol_ref/f:DI ("*.LC4") [flags 0x2]  <var_decl 0x7efc5510c360 *.LC4>)) "errors.c":13 -1
      (nil))
 (jump_insn 340 339 341 149 (set (pc)
         (label_ref 765)) "errors.c":13 -1
@@ -1891,7 +1891,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 342 341 343 150 104 (nil) [1 uses])
 (note 343 342 344 150 [bb 150] NOTE_INSN_BASIC_BLOCK)
 (insn 344 343 345 150 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC5") [flags 0x2]  <var_decl 0x7f68b57193f0 *.LC5>)) "errors.c":14 -1
+        (symbol_ref/f:DI ("*.LC5") [flags 0x2]  <var_decl 0x7efc5510c3f0 *.LC5>)) "errors.c":14 -1
      (nil))
 (jump_insn 345 344 346 150 (set (pc)
         (label_ref 765)) "errors.c":14 -1
@@ -1901,7 +1901,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 347 346 348 151 111 (nil) [1 uses])
 (note 348 347 349 151 [bb 151] NOTE_INSN_BASIC_BLOCK)
 (insn 349 348 350 151 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC6") [flags 0x2]  <var_decl 0x7f68b5719480 *.LC6>)) "errors.c":15 -1
+        (symbol_ref/f:DI ("*.LC6") [flags 0x2]  <var_decl 0x7efc5510c480 *.LC6>)) "errors.c":15 -1
      (nil))
 (jump_insn 350 349 351 151 (set (pc)
         (label_ref 765)) "errors.c":15 -1
@@ -1911,7 +1911,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 352 351 353 152 110 (nil) [1 uses])
 (note 353 352 354 152 [bb 152] NOTE_INSN_BASIC_BLOCK)
 (insn 354 353 355 152 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC7") [flags 0x2]  <var_decl 0x7f68b5719510 *.LC7>)) "errors.c":16 -1
+        (symbol_ref/f:DI ("*.LC7") [flags 0x2]  <var_decl 0x7efc5510c510 *.LC7>)) "errors.c":16 -1
      (nil))
 (jump_insn 355 354 356 152 (set (pc)
         (label_ref 765)) "errors.c":16 -1
@@ -1921,7 +1921,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 357 356 358 153 106 (nil) [1 uses])
 (note 358 357 359 153 [bb 153] NOTE_INSN_BASIC_BLOCK)
 (insn 359 358 360 153 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC8") [flags 0x2]  <var_decl 0x7f68b57195a0 *.LC8>)) "errors.c":17 -1
+        (symbol_ref/f:DI ("*.LC8") [flags 0x2]  <var_decl 0x7efc5510c5a0 *.LC8>)) "errors.c":17 -1
      (nil))
 (jump_insn 360 359 361 153 (set (pc)
         (label_ref 765)) "errors.c":17 -1
@@ -1931,7 +1931,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 362 361 363 154 109 (nil) [1 uses])
 (note 363 362 364 154 [bb 154] NOTE_INSN_BASIC_BLOCK)
 (insn 364 363 365 154 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC9") [flags 0x2]  <var_decl 0x7f68b5719630 *.LC9>)) "errors.c":18 -1
+        (symbol_ref/f:DI ("*.LC9") [flags 0x2]  <var_decl 0x7efc5510c630 *.LC9>)) "errors.c":18 -1
      (nil))
 (jump_insn 365 364 366 154 (set (pc)
         (label_ref 765)) "errors.c":18 -1
@@ -1941,7 +1941,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 367 366 368 155 108 (nil) [1 uses])
 (note 368 367 369 155 [bb 155] NOTE_INSN_BASIC_BLOCK)
 (insn 369 368 370 155 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC10") [flags 0x2]  <var_decl 0x7f68b57196c0 *.LC10>)) "errors.c":19 -1
+        (symbol_ref/f:DI ("*.LC10") [flags 0x2]  <var_decl 0x7efc5510c6c0 *.LC10>)) "errors.c":19 -1
      (nil))
 (jump_insn 370 369 371 155 (set (pc)
         (label_ref 765)) "errors.c":19 -1
@@ -1951,7 +1951,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 372 371 373 156 90 (nil) [1 uses])
 (note 373 372 374 156 [bb 156] NOTE_INSN_BASIC_BLOCK)
 (insn 374 373 375 156 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC11") [flags 0x2]  <var_decl 0x7f68b5719750 *.LC11>)) "errors.c":20 -1
+        (symbol_ref/f:DI ("*.LC11") [flags 0x2]  <var_decl 0x7efc5510c750 *.LC11>)) "errors.c":20 -1
      (nil))
 (jump_insn 375 374 376 156 (set (pc)
         (label_ref 765)) "errors.c":20 -1
@@ -1961,7 +1961,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 377 376 378 157 103 (nil) [1 uses])
 (note 378 377 379 157 [bb 157] NOTE_INSN_BASIC_BLOCK)
 (insn 379 378 380 157 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC12") [flags 0x2]  <var_decl 0x7f68b57197e0 *.LC12>)) "errors.c":21 -1
+        (symbol_ref/f:DI ("*.LC12") [flags 0x2]  <var_decl 0x7efc5510c7e0 *.LC12>)) "errors.c":21 -1
      (nil))
 (jump_insn 380 379 381 157 (set (pc)
         (label_ref 765)) "errors.c":21 -1
@@ -1971,7 +1971,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 382 381 383 158 102 (nil) [1 uses])
 (note 383 382 384 158 [bb 158] NOTE_INSN_BASIC_BLOCK)
 (insn 384 383 385 158 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC13") [flags 0x2]  <var_decl 0x7f68b5719870 *.LC13>)) "errors.c":22 -1
+        (symbol_ref/f:DI ("*.LC13") [flags 0x2]  <var_decl 0x7efc5510c870 *.LC13>)) "errors.c":22 -1
      (nil))
 (jump_insn 385 384 386 158 (set (pc)
         (label_ref 765)) "errors.c":22 -1
@@ -1981,7 +1981,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 387 386 388 159 98 (nil) [1 uses])
 (note 388 387 389 159 [bb 159] NOTE_INSN_BASIC_BLOCK)
 (insn 389 388 390 159 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC14") [flags 0x2]  <var_decl 0x7f68b5719900 *.LC14>)) "errors.c":23 -1
+        (symbol_ref/f:DI ("*.LC14") [flags 0x2]  <var_decl 0x7efc5510c900 *.LC14>)) "errors.c":23 -1
      (nil))
 (jump_insn 390 389 391 159 (set (pc)
         (label_ref 765)) "errors.c":23 -1
@@ -1991,7 +1991,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 392 391 393 160 101 (nil) [1 uses])
 (note 393 392 394 160 [bb 160] NOTE_INSN_BASIC_BLOCK)
 (insn 394 393 395 160 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC15") [flags 0x2]  <var_decl 0x7f68b5719990 *.LC15>)) "errors.c":24 -1
+        (symbol_ref/f:DI ("*.LC15") [flags 0x2]  <var_decl 0x7efc5510c990 *.LC15>)) "errors.c":24 -1
      (nil))
 (jump_insn 395 394 396 160 (set (pc)
         (label_ref 765)) "errors.c":24 -1
@@ -2001,7 +2001,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 397 396 398 161 100 (nil) [1 uses])
 (note 398 397 399 161 [bb 161] NOTE_INSN_BASIC_BLOCK)
 (insn 399 398 400 161 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC16") [flags 0x2]  <var_decl 0x7f68b5719a20 *.LC16>)) "errors.c":25 -1
+        (symbol_ref/f:DI ("*.LC16") [flags 0x2]  <var_decl 0x7efc5510ca20 *.LC16>)) "errors.c":25 -1
      (nil))
 (jump_insn 400 399 401 161 (set (pc)
         (label_ref 765)) "errors.c":25 -1
@@ -2011,7 +2011,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 402 401 403 162 92 (nil) [1 uses])
 (note 403 402 404 162 [bb 162] NOTE_INSN_BASIC_BLOCK)
 (insn 404 403 405 162 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC17") [flags 0x2]  <var_decl 0x7f68b5719ab0 *.LC17>)) "errors.c":26 -1
+        (symbol_ref/f:DI ("*.LC17") [flags 0x2]  <var_decl 0x7efc5510cab0 *.LC17>)) "errors.c":26 -1
      (nil))
 (jump_insn 405 404 406 162 (set (pc)
         (label_ref 765)) "errors.c":26 -1
@@ -2021,7 +2021,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 407 406 408 163 97 (nil) [1 uses])
 (note 408 407 409 163 [bb 163] NOTE_INSN_BASIC_BLOCK)
 (insn 409 408 410 163 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC18") [flags 0x2]  <var_decl 0x7f68b5719b40 *.LC18>)) "errors.c":27 -1
+        (symbol_ref/f:DI ("*.LC18") [flags 0x2]  <var_decl 0x7efc5510cb40 *.LC18>)) "errors.c":27 -1
      (nil))
 (jump_insn 410 409 411 163 (set (pc)
         (label_ref 765)) "errors.c":27 -1
@@ -2031,7 +2031,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 412 411 413 164 96 (nil) [1 uses])
 (note 413 412 414 164 [bb 164] NOTE_INSN_BASIC_BLOCK)
 (insn 414 413 415 164 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC19") [flags 0x2]  <var_decl 0x7f68b5719bd0 *.LC19>)) "errors.c":28 -1
+        (symbol_ref/f:DI ("*.LC19") [flags 0x2]  <var_decl 0x7efc5510cbd0 *.LC19>)) "errors.c":28 -1
      (nil))
 (jump_insn 415 414 416 164 (set (pc)
         (label_ref 765)) "errors.c":28 -1
@@ -2041,7 +2041,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 417 416 418 165 94 (nil) [1 uses])
 (note 418 417 419 165 [bb 165] NOTE_INSN_BASIC_BLOCK)
 (insn 419 418 420 165 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC20") [flags 0x2]  <var_decl 0x7f68b5719c60 *.LC20>)) "errors.c":29 -1
+        (symbol_ref/f:DI ("*.LC20") [flags 0x2]  <var_decl 0x7efc5510cc60 *.LC20>)) "errors.c":29 -1
      (nil))
 (jump_insn 420 419 421 165 (set (pc)
         (label_ref 765)) "errors.c":29 -1
@@ -2051,7 +2051,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 422 421 423 166 95 (nil) [1 uses])
 (note 423 422 424 166 [bb 166] NOTE_INSN_BASIC_BLOCK)
 (insn 424 423 425 166 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC21") [flags 0x2]  <var_decl 0x7f68b5719cf0 *.LC21>)) "errors.c":30 -1
+        (symbol_ref/f:DI ("*.LC21") [flags 0x2]  <var_decl 0x7efc5510ccf0 *.LC21>)) "errors.c":30 -1
      (nil))
 (jump_insn 425 424 426 166 (set (pc)
         (label_ref 765)) "errors.c":30 -1
@@ -2061,7 +2061,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 427 426 428 167 62 (nil) [1 uses])
 (note 428 427 429 167 [bb 167] NOTE_INSN_BASIC_BLOCK)
 (insn 429 428 430 167 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC22") [flags 0x2]  <var_decl 0x7f68b5719d80 *.LC22>)) "errors.c":31 -1
+        (symbol_ref/f:DI ("*.LC22") [flags 0x2]  <var_decl 0x7efc5510cd80 *.LC22>)) "errors.c":31 -1
      (nil))
 (jump_insn 430 429 431 167 (set (pc)
         (label_ref 765)) "errors.c":31 -1
@@ -2071,7 +2071,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 432 431 433 168 89 (nil) [1 uses])
 (note 433 432 434 168 [bb 168] NOTE_INSN_BASIC_BLOCK)
 (insn 434 433 435 168 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC23") [flags 0x2]  <var_decl 0x7f68b5719e10 *.LC23>)) "errors.c":32 -1
+        (symbol_ref/f:DI ("*.LC23") [flags 0x2]  <var_decl 0x7efc5510ce10 *.LC23>)) "errors.c":32 -1
      (nil))
 (jump_insn 435 434 436 168 (set (pc)
         (label_ref 765)) "errors.c":32 -1
@@ -2081,7 +2081,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 437 436 438 169 88 (nil) [1 uses])
 (note 438 437 439 169 [bb 169] NOTE_INSN_BASIC_BLOCK)
 (insn 439 438 440 169 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC24") [flags 0x2]  <var_decl 0x7f68b5719ea0 *.LC24>)) "errors.c":33 -1
+        (symbol_ref/f:DI ("*.LC24") [flags 0x2]  <var_decl 0x7efc5510cea0 *.LC24>)) "errors.c":33 -1
      (nil))
 (jump_insn 440 439 441 169 (set (pc)
         (label_ref 765)) "errors.c":33 -1
@@ -2091,7 +2091,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 442 441 443 170 84 (nil) [1 uses])
 (note 443 442 444 170 [bb 170] NOTE_INSN_BASIC_BLOCK)
 (insn 444 443 445 170 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC25") [flags 0x2]  <var_decl 0x7f68b5719f30 *.LC25>)) "errors.c":34 -1
+        (symbol_ref/f:DI ("*.LC25") [flags 0x2]  <var_decl 0x7efc5510cf30 *.LC25>)) "errors.c":34 -1
      (nil))
 (jump_insn 445 444 446 170 (set (pc)
         (label_ref 765)) "errors.c":34 -1
@@ -2101,7 +2101,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 447 446 448 171 87 (nil) [1 uses])
 (note 448 447 449 171 [bb 171] NOTE_INSN_BASIC_BLOCK)
 (insn 449 448 450 171 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC26") [flags 0x2]  <var_decl 0x7f68b5731000 *.LC26>)) "errors.c":35 -1
+        (symbol_ref/f:DI ("*.LC26") [flags 0x2]  <var_decl 0x7efc55124000 *.LC26>)) "errors.c":35 -1
      (nil))
 (jump_insn 450 449 451 171 (set (pc)
         (label_ref 765)) "errors.c":35 -1
@@ -2111,7 +2111,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 452 451 453 172 86 (nil) [1 uses])
 (note 453 452 454 172 [bb 172] NOTE_INSN_BASIC_BLOCK)
 (insn 454 453 455 172 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC27") [flags 0x2]  <var_decl 0x7f68b5731090 *.LC27>)) "errors.c":36 -1
+        (symbol_ref/f:DI ("*.LC27") [flags 0x2]  <var_decl 0x7efc55124090 *.LC27>)) "errors.c":36 -1
      (nil))
 (jump_insn 455 454 456 172 (set (pc)
         (label_ref 765)) "errors.c":36 -1
@@ -2121,7 +2121,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 457 456 458 173 78 (nil) [1 uses])
 (note 458 457 459 173 [bb 173] NOTE_INSN_BASIC_BLOCK)
 (insn 459 458 460 173 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC28") [flags 0x2]  <var_decl 0x7f68b5731120 *.LC28>)) "errors.c":37 -1
+        (symbol_ref/f:DI ("*.LC28") [flags 0x2]  <var_decl 0x7efc55124120 *.LC28>)) "errors.c":37 -1
      (nil))
 (jump_insn 460 459 461 173 (set (pc)
         (label_ref 765)) "errors.c":37 -1
@@ -2131,7 +2131,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 462 461 463 174 83 (nil) [1 uses])
 (note 463 462 464 174 [bb 174] NOTE_INSN_BASIC_BLOCK)
 (insn 464 463 465 174 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC29") [flags 0x2]  <var_decl 0x7f68b57311b0 *.LC29>)) "errors.c":38 -1
+        (symbol_ref/f:DI ("*.LC29") [flags 0x2]  <var_decl 0x7efc551241b0 *.LC29>)) "errors.c":38 -1
      (nil))
 (jump_insn 465 464 466 174 (set (pc)
         (label_ref 765)) "errors.c":38 -1
@@ -2141,7 +2141,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 467 466 468 175 82 (nil) [1 uses])
 (note 468 467 469 175 [bb 175] NOTE_INSN_BASIC_BLOCK)
 (insn 469 468 470 175 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC30") [flags 0x2]  <var_decl 0x7f68b5731240 *.LC30>)) "errors.c":39 -1
+        (symbol_ref/f:DI ("*.LC30") [flags 0x2]  <var_decl 0x7efc55124240 *.LC30>)) "errors.c":39 -1
      (nil))
 (jump_insn 470 469 471 175 (set (pc)
         (label_ref 765)) "errors.c":39 -1
@@ -2151,7 +2151,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 472 471 473 176 80 (nil) [1 uses])
 (note 473 472 474 176 [bb 176] NOTE_INSN_BASIC_BLOCK)
 (insn 474 473 475 176 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC31") [flags 0x2]  <var_decl 0x7f68b57312d0 *.LC31>)) "errors.c":40 -1
+        (symbol_ref/f:DI ("*.LC31") [flags 0x2]  <var_decl 0x7efc551242d0 *.LC31>)) "errors.c":40 -1
      (nil))
 (jump_insn 475 474 476 176 (set (pc)
         (label_ref 765)) "errors.c":40 -1
@@ -2161,7 +2161,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 477 476 478 177 81 (nil) [1 uses])
 (note 478 477 479 177 [bb 177] NOTE_INSN_BASIC_BLOCK)
 (insn 479 478 480 177 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC32") [flags 0x2]  <var_decl 0x7f68b5731360 *.LC32>)) "errors.c":41 -1
+        (symbol_ref/f:DI ("*.LC32") [flags 0x2]  <var_decl 0x7efc55124360 *.LC32>)) "errors.c":41 -1
      (nil))
 (jump_insn 480 479 481 177 (set (pc)
         (label_ref 765)) "errors.c":41 -1
@@ -2171,7 +2171,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 482 481 483 178 64 (nil) [1 uses])
 (note 483 482 484 178 [bb 178] NOTE_INSN_BASIC_BLOCK)
 (insn 484 483 485 178 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC33") [flags 0x2]  <var_decl 0x7f68b57313f0 *.LC33>)) "errors.c":42 -1
+        (symbol_ref/f:DI ("*.LC33") [flags 0x2]  <var_decl 0x7efc551243f0 *.LC33>)) "errors.c":42 -1
      (nil))
 (jump_insn 485 484 486 178 (set (pc)
         (label_ref 765)) "errors.c":42 -1
@@ -2181,7 +2181,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 487 486 488 179 77 (nil) [1 uses])
 (note 488 487 489 179 [bb 179] NOTE_INSN_BASIC_BLOCK)
 (insn 489 488 490 179 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC34") [flags 0x2]  <var_decl 0x7f68b5731480 *.LC34>)) "errors.c":43 -1
+        (symbol_ref/f:DI ("*.LC34") [flags 0x2]  <var_decl 0x7efc55124480 *.LC34>)) "errors.c":43 -1
      (nil))
 (jump_insn 490 489 491 179 (set (pc)
         (label_ref 765)) "errors.c":43 -1
@@ -2191,7 +2191,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 492 491 493 180 76 (nil) [1 uses])
 (note 493 492 494 180 [bb 180] NOTE_INSN_BASIC_BLOCK)
 (insn 494 493 495 180 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC35") [flags 0x2]  <var_decl 0x7f68b5731510 *.LC35>)) "errors.c":44 -1
+        (symbol_ref/f:DI ("*.LC35") [flags 0x2]  <var_decl 0x7efc55124510 *.LC35>)) "errors.c":44 -1
      (nil))
 (jump_insn 495 494 496 180 (set (pc)
         (label_ref 765)) "errors.c":44 -1
@@ -2201,7 +2201,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 497 496 498 181 72 (nil) [1 uses])
 (note 498 497 499 181 [bb 181] NOTE_INSN_BASIC_BLOCK)
 (insn 499 498 500 181 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC36") [flags 0x2]  <var_decl 0x7f68b57315a0 *.LC36>)) "errors.c":45 -1
+        (symbol_ref/f:DI ("*.LC36") [flags 0x2]  <var_decl 0x7efc551245a0 *.LC36>)) "errors.c":45 -1
      (nil))
 (jump_insn 500 499 501 181 (set (pc)
         (label_ref 765)) "errors.c":45 -1
@@ -2211,7 +2211,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 502 501 503 182 75 (nil) [1 uses])
 (note 503 502 504 182 [bb 182] NOTE_INSN_BASIC_BLOCK)
 (insn 504 503 505 182 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC37") [flags 0x2]  <var_decl 0x7f68b5731630 *.LC37>)) "errors.c":46 -1
+        (symbol_ref/f:DI ("*.LC37") [flags 0x2]  <var_decl 0x7efc55124630 *.LC37>)) "errors.c":46 -1
      (nil))
 (jump_insn 505 504 506 182 (set (pc)
         (label_ref 765)) "errors.c":46 -1
@@ -2221,7 +2221,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 507 506 508 183 74 (nil) [1 uses])
 (note 508 507 509 183 [bb 183] NOTE_INSN_BASIC_BLOCK)
 (insn 509 508 510 183 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC38") [flags 0x2]  <var_decl 0x7f68b57316c0 *.LC38>)) "errors.c":47 -1
+        (symbol_ref/f:DI ("*.LC38") [flags 0x2]  <var_decl 0x7efc551246c0 *.LC38>)) "errors.c":47 -1
      (nil))
 (jump_insn 510 509 511 183 (set (pc)
         (label_ref 765)) "errors.c":47 -1
@@ -2231,7 +2231,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 512 511 513 184 66 (nil) [1 uses])
 (note 513 512 514 184 [bb 184] NOTE_INSN_BASIC_BLOCK)
 (insn 514 513 515 184 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC39") [flags 0x2]  <var_decl 0x7f68b5731750 *.LC39>)) "errors.c":48 -1
+        (symbol_ref/f:DI ("*.LC39") [flags 0x2]  <var_decl 0x7efc55124750 *.LC39>)) "errors.c":48 -1
      (nil))
 (jump_insn 515 514 516 184 (set (pc)
         (label_ref 765)) "errors.c":48 -1
@@ -2241,7 +2241,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 517 516 518 185 71 (nil) [1 uses])
 (note 518 517 519 185 [bb 185] NOTE_INSN_BASIC_BLOCK)
 (insn 519 518 520 185 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC40") [flags 0x2]  <var_decl 0x7f68b57317e0 *.LC40>)) "errors.c":49 -1
+        (symbol_ref/f:DI ("*.LC40") [flags 0x2]  <var_decl 0x7efc551247e0 *.LC40>)) "errors.c":49 -1
      (nil))
 (jump_insn 520 519 521 185 (set (pc)
         (label_ref 765)) "errors.c":49 -1
@@ -2251,7 +2251,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 522 521 523 186 70 (nil) [1 uses])
 (note 523 522 524 186 [bb 186] NOTE_INSN_BASIC_BLOCK)
 (insn 524 523 525 186 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC41") [flags 0x2]  <var_decl 0x7f68b5731870 *.LC41>)) "errors.c":50 -1
+        (symbol_ref/f:DI ("*.LC41") [flags 0x2]  <var_decl 0x7efc55124870 *.LC41>)) "errors.c":50 -1
      (nil))
 (jump_insn 525 524 526 186 (set (pc)
         (label_ref 765)) "errors.c":50 -1
@@ -2261,7 +2261,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 527 526 528 187 68 (nil) [1 uses])
 (note 528 527 529 187 [bb 187] NOTE_INSN_BASIC_BLOCK)
 (insn 529 528 530 187 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC42") [flags 0x2]  <var_decl 0x7f68b5731900 *.LC42>)) "errors.c":51 -1
+        (symbol_ref/f:DI ("*.LC42") [flags 0x2]  <var_decl 0x7efc55124900 *.LC42>)) "errors.c":51 -1
      (nil))
 (jump_insn 530 529 531 187 (set (pc)
         (label_ref 765)) "errors.c":51 -1
@@ -2271,7 +2271,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 532 531 533 188 69 (nil) [1 uses])
 (note 533 532 534 188 [bb 188] NOTE_INSN_BASIC_BLOCK)
 (insn 534 533 535 188 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC43") [flags 0x2]  <var_decl 0x7f68b5731990 *.LC43>)) "errors.c":52 -1
+        (symbol_ref/f:DI ("*.LC43") [flags 0x2]  <var_decl 0x7efc55124990 *.LC43>)) "errors.c":52 -1
      (nil))
 (jump_insn 535 534 536 188 (set (pc)
         (label_ref 765)) "errors.c":52 -1
@@ -2281,7 +2281,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 537 536 538 189 3 (nil) [1 uses])
 (note 538 537 539 189 [bb 189] NOTE_INSN_BASIC_BLOCK)
 (insn 539 538 540 189 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC44") [flags 0x2]  <var_decl 0x7f68b5731a20 *.LC44>)) "errors.c":53 -1
+        (symbol_ref/f:DI ("*.LC44") [flags 0x2]  <var_decl 0x7efc55124a20 *.LC44>)) "errors.c":53 -1
      (nil))
 (jump_insn 540 539 541 189 (set (pc)
         (label_ref 765)) "errors.c":53 -1
@@ -2291,7 +2291,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 542 541 543 190 61 (nil) [1 uses])
 (note 543 542 544 190 [bb 190] NOTE_INSN_BASIC_BLOCK)
 (insn 544 543 545 190 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC45") [flags 0x2]  <var_decl 0x7f68b5731ab0 *.LC45>)) "errors.c":54 -1
+        (symbol_ref/f:DI ("*.LC45") [flags 0x2]  <var_decl 0x7efc55124ab0 *.LC45>)) "errors.c":54 -1
      (nil))
 (jump_insn 545 544 546 190 (set (pc)
         (label_ref 765)) "errors.c":54 -1
@@ -2301,7 +2301,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 547 546 548 191 60 (nil) [1 uses])
 (note 548 547 549 191 [bb 191] NOTE_INSN_BASIC_BLOCK)
 (insn 549 548 550 191 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC46") [flags 0x2]  <var_decl 0x7f68b5731b40 *.LC46>)) "errors.c":55 -1
+        (symbol_ref/f:DI ("*.LC46") [flags 0x2]  <var_decl 0x7efc55124b40 *.LC46>)) "errors.c":55 -1
      (nil))
 (jump_insn 550 549 551 191 (set (pc)
         (label_ref 765)) "errors.c":55 -1
@@ -2311,7 +2311,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 552 551 553 192 56 (nil) [1 uses])
 (note 553 552 554 192 [bb 192] NOTE_INSN_BASIC_BLOCK)
 (insn 554 553 555 192 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC47") [flags 0x2]  <var_decl 0x7f68b5731bd0 *.LC47>)) "errors.c":56 -1
+        (symbol_ref/f:DI ("*.LC47") [flags 0x2]  <var_decl 0x7efc55124bd0 *.LC47>)) "errors.c":56 -1
      (nil))
 (jump_insn 555 554 556 192 (set (pc)
         (label_ref 765)) "errors.c":56 -1
@@ -2321,7 +2321,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 557 556 558 193 59 (nil) [1 uses])
 (note 558 557 559 193 [bb 193] NOTE_INSN_BASIC_BLOCK)
 (insn 559 558 560 193 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC48") [flags 0x2]  <var_decl 0x7f68b5731c60 *.LC48>)) "errors.c":57 -1
+        (symbol_ref/f:DI ("*.LC48") [flags 0x2]  <var_decl 0x7efc55124c60 *.LC48>)) "errors.c":57 -1
      (nil))
 (jump_insn 560 559 561 193 (set (pc)
         (label_ref 765)) "errors.c":57 -1
@@ -2331,7 +2331,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 562 561 563 194 58 (nil) [1 uses])
 (note 563 562 564 194 [bb 194] NOTE_INSN_BASIC_BLOCK)
 (insn 564 563 565 194 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC49") [flags 0x2]  <var_decl 0x7f68b5731cf0 *.LC49>)) "errors.c":58 -1
+        (symbol_ref/f:DI ("*.LC49") [flags 0x2]  <var_decl 0x7efc55124cf0 *.LC49>)) "errors.c":58 -1
      (nil))
 (jump_insn 565 564 566 194 (set (pc)
         (label_ref 765)) "errors.c":58 -1
@@ -2341,7 +2341,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 567 566 568 195 48 (nil) [1 uses])
 (note 568 567 569 195 [bb 195] NOTE_INSN_BASIC_BLOCK)
 (insn 569 568 570 195 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC50") [flags 0x2]  <var_decl 0x7f68b5731d80 *.LC50>)) "errors.c":59 -1
+        (symbol_ref/f:DI ("*.LC50") [flags 0x2]  <var_decl 0x7efc55124d80 *.LC50>)) "errors.c":59 -1
      (nil))
 (jump_insn 570 569 571 195 (set (pc)
         (label_ref 765)) "errors.c":59 -1
@@ -2351,7 +2351,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 572 571 573 196 55 (nil) [1 uses])
 (note 573 572 574 196 [bb 196] NOTE_INSN_BASIC_BLOCK)
 (insn 574 573 575 196 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC51") [flags 0x2]  <var_decl 0x7f68b5731e10 *.LC51>)) "errors.c":60 -1
+        (symbol_ref/f:DI ("*.LC51") [flags 0x2]  <var_decl 0x7efc55124e10 *.LC51>)) "errors.c":60 -1
      (nil))
 (jump_insn 575 574 576 196 (set (pc)
         (label_ref 765)) "errors.c":60 -1
@@ -2361,7 +2361,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 577 576 578 197 54 (nil) [1 uses])
 (note 578 577 579 197 [bb 197] NOTE_INSN_BASIC_BLOCK)
 (insn 579 578 580 197 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC52") [flags 0x2]  <var_decl 0x7f68b5731ea0 *.LC52>)) "errors.c":61 -1
+        (symbol_ref/f:DI ("*.LC52") [flags 0x2]  <var_decl 0x7efc55124ea0 *.LC52>)) "errors.c":61 -1
      (nil))
 (jump_insn 580 579 581 197 (set (pc)
         (label_ref 765)) "errors.c":61 -1
@@ -2371,7 +2371,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 582 581 583 198 50 (nil) [1 uses])
 (note 583 582 584 198 [bb 198] NOTE_INSN_BASIC_BLOCK)
 (insn 584 583 585 198 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC53") [flags 0x2]  <var_decl 0x7f68b5731f30 *.LC53>)) "errors.c":62 -1
+        (symbol_ref/f:DI ("*.LC53") [flags 0x2]  <var_decl 0x7efc55124f30 *.LC53>)) "errors.c":62 -1
      (nil))
 (jump_insn 585 584 586 198 (set (pc)
         (label_ref 765)) "errors.c":62 -1
@@ -2381,7 +2381,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 587 586 588 199 53 (nil) [1 uses])
 (note 588 587 589 199 [bb 199] NOTE_INSN_BASIC_BLOCK)
 (insn 589 588 590 199 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC54") [flags 0x2]  <var_decl 0x7f68b5736000 *.LC54>)) "errors.c":63 -1
+        (symbol_ref/f:DI ("*.LC54") [flags 0x2]  <var_decl 0x7efc55129000 *.LC54>)) "errors.c":63 -1
      (nil))
 (jump_insn 590 589 591 199 (set (pc)
         (label_ref 765)) "errors.c":63 -1
@@ -2391,7 +2391,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 592 591 593 200 52 (nil) [1 uses])
 (note 593 592 594 200 [bb 200] NOTE_INSN_BASIC_BLOCK)
 (insn 594 593 595 200 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC55") [flags 0x2]  <var_decl 0x7f68b5736090 *.LC55>)) "errors.c":64 -1
+        (symbol_ref/f:DI ("*.LC55") [flags 0x2]  <var_decl 0x7efc55129090 *.LC55>)) "errors.c":64 -1
      (nil))
 (jump_insn 595 594 596 200 (set (pc)
         (label_ref 765)) "errors.c":64 -1
@@ -2401,7 +2401,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 597 596 598 201 34 (nil) [1 uses])
 (note 598 597 599 201 [bb 201] NOTE_INSN_BASIC_BLOCK)
 (insn 599 598 600 201 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC56") [flags 0x2]  <var_decl 0x7f68b5736120 *.LC56>)) "errors.c":65 -1
+        (symbol_ref/f:DI ("*.LC56") [flags 0x2]  <var_decl 0x7efc55129120 *.LC56>)) "errors.c":65 -1
      (nil))
 (jump_insn 600 599 601 201 (set (pc)
         (label_ref 765)) "errors.c":65 -1
@@ -2411,7 +2411,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 602 601 603 202 47 (nil) [1 uses])
 (note 603 602 604 202 [bb 202] NOTE_INSN_BASIC_BLOCK)
 (insn 604 603 605 202 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC57") [flags 0x2]  <var_decl 0x7f68b57361b0 *.LC57>)) "errors.c":66 -1
+        (symbol_ref/f:DI ("*.LC57") [flags 0x2]  <var_decl 0x7efc551291b0 *.LC57>)) "errors.c":66 -1
      (nil))
 (jump_insn 605 604 606 202 (set (pc)
         (label_ref 765)) "errors.c":66 -1
@@ -2421,7 +2421,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 607 606 608 203 46 (nil) [1 uses])
 (note 608 607 609 203 [bb 203] NOTE_INSN_BASIC_BLOCK)
 (insn 609 608 610 203 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC58") [flags 0x2]  <var_decl 0x7f68b5736240 *.LC58>)) "errors.c":67 -1
+        (symbol_ref/f:DI ("*.LC58") [flags 0x2]  <var_decl 0x7efc55129240 *.LC58>)) "errors.c":67 -1
      (nil))
 (jump_insn 610 609 611 203 (set (pc)
         (label_ref 765)) "errors.c":67 -1
@@ -2431,7 +2431,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 612 611 613 204 42 (nil) [1 uses])
 (note 613 612 614 204 [bb 204] NOTE_INSN_BASIC_BLOCK)
 (insn 614 613 615 204 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC59") [flags 0x2]  <var_decl 0x7f68b57362d0 *.LC59>)) "errors.c":68 -1
+        (symbol_ref/f:DI ("*.LC59") [flags 0x2]  <var_decl 0x7efc551292d0 *.LC59>)) "errors.c":68 -1
      (nil))
 (jump_insn 615 614 616 204 (set (pc)
         (label_ref 765)) "errors.c":68 -1
@@ -2441,7 +2441,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 617 616 618 205 45 (nil) [1 uses])
 (note 618 617 619 205 [bb 205] NOTE_INSN_BASIC_BLOCK)
 (insn 619 618 620 205 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC60") [flags 0x2]  <var_decl 0x7f68b5736360 *.LC60>)) "errors.c":69 -1
+        (symbol_ref/f:DI ("*.LC60") [flags 0x2]  <var_decl 0x7efc55129360 *.LC60>)) "errors.c":69 -1
      (nil))
 (jump_insn 620 619 621 205 (set (pc)
         (label_ref 765)) "errors.c":69 -1
@@ -2451,7 +2451,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 622 621 623 206 44 (nil) [1 uses])
 (note 623 622 624 206 [bb 206] NOTE_INSN_BASIC_BLOCK)
 (insn 624 623 625 206 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC61") [flags 0x2]  <var_decl 0x7f68b57363f0 *.LC61>)) "errors.c":70 -1
+        (symbol_ref/f:DI ("*.LC61") [flags 0x2]  <var_decl 0x7efc551293f0 *.LC61>)) "errors.c":70 -1
      (nil))
 (jump_insn 625 624 626 206 (set (pc)
         (label_ref 765)) "errors.c":70 -1
@@ -2461,7 +2461,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 627 626 628 207 40 (nil) [1 uses])
 (note 628 627 629 207 [bb 207] NOTE_INSN_BASIC_BLOCK)
 (insn 629 628 630 207 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC62") [flags 0x2]  <var_decl 0x7f68b5736480 *.LC62>)) "errors.c":71 -1
+        (symbol_ref/f:DI ("*.LC62") [flags 0x2]  <var_decl 0x7efc55129480 *.LC62>)) "errors.c":71 -1
      (nil))
 (jump_insn 630 629 631 207 (set (pc)
         (label_ref 765)) "errors.c":71 -1
@@ -2471,7 +2471,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 632 631 633 208 38 (nil) [1 uses])
 (note 633 632 634 208 [bb 208] NOTE_INSN_BASIC_BLOCK)
 (insn 634 633 635 208 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC63") [flags 0x2]  <var_decl 0x7f68b5736510 *.LC63>)) "errors.c":72 -1
+        (symbol_ref/f:DI ("*.LC63") [flags 0x2]  <var_decl 0x7efc55129510 *.LC63>)) "errors.c":72 -1
      (nil))
 (jump_insn 635 634 636 208 (set (pc)
         (label_ref 765)) "errors.c":72 -1
@@ -2481,7 +2481,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 637 636 638 209 39 (nil) [1 uses])
 (note 638 637 639 209 [bb 209] NOTE_INSN_BASIC_BLOCK)
 (insn 639 638 640 209 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC64") [flags 0x2]  <var_decl 0x7f68b57365a0 *.LC64>)) "errors.c":73 -1
+        (symbol_ref/f:DI ("*.LC64") [flags 0x2]  <var_decl 0x7efc551295a0 *.LC64>)) "errors.c":73 -1
      (nil))
 (jump_insn 640 639 641 209 (set (pc)
         (label_ref 765)) "errors.c":73 -1
@@ -2491,7 +2491,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 642 641 643 210 5 (nil) [1 uses])
 (note 643 642 644 210 [bb 210] NOTE_INSN_BASIC_BLOCK)
 (insn 644 643 645 210 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC65") [flags 0x2]  <var_decl 0x7f68b5736630 *.LC65>)) "errors.c":74 -1
+        (symbol_ref/f:DI ("*.LC65") [flags 0x2]  <var_decl 0x7efc55129630 *.LC65>)) "errors.c":74 -1
      (nil))
 (jump_insn 645 644 646 210 (set (pc)
         (label_ref 765)) "errors.c":74 -1
@@ -2501,7 +2501,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 647 646 648 211 33 (nil) [1 uses])
 (note 648 647 649 211 [bb 211] NOTE_INSN_BASIC_BLOCK)
 (insn 649 648 650 211 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC66") [flags 0x2]  <var_decl 0x7f68b57366c0 *.LC66>)) "errors.c":75 -1
+        (symbol_ref/f:DI ("*.LC66") [flags 0x2]  <var_decl 0x7efc551296c0 *.LC66>)) "errors.c":75 -1
      (nil))
 (jump_insn 650 649 651 211 (set (pc)
         (label_ref 765)) "errors.c":75 -1
@@ -2511,7 +2511,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 652 651 653 212 32 (nil) [1 uses])
 (note 653 652 654 212 [bb 212] NOTE_INSN_BASIC_BLOCK)
 (insn 654 653 655 212 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC67") [flags 0x2]  <var_decl 0x7f68b5736750 *.LC67>)) "errors.c":76 -1
+        (symbol_ref/f:DI ("*.LC67") [flags 0x2]  <var_decl 0x7efc55129750 *.LC67>)) "errors.c":76 -1
      (nil))
 (jump_insn 655 654 656 212 (set (pc)
         (label_ref 765)) "errors.c":76 -1
@@ -2521,7 +2521,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 657 656 658 213 28 (nil) [1 uses])
 (note 658 657 659 213 [bb 213] NOTE_INSN_BASIC_BLOCK)
 (insn 659 658 660 213 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC68") [flags 0x2]  <var_decl 0x7f68b57367e0 *.LC68>)) "errors.c":77 -1
+        (symbol_ref/f:DI ("*.LC68") [flags 0x2]  <var_decl 0x7efc551297e0 *.LC68>)) "errors.c":77 -1
      (nil))
 (jump_insn 660 659 661 213 (set (pc)
         (label_ref 765)) "errors.c":77 -1
@@ -2531,7 +2531,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 662 661 663 214 31 (nil) [1 uses])
 (note 663 662 664 214 [bb 214] NOTE_INSN_BASIC_BLOCK)
 (insn 664 663 665 214 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC69") [flags 0x2]  <var_decl 0x7f68b5736870 *.LC69>)) "errors.c":78 -1
+        (symbol_ref/f:DI ("*.LC69") [flags 0x2]  <var_decl 0x7efc55129870 *.LC69>)) "errors.c":78 -1
      (nil))
 (jump_insn 665 664 666 214 (set (pc)
         (label_ref 765)) "errors.c":78 -1
@@ -2541,7 +2541,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 667 666 668 215 30 (nil) [1 uses])
 (note 668 667 669 215 [bb 215] NOTE_INSN_BASIC_BLOCK)
 (insn 669 668 670 215 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC70") [flags 0x2]  <var_decl 0x7f68b5736900 *.LC70>)) "errors.c":79 -1
+        (symbol_ref/f:DI ("*.LC70") [flags 0x2]  <var_decl 0x7efc55129900 *.LC70>)) "errors.c":79 -1
      (nil))
 (jump_insn 670 669 671 215 (set (pc)
         (label_ref 765)) "errors.c":79 -1
@@ -2551,7 +2551,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 672 671 673 216 22 (nil) [1 uses])
 (note 673 672 674 216 [bb 216] NOTE_INSN_BASIC_BLOCK)
 (insn 674 673 675 216 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC71") [flags 0x2]  <var_decl 0x7f68b5736990 *.LC71>)) "errors.c":80 -1
+        (symbol_ref/f:DI ("*.LC71") [flags 0x2]  <var_decl 0x7efc55129990 *.LC71>)) "errors.c":80 -1
      (nil))
 (jump_insn 675 674 676 216 (set (pc)
         (label_ref 765)) "errors.c":80 -1
@@ -2561,7 +2561,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 677 676 678 217 27 (nil) [1 uses])
 (note 678 677 679 217 [bb 217] NOTE_INSN_BASIC_BLOCK)
 (insn 679 678 680 217 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC72") [flags 0x2]  <var_decl 0x7f68b5736a20 *.LC72>)) "errors.c":81 -1
+        (symbol_ref/f:DI ("*.LC72") [flags 0x2]  <var_decl 0x7efc55129a20 *.LC72>)) "errors.c":81 -1
      (nil))
 (jump_insn 680 679 681 217 (set (pc)
         (label_ref 765)) "errors.c":81 -1
@@ -2571,7 +2571,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 682 681 683 218 26 (nil) [1 uses])
 (note 683 682 684 218 [bb 218] NOTE_INSN_BASIC_BLOCK)
 (insn 684 683 685 218 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC73") [flags 0x2]  <var_decl 0x7f68b5736ab0 *.LC73>)) "errors.c":82 -1
+        (symbol_ref/f:DI ("*.LC73") [flags 0x2]  <var_decl 0x7efc55129ab0 *.LC73>)) "errors.c":82 -1
      (nil))
 (jump_insn 685 684 686 218 (set (pc)
         (label_ref 765)) "errors.c":82 -1
@@ -2581,7 +2581,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 687 686 688 219 20 (nil) [1 uses])
 (note 688 687 689 219 [bb 219] NOTE_INSN_BASIC_BLOCK)
 (insn 689 688 690 219 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC74") [flags 0x2]  <var_decl 0x7f68b5736b40 *.LC74>)) "errors.c":83 -1
+        (symbol_ref/f:DI ("*.LC74") [flags 0x2]  <var_decl 0x7efc55129b40 *.LC74>)) "errors.c":83 -1
      (nil))
 (jump_insn 690 689 691 219 (set (pc)
         (label_ref 765)) "errors.c":83 -1
@@ -2591,7 +2591,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 692 691 693 220 21 (nil) [1 uses])
 (note 693 692 694 220 [bb 220] NOTE_INSN_BASIC_BLOCK)
 (insn 694 693 695 220 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC75") [flags 0x2]  <var_decl 0x7f68b5736bd0 *.LC75>)) "errors.c":84 -1
+        (symbol_ref/f:DI ("*.LC75") [flags 0x2]  <var_decl 0x7efc55129bd0 *.LC75>)) "errors.c":84 -1
      (nil))
 (jump_insn 695 694 696 220 (set (pc)
         (label_ref 765)) "errors.c":84 -1
@@ -2601,7 +2601,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 697 696 698 221 41 (nil) [1 uses])
 (note 698 697 699 221 [bb 221] NOTE_INSN_BASIC_BLOCK)
 (insn 699 698 700 221 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC76") [flags 0x2]  <var_decl 0x7f68b5736c60 *.LC76>)) "errors.c":85 -1
+        (symbol_ref/f:DI ("*.LC76") [flags 0x2]  <var_decl 0x7efc55129c60 *.LC76>)) "errors.c":85 -1
      (nil))
 (jump_insn 700 699 701 221 (set (pc)
         (label_ref 765)) "errors.c":85 -1
@@ -2611,7 +2611,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 702 701 703 222 24 (nil) [1 uses])
 (note 703 702 704 222 [bb 222] NOTE_INSN_BASIC_BLOCK)
 (insn 704 703 705 222 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC77") [flags 0x2]  <var_decl 0x7f68b5736cf0 *.LC77>)) "errors.c":86 -1
+        (symbol_ref/f:DI ("*.LC77") [flags 0x2]  <var_decl 0x7efc55129cf0 *.LC77>)) "errors.c":86 -1
      (nil))
 (jump_insn 705 704 706 222 (set (pc)
         (label_ref 765)) "errors.c":86 -1
@@ -2621,7 +2621,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 707 706 708 223 25 (nil) [1 uses])
 (note 708 707 709 223 [bb 223] NOTE_INSN_BASIC_BLOCK)
 (insn 709 708 710 223 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC78") [flags 0x2]  <var_decl 0x7f68b5736d80 *.LC78>)) "errors.c":87 -1
+        (symbol_ref/f:DI ("*.LC78") [flags 0x2]  <var_decl 0x7efc55129d80 *.LC78>)) "errors.c":87 -1
      (nil))
 (jump_insn 710 709 711 223 (set (pc)
         (label_ref 765)) "errors.c":87 -1
@@ -2631,7 +2631,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 712 711 713 224 7 (nil) [1 uses])
 (note 713 712 714 224 [bb 224] NOTE_INSN_BASIC_BLOCK)
 (insn 714 713 715 224 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC79") [flags 0x2]  <var_decl 0x7f68b5736e10 *.LC79>)) "errors.c":88 -1
+        (symbol_ref/f:DI ("*.LC79") [flags 0x2]  <var_decl 0x7efc55129e10 *.LC79>)) "errors.c":88 -1
      (nil))
 (jump_insn 715 714 716 224 (set (pc)
         (label_ref 765)) "errors.c":88 -1
@@ -2641,7 +2641,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 717 716 718 225 16 (nil) [1 uses])
 (note 718 717 719 225 [bb 225] NOTE_INSN_BASIC_BLOCK)
 (insn 719 718 720 225 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC80") [flags 0x2]  <var_decl 0x7f68b5736ea0 *.LC80>)) "errors.c":89 -1
+        (symbol_ref/f:DI ("*.LC80") [flags 0x2]  <var_decl 0x7efc55129ea0 *.LC80>)) "errors.c":89 -1
      (nil))
 (jump_insn 720 719 721 225 (set (pc)
         (label_ref 765)) "errors.c":89 -1
@@ -2651,7 +2651,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 722 721 723 226 19 (nil) [1 uses])
 (note 723 722 724 226 [bb 226] NOTE_INSN_BASIC_BLOCK)
 (insn 724 723 725 226 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC81") [flags 0x2]  <var_decl 0x7f68b5736f30 *.LC81>)) "errors.c":90 -1
+        (symbol_ref/f:DI ("*.LC81") [flags 0x2]  <var_decl 0x7efc55129f30 *.LC81>)) "errors.c":90 -1
      (nil))
 (jump_insn 725 724 726 226 (set (pc)
         (label_ref 765)) "errors.c":90 -1
@@ -2661,7 +2661,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 727 726 728 227 18 (nil) [1 uses])
 (note 728 727 729 227 [bb 227] NOTE_INSN_BASIC_BLOCK)
 (insn 729 728 730 227 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC82") [flags 0x2]  <var_decl 0x7f68b573b000 *.LC82>)) "errors.c":91 -1
+        (symbol_ref/f:DI ("*.LC82") [flags 0x2]  <var_decl 0x7efc5512e000 *.LC82>)) "errors.c":91 -1
      (nil))
 (jump_insn 730 729 731 227 (set (pc)
         (label_ref 765)) "errors.c":91 -1
@@ -2671,7 +2671,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 732 731 733 228 9 (nil) [1 uses])
 (note 733 732 734 228 [bb 228] NOTE_INSN_BASIC_BLOCK)
 (insn 734 733 735 228 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC83") [flags 0x2]  <var_decl 0x7f68b573b090 *.LC83>)) "errors.c":92 -1
+        (symbol_ref/f:DI ("*.LC83") [flags 0x2]  <var_decl 0x7efc5512e090 *.LC83>)) "errors.c":92 -1
      (nil))
 (jump_insn 735 734 736 228 (set (pc)
         (label_ref 765)) "errors.c":92 -1
@@ -2681,7 +2681,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 737 736 738 229 36 (nil) [1 uses])
 (note 738 737 739 229 [bb 229] NOTE_INSN_BASIC_BLOCK)
 (insn 739 738 740 229 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC84") [flags 0x2]  <var_decl 0x7f68b573b120 *.LC84>)) "errors.c":93 -1
+        (symbol_ref/f:DI ("*.LC84") [flags 0x2]  <var_decl 0x7efc5512e120 *.LC84>)) "errors.c":93 -1
      (nil))
 (jump_insn 740 739 741 229 (set (pc)
         (label_ref 765)) "errors.c":93 -1
@@ -2691,7 +2691,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 742 741 743 230 15 (nil) [1 uses])
 (note 743 742 744 230 [bb 230] NOTE_INSN_BASIC_BLOCK)
 (insn 744 743 745 230 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC85") [flags 0x2]  <var_decl 0x7f68b573b1b0 *.LC85>)) "errors.c":94 -1
+        (symbol_ref/f:DI ("*.LC85") [flags 0x2]  <var_decl 0x7efc5512e1b0 *.LC85>)) "errors.c":94 -1
      (nil))
 (jump_insn 745 744 746 230 (set (pc)
         (label_ref 765)) "errors.c":94 -1
@@ -2701,7 +2701,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 747 746 748 231 14 (nil) [1 uses])
 (note 748 747 749 231 [bb 231] NOTE_INSN_BASIC_BLOCK)
 (insn 749 748 750 231 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC86") [flags 0x2]  <var_decl 0x7f68b573b240 *.LC86>)) "errors.c":95 -1
+        (symbol_ref/f:DI ("*.LC86") [flags 0x2]  <var_decl 0x7efc5512e240 *.LC86>)) "errors.c":95 -1
      (nil))
 (jump_insn 750 749 751 231 (set (pc)
         (label_ref 765)) "errors.c":95 -1
@@ -2711,7 +2711,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 752 751 753 232 11 (nil) [1 uses])
 (note 753 752 754 232 [bb 232] NOTE_INSN_BASIC_BLOCK)
 (insn 754 753 755 232 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC87") [flags 0x2]  <var_decl 0x7f68b573b2d0 *.LC87>)) "errors.c":96 -1
+        (symbol_ref/f:DI ("*.LC87") [flags 0x2]  <var_decl 0x7efc5512e2d0 *.LC87>)) "errors.c":96 -1
      (nil))
 (jump_insn 755 754 756 232 (set (pc)
         (label_ref 765)) "errors.c":96 -1
@@ -2721,7 +2721,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 757 756 758 233 13 (nil) [1 uses])
 (note 758 757 759 233 [bb 233] NOTE_INSN_BASIC_BLOCK)
 (insn 759 758 760 233 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC88") [flags 0x2]  <var_decl 0x7f68b573b360 *.LC88>)) "errors.c":97 -1
+        (symbol_ref/f:DI ("*.LC88") [flags 0x2]  <var_decl 0x7efc5512e360 *.LC88>)) "errors.c":97 -1
      (nil))
 (jump_insn 760 759 761 233 (set (pc)
         (label_ref 765)) "errors.c":97 -1
@@ -2731,7 +2731,7 @@ Forwarding edge 143->144 to 234 failed.
 (code_label 762 761 763 234 2 (nil) [27 uses])
 (note 763 762 764 234 [bb 234] NOTE_INSN_BASIC_BLOCK)
 (insn 764 763 765 234 (set (reg/f:DI 87 [ _1 ])
-        (symbol_ref/f:DI ("*.LC89") [flags 0x2]  <var_decl 0x7f68b573b3f0 *.LC89>)) "errors.c":98 -1
+        (symbol_ref/f:DI ("*.LC89") [flags 0x2]  <var_decl 0x7efc5512e3f0 *.LC89>)) "errors.c":98 -1
      (nil))
 (code_label 765 764 766 235 118 (nil) [89 uses])
 (note 766 765 767 235 [bb 235] NOTE_INSN_BASIC_BLOCK)
@@ -2809,7 +2809,7 @@ try_optimize_cfg iteration 2
         (reg:SI 90)) "errors.c":107 -1
      (nil))
 (call_insn 12 11 13 4 (set (reg:DI 0 ax)
-        (call (mem:QI (symbol_ref:DI ("clGetErrorString") [flags 0x3]  <function_decl 0x7f68b5bd1d00 clGetErrorString>) [0 clGetErrorString S1 A8])
+        (call (mem:QI (symbol_ref:DI ("clGetErrorString") [flags 0x3]  <function_decl 0x7efc555c4d00 clGetErrorString>) [0 clGetErrorString S1 A8])
             (const_int 0 [0]))) "errors.c":107 -1
      (nil)
     (expr_list:SI (use (reg:SI 5 di))
@@ -2835,13 +2835,13 @@ try_optimize_cfg iteration 2
         (reg:SI 92)) "errors.c":107 -1
      (nil))
 (insn 19 18 20 4 (set (reg:DI 5 di)
-        (symbol_ref/f:DI ("*.LC90") [flags 0x2]  <var_decl 0x7f68b5759c60 *.LC90>)) "errors.c":107 -1
+        (symbol_ref/f:DI ("*.LC90") [flags 0x2]  <var_decl 0x7efc5514cc60 *.LC90>)) "errors.c":107 -1
      (nil))
 (insn 20 19 21 4 (set (reg:QI 0 ax)
         (const_int 0 [0])) "errors.c":107 -1
      (nil))
 (call_insn 21 20 22 4 (set (reg:SI 0 ax)
-        (call (mem:QI (symbol_ref:DI ("printf") [flags 0x41]  <function_decl 0x7f68b5acef00 printf>) [0 __builtin_printf S1 A8])
+        (call (mem:QI (symbol_ref:DI ("printf") [flags 0x41]  <function_decl 0x7efc554c1f00 printf>) [0 __builtin_printf S1 A8])
             (const_int 0 [0]))) "errors.c":107 -1
      (nil)
     (expr_list (use (reg:QI 0 ax))
