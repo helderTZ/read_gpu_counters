@@ -18,7 +18,11 @@
 
 
 
-char kernel_choice[50];
+char kernel_choice[50] = "";
+int number_available_kernels = 6;
+char *available_kernels[] = {"single_flop", "flops_light", "flops_max", "load_store", "ternary", "custom"};
+
+
 
 
 /* dumpBinaries
@@ -73,6 +77,10 @@ void dumpBinaries(cl_program program) {
 }
 
 
+
+
+
+
 int main(int argc, char** argv) {
 
 	int i;
@@ -96,6 +104,24 @@ int main(int argc, char** argv) {
 			if (strcmp(argv[i], "-c")==0 || strcmp(argv[i], "--choose")==0)
 				strcpy(kernel_choice, argv[i+1]);
 		}
+	}
+
+	// validate kernel chosen
+	if(strcmp(kernel_choice, "") == 0) {
+		printf("No kernel selectrd, defaulting to kernel \"flops_light\"\n");
+		strcpy(kernel_choice, "flops_light");
+	}
+
+	int match = 0;
+	for (int i = 0; i < number_available_kernels; i++) {
+		if (strcmp(kernel_choice, available_kernels[i]) == 0) match++;
+	}
+	if (match == 0) {
+		printf(KRED "Chosen kernel not available. Choose from:\n" KNRM);
+		for (int i = 0; i < number_available_kernels; i++)
+			printf("\t%s\n", available_kernels[i]);
+		printf("Defaulting to kernel \"flops_light\"\n");
+		strcpy(kernel_choice, "flops_light");
 	}
 
 
@@ -130,10 +156,10 @@ int main(int argc, char** argv) {
 	A = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(A==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
 	B = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(B==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
 	C = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(C==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
-	D = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(A==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
-	E = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(B==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
-	F = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(C==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
-	G = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(C==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
+	D = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(D==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
+	E = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(E==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
+	F = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(F==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
+	G = (float*)malloc(sizeof(float) * NUM_TOTAL_THREADS_GT2); if(G==NULL) { printf(KRED "Error allocating!\n" KNRM); exit(1); }
 	for(i=0; i<NUM_TOTAL_THREADS_GT2; i++) {
 		A[i] = 2.0;
 		B[i] = 2.0;
@@ -145,7 +171,10 @@ int main(int argc, char** argv) {
 	}
 	
 	// get kernel code from file
-	f_source = fopen("kernel.cl", "r");
+	if (strcmp(kernel_choice, "custom") == 0)
+		f_source = fopen("custom_kernel.cl", "r");
+	else
+		f_source = fopen("kernel.cl", "r");
 	fseek(f_source, 0L, SEEK_END);
 	source_size = (size_t) ftell(f_source);
 	fseek(f_source, 0L, SEEK_SET);
@@ -179,10 +208,10 @@ int main(int argc, char** argv) {
 	ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 	ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 	ocl_ret = clEnqueueWriteBuffer(command_queue, c, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), C, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
-	//ocl_ret = clEnqueueWriteBuffer(command_queue, d, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), D, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
-	//ocl_ret = clEnqueueWriteBuffer(command_queue, e, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), E, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
-	//ocl_ret = clEnqueueWriteBuffer(command_queue, f, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), F, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
-	//ocl_ret = clEnqueueWriteBuffer(command_queue, g, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), G, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+	ocl_ret = clEnqueueWriteBuffer(command_queue, d, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), D, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+	ocl_ret = clEnqueueWriteBuffer(command_queue, e, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), E, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+	ocl_ret = clEnqueueWriteBuffer(command_queue, f, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), F, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+	ocl_ret = clEnqueueWriteBuffer(command_queue, g, CL_TRUE, 0, NUM_TOTAL_THREADS_GT2*sizeof(float), G, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 	
 	program = clCreateProgramWithSource(context, 1, (const char**)&source_str, (const size_t*)&source_size, &ocl_ret); 	clCheckError(ocl_ret, __LINE__);
 	ocl_ret = clBuildProgram(program, 1, &device, options, NULL, NULL); 												clCheckError(ocl_ret, __LINE__);
@@ -197,47 +226,36 @@ int main(int argc, char** argv) {
 	free(build_log);
 
 
-	// get binaries (assembly)
-	//dumpBinaries(program);
-	//ocl_ret = clGetProgramInfo(program, CL_PROGRAM_NUM_DEVICES, sizeof(cl_uint), &num_devices, NULL); clCheckError(ocl_ret, __LINE__);
-	//printf("num_devices = %d\n", num_devices);
-	//devices = malloc(num_devices * sizeof(cl_device_id));
-	//ocl_ret = clGetProgramInfo(program, CL_PROGRAM_DEVICES, sizeof(cl_device_id) * num_devices, devices, NULL); clCheckError(ocl_ret, __LINE__);
-	//binaries_size = malloc(num_devices*sizeof(size_t));
-	//ocl_ret = clGetProgramInfo(program, CL_PROGRAM_BINARY_SIZES, num_devices*sizeof(size_t), binaries_size, NULL);	clCheckError(ocl_ret, __LINE__);
-	//for(j = 0; j < (int)num_devices; j++) printf("binaries_size[%d] = %d B\n", j, binaries_size[j]);
-	//binaries_str = malloc(num_devices*sizeof(unsigned char*));
-	//for(j = 0; j < (int)num_devices; j++) {
-	//	binaries_str[j] = malloc(binaries_size[j] * sizeof(unsigned char));
-	//}
-	//ocl_ret = clGetProgramInfo(program, CL_PROGRAM_BINARIES, num_devices * sizeof(unsigned char*), binaries_str, NULL);		clCheckError(ocl_ret, __LINE__);
-	//char filename[50];
-	//for(j = 0; j < (int)num_devices; j++) {
-	//	sprintf(filename, "kernel_binary_dev%d.s", j);
-	//	f_binaries = fopen(filename, "w");
-	//	fwrite(binaries_str[j], 1, binaries_size[j], f_binaries);
-	//	fclose(f_binaries);
-	//}
-	//free(binaries_size);
-	//for(j = 0; j < (int)num_devices; j++) {
-	//	free(binaries_str[j]);
-	//}
-	//free(binaries_str);
-	//free(devices);
+	kernel = clCreateKernel(program, kernel_choice, &ocl_ret); 		clCheckError(ocl_ret, __LINE__);
+	if (strcmp(kernel_choice, "single_flop") == 0) {
+		ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+	}
+	if (strcmp(kernel_choice, "flops_light") == 0) {
+		ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*)&c); clCheckError(ocl_ret, __LINE__);
+	} else if (strcmp(kernel_choice, "flops_max") == 0) {
+		ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*)&c); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), (void*)&d); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), (void*)&e); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 5, sizeof(cl_mem), (void*)&f); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 6, sizeof(cl_mem), (void*)&g); clCheckError(ocl_ret, __LINE__);
+	} else if (strcmp(kernel_choice, "ternary") == 0) {
+		ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+	} else if (strcmp(kernel_choice, "custom") == 0) {
+		ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+		ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+	}
 
 
-	//kernel = clCreateKernel(program, "flops_max", &ocl_ret); 		clCheckError(ocl_ret, __LINE__);
-	kernel = clCreateKernel(program, "flops_light", &ocl_ret); 		clCheckError(ocl_ret, __LINE__);
-	ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
-	ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
-	ocl_ret = clSetKernelArg(kernel, 2, sizeof(cl_mem), (void*)&c); clCheckError(ocl_ret, __LINE__);
-	//ocl_ret = clSetKernelArg(kernel, 3, sizeof(cl_mem), (void*)&d); clCheckError(ocl_ret, __LINE__);
-	//ocl_ret = clSetKernelArg(kernel, 4, sizeof(cl_mem), (void*)&e); clCheckError(ocl_ret, __LINE__);
-	//ocl_ret = clSetKernelArg(kernel, 5, sizeof(cl_mem), (void*)&f); clCheckError(ocl_ret, __LINE__);
-	//ocl_ret = clSetKernelArg(kernel, 6, sizeof(cl_mem), (void*)&g); clCheckError(ocl_ret, __LINE__);
-
-	global = NUM_TOTAL_THREADS_GT2*10;
-	local = NUM_THREADS_PER_EU;
+	//global = NUM_TOTAL_EUS_GT2;
+	global = 1;
+	local = 1;
+	//global = NUM_TOTAL_THREADS_GT2*10;
+	//local = NUM_THREADS_PER_EU;
 	
 
 
@@ -289,11 +307,6 @@ int main(int argc, char** argv) {
 
 
 
-	// get gpu max frequency
-	//char buf[512];
-	//snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_boost_freq_mhz", card);
-	//ret = read_u64_file(buf, &gt_max_freq_mhz);
-	//printf("GPU max frequency (card %d): %d MHz\n", card, gt_max_freq_mhz);
 
 	render_copy = igt_get_render_copyfunc(devid); // this should be replaced by the opencl kernel
 
@@ -301,13 +314,15 @@ int main(int argc, char** argv) {
 	//test_whitelisted_registers_userspace_config();
 
 
-	write_to_flexible_eu_registers();
-
+	//write_to_flexible_eu_registers();
 
 
 	// read counters, do work, read counters again and print deltas
 	for(j = 0; j < repeat; j++) {
-		test_counters_with_opencl(dump);
+		//test_counters_with_opencl(dump);
+		//read_counters_with_mmio();
+        //test_counters_with_mmap();
+        test_counters_with_lib();
 	}
 
 
@@ -325,9 +340,17 @@ int main(int argc, char** argv) {
 	clReleaseMemObject(a);
 	clReleaseMemObject(b);
 	clReleaseMemObject(c);
+	clReleaseMemObject(d);
+	clReleaseMemObject(e);
+	clReleaseMemObject(f);
+	clReleaseMemObject(g);
 	free(source_str);
 	free(A);
 	free(B);
 	free(C);
+	free(D);
+	free(E);
+	free(F);
+	free(G);
 
 }

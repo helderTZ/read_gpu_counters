@@ -525,14 +525,14 @@ bool init_sys_info(void) {
 	timestamp_frequency = 12500000;
 
 	// debug
-	printf("IS_HASWELL:    %s\n", IS_HASWELL(devid) ? "true" : "false");
-	printf("IS_BROADWELL:  %s\n", IS_BROADWELL(devid) ? "true" : "false");
-	printf("IS_CHERRYVIEW: %s\n", IS_CHERRYVIEW(devid) ? "true" : "false");
-	printf("IS_SKYLAKE:    %s\n", IS_SKYLAKE(devid) ? "true" : "false");
-	printf("IS_BROXTON:    %s\n", IS_BROXTON(devid) ? "true" : "false");
-	printf("IS_KABYLAKE:   %s\n", IS_KABYLAKE(devid) ? "true" : "false");
-	printf("IS_GEMINILAKE: %s\n", IS_GEMINILAKE(devid) ? "true" : "false");
-	printf("IS_COFFEELAKE: %s\n", IS_COFFEELAKE(devid) ? "true" : "false");
+	//printf("IS_HASWELL:    %s\n", IS_HASWELL(devid) ? "true" : "false");
+	//printf("IS_BROADWELL:  %s\n", IS_BROADWELL(devid) ? "true" : "false");
+	//printf("IS_CHERRYVIEW: %s\n", IS_CHERRYVIEW(devid) ? "true" : "false");
+	//printf("IS_SKYLAKE:    %s\n", IS_SKYLAKE(devid) ? "true" : "false");
+	//printf("IS_BROXTON:    %s\n", IS_BROXTON(devid) ? "true" : "false");
+	//printf("IS_KABYLAKE:   %s\n", IS_KABYLAKE(devid) ? "true" : "false");
+	//printf("IS_GEMINILAKE: %s\n", IS_GEMINILAKE(devid) ? "true" : "false");
+	//printf("IS_COFFEELAKE: %s\n", IS_COFFEELAKE(devid) ? "true" : "false");
 
 	if (IS_HASWELL(devid)) {
 		/* We don't have a TestOa metric set for Haswell so use
@@ -790,7 +790,16 @@ void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long lon
 
 
 
+
+
 void test_counters_with_opencl(int dump) {
+
+
+
+	// ========================================================== //
+	// ====================== PRELIMINARIES ===================== //
+	// ========================================================== //
+
 
 	uint64_t properties[] = {
 
@@ -854,29 +863,46 @@ void test_counters_with_opencl(int dump) {
 
 
 
+    printf("pci_dev->regions[mmio_bar].base_addr = %x\n", intel_get_pci_device()->regions[0].base_addr);
 
 
-
-	// ==================================//
+	// ========================================================== //
+	// =============== CONFIGURE FLEXIBLE COUNTERS ============== //
+	// ========================================================== //
 
 	// count flops
 	enum increment_event_filter inc_event = EU_FPU0_FPU1_PIPELINES_CONCURRENTLY_ACTIVE;
 	enum coarse_event_filter coarse_event = NO_COARSE_FILTER;
 	enum fine_event_filter fine_event = NO_FINE_FILTER;
+	// count movs
+	enum increment_event_filter inc_event2 = EU_SEND_PIPELINE_ACTIVE;
+	enum coarse_event_filter coarse_event2 = NO_COARSE_FILTER;
+	enum fine_event_filter fine_event2 = CYCLES_WHERE_MOV_INSTRUCTIONS_ARE_BEING_EXECUTED;
+	// eu0 row0
+	//enum increment_event_filter inc_event = EU_FPU0_FPU1_PIPELINES_CONCURRENTLY_ACTIVE;
+	//enum coarse_event_filter coarse_event = ROW_EQUALS_0;
+	//enum fine_event_filter fine_event = EU_NUM_EQUALS_0;
 
 	// setup dword to write to register
 	uint32_t dword = 0;
 	dword = dword | (uint32_t) inc_event;
 	dword = dword | ( (uint32_t) coarse_event << 4);
 	dword = dword | ( (uint32_t) fine_event << 8);
+	uint32_t dword2 = 0;
+	dword2 = dword2 | (uint32_t) inc_event2;
+	dword2 = dword2 | ( (uint32_t) coarse_event2 << 4);
+	dword2 = dword2 | ( (uint32_t) fine_event2 << 8);
+
 
 	int err;
 	uint32_t reg_value;
 
-	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
+	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd);
+	if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
 
 	// write EU_PERF_CNT_CTL0
 	intel_register_write(0xE458, dword);
+	intel_register_write(0xE558, dword2);
 
 	// read
 	reg_value = intel_register_read(0xE458);
@@ -888,6 +914,147 @@ void test_counters_with_opencl(int dump) {
 
 
 
+	// read counters via mmio
+
+	uint32_t a_counter_32_adresses[4] = {0x2900, 0x2904, 0x2908, 0x292C};
+	uint32_t a_counters_40_low_addresses[32] = {0x2800, 0x2808, 0x2810, 0x2818, 0x2820, 0x2828, 0x2830,
+												0x2838, 0x2840, 0x2848, 0x2850, 0x2858, 0x2860, 0x2868,
+												0x2870, 0x2878, 0x2880, 0x2888, 0x2890, 0x2898, 0x28A0,
+												0x28A8, 0x28B0, 0x28B8, 0x28C0, 0x28C8, 0x28D0, 0x28D8,
+												0x28E0, 0x28E8, 0x28F0, 0x28F8};
+	uint32_t a_counters_40_high_addresses[32] = {0x2804, 0x280C, 0x2814, 0x281C, 0x2824, 0x282C, 0x2834,
+												 0x283C, 0x2844, 0x284C, 0x2854, 0x285C, 0x2864, 0x286C,
+												 0x2874, 0x287C, 0x2884, 0x288C, 0x2894, 0x289C, 0x28A4,
+												 0x28AC, 0x28B4, 0x28BC, 0x28C4, 0x28CC, 0x28D4, 0x28DC,
+												 0x28E0, 0x28EC, 0x28F4, 0x28FC};
+	uint32_t b_counters_addresses[8] = {0x2920, 0x2924, 0x2928, 0x292C, 0x2930, 0x2934, 0x2938, 0x293C};
+	uint32_t a_counters_32_offset = 64;
+
+	uint32_t a_counters_32_values_start[4] = {0};
+	uint32_t a_counters_40_low_values_start[32] = {0};
+	uint32_t a_counters_40_high_values_start[32] = {0};
+	uint64_t a_counters_40_values_start[32] = {0};
+	uint32_t b_counters_values_start[8] = {0};
+
+	uint32_t a_counters_32_values_end[4] = {0};
+	uint32_t a_counters_40_low_values_end[32] = {0};
+	uint32_t a_counters_40_high_values_end[32] = {0};
+	uint64_t a_counters_40_values_end[32] = {0};
+	uint32_t b_counters_values_end[8] = {0};
+
+	uint32_t a_counters_32_values_delta[4] = {0};
+	uint64_t a_counters_40_values_delta[32] = {0};
+	uint32_t b_counters_values_delta[8] = {0};
+
+	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd);
+	if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
+
+
+	intel_register_write(0xE458, 0);//dword);
+	intel_register_write(0xE558, 0);//dword2);
+
+
+	// read all counters
+	for (int i = 0; i < 32; i++) {
+		a_counters_40_low_values_start[i] = intel_register_read(a_counters_40_low_addresses[i]);
+		a_counters_40_high_values_start[i] = intel_register_read(a_counters_40_high_addresses[i]);
+	}
+	for (int i = 0; i < 4; i++) {
+		a_counters_32_values_start[i] = intel_register_read(a_counter_32_adresses[i]);
+	}
+	for (int i = 0; i < 8; i++) {
+		b_counters_values_start[i] = intel_register_read(b_counters_addresses[i]);
+	}
+
+	intel_register_write(0xE458, dword);
+	printf("0xE458 = %u\n", intel_register_read(0xE458));
+
+	// do work
+    ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
+    clFlush(command_queue);
+    clFinish(command_queue);
+
+	printf("0xE458 = %u\n", intel_register_read(0xE458));
+
+	// read all counters
+    for (int i = 0; i < 32; i++) {
+		a_counters_40_low_values_end[i] = intel_register_read(a_counters_40_low_addresses[i]);
+		a_counters_40_high_values_end[i] = intel_register_read(a_counters_40_high_addresses[i]);
+	}
+	for (int i = 0; i < 4; i++) {
+		a_counters_32_values_end[i] = intel_register_read(a_counter_32_adresses[i]);
+	}
+	for (int i = 0; i < 8; i++) {
+		b_counters_values_end[i] = intel_register_read(b_counters_addresses[i]);
+	}
+
+	
+	printf("0xE458 = %u\n", intel_register_read(0xE458));
+
+
+	for (int i = 0; i < 32; i++) {
+		a_counters_40_values_start[i] = ( (uint64_t) a_counters_40_high_values_start[i] << 32 ) | (uint64_t) a_counters_40_low_values_start[i];
+		a_counters_40_values_end[i] = ( (uint64_t) a_counters_40_high_values_end[i] << 32 ) | (uint64_t) a_counters_40_low_values_end[i];
+		a_counters_40_values_delta[i] = a_counters_40_values_end[i] - a_counters_40_values_start[i];
+	}
+	for (int i = 0; i < 4; i++) {
+		a_counters_32_values_delta[i] = a_counters_32_values_end[i] - a_counters_32_values_start[i];
+	}
+	for (int i = 0; i < 8; i++) {
+		b_counters_values_delta[i] = b_counters_values_end[i] - b_counters_values_start[i];
+	}
+
+
+	int last_index;
+
+	printf("before work, counters through mmio:\n");
+	for (int i = 0; i < 32; i++) {
+		printf("A%d: %s%u\n", i, (i>9) ? "" : " ", a_counters_40_values_start[i]);
+		last_index = i;
+	}
+	for (int i = 0; i < 4; i++) {
+		printf("A%d: %u\n", i+last_index, a_counters_32_values_start[i]);
+	}
+	for (int i = 0; i < 8; i++) {
+		printf("B%d: %u\n", i, b_counters_values_start[i]);		
+	}
+
+
+	printf("\nafter work, counters through mmio:\n");
+	for (int i = 0; i < 32; i++) {
+		printf("A%d: %s%u\n", i, (i>9) ? "" : " ", a_counters_40_values_end[i]);
+		last_index = i;
+	}
+	for (int i = 0; i < 4; i++) {
+		printf("A%d: %u\n", i+last_index, a_counters_32_values_end[i]);
+	}
+	for (int i = 0; i < 8; i++) {
+		printf("B%d: %u\n", i, b_counters_values_end[i]);		
+	}
+
+	printf("delta of counters\n");
+	for (int i = 0; i < 32; i++) {
+		printf("A%d: %s%u\n", i, (i>9) ? "" : " ", a_counters_40_values_delta[i]);
+		last_index = i;
+	}
+	for (int i = 0; i < 4; i++) {
+		printf("A%d: %u\n", i+last_index, a_counters_32_values_delta[i]);
+	}
+	for (int i = 0; i < 8; i++) {
+		printf("B%d: %u\n", i, b_counters_values_delta[i]);		
+	}
+
+
+	intel_register_access_fini();
+
+	printf("================================\n");
+
+
+
+
+	// ========================================================== //
+	// ====================== READ COUNTERS ===================== //
+	// ========================================================== //
 
 
 	emit_report_perf_count(batch,
@@ -939,8 +1106,9 @@ void test_counters_with_opencl(int dump) {
 	snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_cur_freq_mhz", card);
 	ret = read_u64_file(buf, &gpu_cur_freq);
 
+	printf("\n=================================================\n");
 	print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, dump);
-	printf("\n");
+	printf("=================================================\n");
 
 	//for(int i = 0; i < 256/64; i++) {
 	//	printf("===========================================================\n");
@@ -951,6 +1119,100 @@ void test_counters_with_opencl(int dump) {
 	//
 	//	printf("\n");
 	//}
+
+
+	/*
+
+
+	// ========================================================== //
+	// ================== prepare report card =================== //
+	// ========================================================== //
+
+	counters_info_t counters;
+	int i;
+
+	// mmio
+	for(i=0; i<4; i++) {
+		counters.mmio_a_counters_32_values_start[i] = a_counters_32_values_start[i];
+		counters.mmio_a_counters_32_values_end[i]   = a_counters_32_values_end[i];
+		counters.mmio_a_counters_32_values_delta[i] = a_counters_32_values_delta[i];
+	}
+	for(i=0; i<32; i++) {
+		counters.mmio_a_counters_40_values_start[i] = a_counters_40_values_start[i];
+		counters.mmio_a_counters_40_values_end[i]   = a_counters_40_values_end[i];
+		counters.mmio_a_counters_40_values_delta[i] = a_counters_40_values_delta[i];
+	}
+	for(i=0; i<8; i++) {
+		counters.mmio_b_counters_values_start[i] = b_counters_values_start[i];
+		counters.mmio_b_counters_values_end[i]   = b_counters_values_end[i];
+		counters.mmio_b_counters_values_delta[i] = b_counters_values_delta[i];
+	}
+
+	// mi_rpc
+	counters.mirpc_timestamp_start = report0_32[1];
+	counters.mirpc_timestamp_end   = report1_32[1];
+	counters.mirpc_timestamp_delta = report1_32[1] - report0_32[1];
+
+	counters.mirpc_gpu_ticks_start = read_report_ticks(report0_32, test_oa_format);
+	counters.mirpc_gpu_ticks_end   = read_report_ticks(report1_32, test_oa_format);
+	counters.mirpc_gpu_ticks_delta = counters.mirpc_gpu_ticks_end - counters.mirpc_gpu_ticks_start;
+
+	counters.mirpc_ctx_id_start = report0_32[2];
+	counters.mirpc_ctx_id_end   = report1_32[2];
+
+	gen8_read_report_clock_ratios(report0_32, &counters.mirpc_slice_clock_start, &counters.mirpc_unslice_clock_start);
+	gen8_read_report_clock_ratios(report1_32, &counters.mirpc_slice_clock_end, &counters.mirpc_unslice_clock_end);
+
+	strcpy(counters.mirpc_reason_start, gen8_read_report_reason(report0_32));
+	strcpy(counters.mirpc_reason_end, gen8_read_report_reason(report1_32));
+
+	int j;
+	for(j=0, i=0; j < get_oa_format(test_oa_format).n_a40; j++, i++) {
+		counters.mirpc_a_counters_40_values_start[i] = gen8_read_40bit_a_counter(report0_32, test_oa_format, j);
+		counters.mirpc_a_counters_40_values_end[i]   = gen8_read_40bit_a_counter(report1_32, test_oa_format, j);
+		counters.mirpc_a_counters_40_values_delta[i] = gen8_40bit_a_delta(counters.mirpc_a_counters_40_values_start[i], counters.mirpc_a_counters_40_values_end[i]);
+		if (undefined_a_counters[j]) continue;
+	}
+	for(j=0, i=0; j < get_oa_format(test_oa_format).n_a; j++, i++) {
+		counters.mirpc_a_counters_32_values_start[i] = *((uint32_t *) ( ((uint8_t *)report0_32) + get_oa_format(test_oa_format).a_off ));
+		counters.mirpc_a_counters_32_values_end[i]   = *((uint32_t *) ( ((uint8_t *)report1_32) + get_oa_format(test_oa_format).a_off ));
+		counters.mirpc_a_counters_32_values_delta[i] = counters.mirpc_a_counters_32_values_start[i] - counters.mirpc_a_counters_32_values_end[i];
+		int a_id = get_oa_format(test_oa_format).first_a + j;
+		if (undefined_a_counters[a_id]) continue;
+	}
+	for (j=0, i=0; j < get_oa_format(test_oa_format).n_b; j++, i++) {
+		counters.mirpc_b_counters_values_start[i] = *((uint32_t *) ( ((uint8_t *)report0_32) + get_oa_format(test_oa_format).b_off ));
+		counters.mirpc_b_counters_values_end[i]   = *((uint32_t *) ( ((uint8_t *)report1_32) + get_oa_format(test_oa_format).b_off ));
+		counters.mirpc_b_counters_values_delta[i] = counters.mirpc_b_counters_values_start[i] - counters.mirpc_b_counters_values_end[i];
+	}
+	for (j=0, i=0; j < get_oa_format(test_oa_format).n_c; j++, i++) {
+		counters.mirpc_c_counters_values_start[i] = *((uint32_t *) ( ((uint8_t *)report0_32) + get_oa_format(test_oa_format).c_off ));
+		counters.mirpc_c_counters_values_end[i]   = *((uint32_t *) ( ((uint8_t *)report1_32) + get_oa_format(test_oa_format).c_off ));
+		counters.mirpc_c_counters_values_delta[i] = counters.mirpc_c_counters_values_start[i] - counters.mirpc_c_counters_values_end[i];
+	}
+
+	// others
+
+	counters.cpu_ticks_start = cpu_ticks0;
+	counters.cpu_ticks_end   = cpu_ticks1;
+	counters.cpu_ticks_start = cpu_ticks1 - cpu_ticks0;
+
+	counters.gpu_clock_start = cpu_cur_freq;
+	counters.gpu_clock_end   = cpu_cur_freq;
+
+	counters.cpu_clock_start = gpu_cur_freq;
+	counters.cpu_clock_end   = gpu_cur_freq;
+
+	print_report_card(counters);
+
+
+	*/
+
+
+
+
+
+
 
 	for (int i = 0; i < ARRAY_SIZE(src); i++) {
 		drm_intel_bo_unreference(src[i].bo);
@@ -1047,6 +1309,10 @@ void i915_perf_remove_config(int fd, uint64_t config_id)
 	igt_assert_eq(igt_ioctl(fd, DRM_IOCTL_I915_PERF_REMOVE_CONFIG,
 				&config_id), 0);
 }
+
+
+
+
 
 
 
@@ -1173,6 +1439,12 @@ test_whitelisted_registers_userspace_config(void)
 
 
 
+
+
+
+
+
+
 void print_binary(int val, int len) {
 	
 	int i;
@@ -1186,6 +1458,10 @@ void print_binary(int val, int len) {
 	printf("0b%s\n", word);
 	free(word);
 }
+
+
+
+
 
 
 #define GGTT 0	// uses full ppgtt 64 bits, so this should be zero (?)
@@ -1395,6 +1671,10 @@ void write_to_flexible_eu_registers(void) {
 	dword = dword | (uint32_t) inc_event;
 	dword = dword | ( (uint32_t) coarse_event << 4);
 	dword = dword | ( (uint32_t) fine_event << 8);
+	//uint32_t dword = 0x7FFFFFFF;
+	//dword = dword | (uint32_t) ~inc_event;
+	//dword = dword | ( (uint32_t) ~coarse_event << 4);
+	//dword = dword | ( (uint32_t) ~fine_event << 8);
 
 	// print binary word for debug
 	printf("EU_PERF_CNT_CTL0: ");
@@ -1437,20 +1717,21 @@ void write_to_flexible_eu_registers(void) {
 	
 	// read EU_PERF_CNT_CTL0, should be 0
 	reg_value = intel_register_read(0xE458);
-	printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
+	//printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
 
 	// write EU_PERF_CNT_CTL0
 	intel_register_write(0xE458, dword);
 
 	// read again
 	reg_value = intel_register_read(0xE458);
-	printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
+	//printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
 
 	intel_register_access_fini();
 
+
 	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
 	reg_value = intel_register_read(0xE458);
-	printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
+	//printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
 	intel_register_access_fini();
 
 	// read free running counters
@@ -1521,9 +1802,9 @@ void write_to_flexible_eu_registers(void) {
 	reg_contents = send_mi_store_reg_mem(batch, reg_address, GGTT, PRED_ENABLE);
 
 
-	printf("EU_PERF_CNT_CTL0: ");
-	print_binary((int)reg_contents, 32);
-	printf("                = %u\n", reg_contents);
+	//printf("EU_PERF_CNT_CTL0: ");
+	//print_binary((int)reg_contents, 32);
+	//printf("                = %u\n", reg_contents);
 
 
 
@@ -1542,4 +1823,1389 @@ void write_to_flexible_eu_registers(void) {
 
 
 }
+
+
+
+
+
+
+
+uint32_t create_filtering_word(enum increment_event_filter increment,
+								enum coarse_event_filter coarse,
+								enum fine_event_filter fine) {
+
+	uint32_t dword = 0;
+	dword = dword | (uint32_t) increment;
+	dword = dword | ( (uint32_t) coarse << 4);
+	dword = dword | ( (uint32_t) fine << 8);
+
+	return dword;
+
+}
+
+
+
+
+
+
+
+void read_counters_with_mmio() {
+
+	// apparently this is required
+	uint64_t properties[] = {
+		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
+		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
+		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
+		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
+	};
+
+	struct drm_i915_perf_open_param param = {
+		.flags = I915_PERF_FLAG_FD_CLOEXEC,
+		.num_properties = sizeof(properties) / 16,
+		.properties_ptr = (uintptr_t) properties
+	};
+
+	drm_intel_bufmgr *bufmgr;
+	struct intel_batchbuffer *batch;
+	drm_intel_bo *bo;
+	drm_intel_context *context0;
+	uint32_t ctx_id = 0;
+	int width = 800;
+	int height = 600;
+	int ret;
+
+	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
+	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
+
+	//for(int i = 0; i < ARRAY_SIZE(src); i++) {
+	//	scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
+	//	scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
+	//}
+
+	batch = intel_batchbuffer_alloc(bufmgr, devid);
+
+	context0 = drm_intel_gem_context_create(bufmgr);
+	//context1 = drm_intel_gem_context_create(bufmgr);
+
+	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
+	//
+	properties[1] = ctx_id;
+	//
+	intel_batchbuffer_flush_with_context(batch, context0);
+
+	//scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
+	//scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
+
+	stream_fd = __perf_open(drm_fd, &param, false);
+
+	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
+
+	ret = drm_intel_bo_map(bo, true /* write enable */);
+
+
+
+
+
+
+
+
+
+
+
+
+	uint32_t a_counter_32_adresses[4] = {0x2900, 0x2904, 0x2908, 0x292C};
+	uint32_t a_counters_40_low_addresses[32] = {0x2800, 0x2808, 0x2810, 0x2818, 0x2820, 0x2828, 0x2830,
+												0x2838, 0x2840, 0x2848, 0x2850, 0x2858, 0x2860, 0x2868,
+												0x2870, 0x2878, 0x2880, 0x2888, 0x2890, 0x2898, 0x28A0,
+												0x28A8, 0x28B0, 0x28B8, 0x28C0, 0x28C8, 0x28D0, 0x28D8,
+												0x28E0, 0x28E8, 0x28F0, 0x28F8};
+	uint32_t a_counters_40_high_addresses[32] = {0x2804, 0x280C, 0x2814, 0x281C, 0x2824, 0x282C, 0x2834,
+												 0x283C, 0x2844, 0x284C, 0x2854, 0x285C, 0x2864, 0x286C,
+												 0x2874, 0x287C, 0x2884, 0x288C, 0x2894, 0x289C, 0x28A4,
+												 0x28AC, 0x28B4, 0x28BC, 0x28C4, 0x28CC, 0x28D4, 0x28DC,
+												 0x28E0, 0x28EC, 0x28F4, 0x28FC};
+	uint32_t b_counters_addresses[8] = {0x2920, 0x2924, 0x2928, 0x292C, 0x2930, 0x2934, 0x2938, 0x293C};
+	uint32_t a_counters_32_offset = 64;
+
+	uint32_t a_counters_32_values_start[4] = {0};
+	uint32_t a_counters_32_values_end[4] = {0};
+	uint32_t a_counters_32_values[4] = {0};
+	uint32_t a_counters_40_low_values_start[32] = {0};
+	uint32_t a_counters_40_low_values_end[32] = {0};
+	uint32_t a_counters_40_low_values[32] = {0};
+	uint32_t a_counters_40_high_values_start[32] = {0};
+	uint32_t a_counters_40_high_values_end[32] = {0};
+	uint32_t a_counters_40_high_values[32] = {0};
+	uint64_t a_counters_40_values_start[32] = {0};
+	uint64_t a_counters_40_values_end[32] = {0};
+	uint64_t a_counters_40_values[32] = {0};
+	uint32_t b_counters_values_start[8] = {0};
+	uint32_t b_counters_values_end[8] = {0};
+	uint32_t b_counters_values[8] = {0};
+
+
+
+	// count flops
+	enum increment_event_filter inc_event = EU_FPU0_FPU1_PIPELINES_CONCURRENTLY_ACTIVE;
+	enum coarse_event_filter coarse_event = NO_COARSE_FILTER;
+	enum fine_event_filter fine_event = NO_FINE_FILTER;
+
+	// setup dword to write to register
+	uint32_t dword = 0;
+	dword = dword | (uint32_t) inc_event;
+	dword = dword | ( (uint32_t) coarse_event << 4);
+	dword = dword | ( (uint32_t) fine_event << 8);
+	//uint32_t dword = 0x7FFFFFFF;
+	//dword = dword | (uint32_t) ~inc_event;
+	//dword = dword | ( (uint32_t) ~coarse_event << 4);
+	//dword = dword | ( (uint32_t) ~fine_event << 8);
+	printf("EU_PERF_CNT_CTL0: "); print_binary(dword, 32);
+
+
+
+	int err;
+	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd);
+	if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
+
+
+
+	intel_register_write(0xE458, dword);
+
+
+
+
+	for (int i = 0; i < 32; i++) {
+		a_counters_40_low_values_start[i] = intel_register_read(a_counters_40_low_addresses[i]);
+		a_counters_40_high_values_start[i] = intel_register_read(a_counters_40_high_addresses[i]);
+		a_counters_40_values_start[i] = ( (uint64_t) a_counters_40_high_values[i] << 32 ) | (uint64_t) a_counters_40_low_values[i];
+	}
+	for (int i = 0; i < 4; i++) {
+		a_counters_32_values_start[i] = intel_register_read(a_counter_32_adresses[i]);
+	}
+	for (int i = 0; i < 8; i++) {
+		b_counters_values_start[i] = intel_register_read(b_counters_addresses[i]);
+	}
+
+
+
+	intel_register_access_fini();
+
+
+
+
+	// do work
+    err = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL); clCheckError(err, __LINE__);
+    clFlush(command_queue);
+    clFinish(command_queue);
+
+
+
+    err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd);
+	if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
+
+
+
+
+    for (int i = 0; i < 32; i++) {
+		a_counters_40_low_values_end[i] = intel_register_read(a_counters_40_low_addresses[i]);
+		a_counters_40_high_values_end[i] = intel_register_read(a_counters_40_high_addresses[i]);
+		a_counters_40_values_end[i] = ( (uint64_t) a_counters_40_high_values[i] << 32 ) | (uint64_t) a_counters_40_low_values[i];
+	}
+	for (int i = 0; i < 4; i++) {
+		a_counters_32_values_end[i] = intel_register_read(a_counter_32_adresses[i]);
+	}
+	for (int i = 0; i < 8; i++) {
+		b_counters_values_end[i] = intel_register_read(b_counters_addresses[i]);
+	}
+
+
+
+	intel_register_access_fini();
+
+
+
+
+	for (int i = 0; i < 32; i++) {
+		a_counters_40_values[i] = a_counters_40_values_end[i] - a_counters_40_values_start[i];
+	}
+	for (int i = 0; i < 4; i++) {
+		a_counters_32_values[i] = a_counters_32_values_end[i] - a_counters_32_values_start[i];
+	}
+	for (int i = 0; i < 8; i++) {
+		b_counters_values[i] = b_counters_values_end[i] - b_counters_values_start[i];
+	}
+
+
+	int last_index;
+	for (int i = 0; i < 32; i++) {
+		printf("A%d: %s1st = %lu 2nd = %lu delta = %lu\n", i, (i>9) ? "" : " ", a_counters_40_values_start[i], a_counters_40_values_end[i], a_counters_40_values[i]);
+		last_index = i;
+	}
+	for (int i = 0; i < 4; i++) {
+		printf("A%d: 1st = %u 2nd = %u delta = %u\n", i+last_index, a_counters_32_values_start[i], a_counters_32_values_end[i], a_counters_32_values[i]);
+	}
+	for (int i = 0; i < 8; i++) {
+		printf("B%d: 1st = %u 2nd = %u delta = %u\n", i, b_counters_values_start[i], b_counters_values_end[i], b_counters_values[i]);		
+	}
+
+
+	
+
+
+
+
+	drm_intel_bo_unmap(bo);
+	drm_intel_bo_unreference(bo);
+	intel_batchbuffer_free(batch);
+	drm_intel_gem_context_destroy(context0);
+	drm_intel_bufmgr_destroy(bufmgr);
+	__perf_close(stream_fd);
+
+
+
+}
+
+
+
+
+int enable_aggregating_counters(int eu_flexible_counter_num, uint32_t programable_dword) {
+
+	int eu_perf_cnt_ctl[7] = {0xE458, 0xE558, 0xE658, 0xE758, 0xE45C, 0xE55C, 0xE65C};
+
+	if (eu_flexible_counter_num < 0 || eu_flexible_counter_num > 7)
+		return -1;
+
+	if (intel_register_access_init(intel_get_pci_device(), 0, drm_fd))
+		return -1;
+
+	intel_register_write(eu_perf_cnt_ctl[eu_flexible_counter_num], programable_dword);
+
+	intel_register_access_fini();
+
+	return 0;
+
+}
+
+
+
+void print_report_card(counters_info_t counters) {
+
+	FILE *fptr;
+	int i, last_index;
+
+	fptr = fopen("report_card.txt", "w");
+
+
+
+	fprintf(fptr, "========= Ticks and clocks info =========\n");
+
+	fprintf(fptr, "\tCPU ticks before workload: %lu\n", counters.cpu_ticks_start);
+	fprintf(fptr, "\tCPU ticks after workload:  %lu\n", counters.cpu_ticks_end);
+	fprintf(fptr, "\tCPU ticks delta:           %lu\n", counters.cpu_ticks_delta);
+	fprintf(fptr, "\tGPU clock before workload: %u\n", counters.gpu_clock_start);
+	fprintf(fptr, "\tGPU clock after workload:  %u\n", counters.gpu_clock_end);
+	fprintf(fptr, "\tCPU clock before workload: %u\n", counters.cpu_clock_start);
+	fprintf(fptr, "\tCPU clock after workload:  %u\n", counters.cpu_clock_end);
+
+	fprintf(fptr, "\n========= MMIO counters =========\n");
+
+	fprintf(fptr, "\tBefore workload\n");
+	for(i = 0; i < 32; i++) {
+		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mmio_a_counters_40_values_start[i]);
+		last_index = i;
+	}
+	for(i = 0; i < 4; i++) {
+		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mmio_a_counters_32_values_start[i]);
+	}
+	for(i = 0; i < 8; i++) {
+		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mmio_b_counters_values_start[i]);
+	}
+
+	fprintf(fptr, "\tAfter workload\n");
+	for(i = 0; i < 32; i++) {
+		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mmio_a_counters_40_values_end[i]);
+		last_index = i;
+	}
+	for(i = 0; i < 4; i++) {
+		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mmio_a_counters_32_values_end[i]);
+	}
+	for(i = 0; i < 8; i++) {
+		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mmio_b_counters_values_end[i]);
+	}
+
+	fprintf(fptr, "\tDeltas\n");
+	for(i = 0; i < 32; i++) {
+		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mmio_a_counters_40_values_delta[i]);
+		last_index = i;
+	}
+	for(i = 0; i < 4; i++) {
+		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mmio_a_counters_32_values_delta[i]);
+	}
+	for(i = 0; i < 8; i++) {
+		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mmio_b_counters_values_delta[i]);
+	}
+
+	fprintf(fptr, "\n========= MI_RPC counters =========\n");
+
+	fprintf(fptr, "\tBefore workload\n");
+	fprintf(fptr, "\t\tTimestamp: %u\n", counters.mirpc_timestamp_start);
+	fprintf(fptr, "\t\tContext ID: %u\n", counters.mirpc_ctx_id_start);
+	fprintf(fptr, "\t\tReason: %s\n", counters.mirpc_reason_start);
+	for(i = 0; i < 32; i++) {
+		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mirpc_a_counters_40_values_start[i]);
+		last_index = i;
+	}
+	for(i = 0; i < 4; i++) {
+		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mirpc_a_counters_32_values_start[i]);
+	}
+	for(i = 0; i < 8; i++) {
+		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mirpc_b_counters_values_start[i]);
+	}
+
+	fprintf(fptr, "\tAfter workload\n");
+	fprintf(fptr, "\t\tTimestamp: %u\n", counters.mirpc_timestamp_end);
+	fprintf(fptr, "\t\tContext ID: %u\n", counters.mirpc_ctx_id_end);
+	fprintf(fptr, "\t\tReason: %s\n", counters.mirpc_reason_end);
+	for(i = 0; i < 32; i++) {
+		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mirpc_a_counters_40_values_end[i]);
+		last_index = i;
+	}
+	for(i = 0; i < 4; i++) {
+		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mirpc_a_counters_32_values_end[i]);
+	}
+	for(i = 0; i < 8; i++) {
+		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mirpc_b_counters_values_end[i]);
+	}
+
+	fprintf(fptr, "\tDeltas\n");
+	fprintf(fptr, "\t\tTimestamp: %u\n", counters.mirpc_timestamp_delta);
+	for(i = 0; i < 32; i++) {
+		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mirpc_a_counters_40_values_delta[i]);
+		last_index = i;
+	}
+	for(i = 0; i < 4; i++) {
+		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mirpc_a_counters_32_values_delta[i]);
+	}
+	for(i = 0; i < 8; i++) {
+		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mirpc_b_counters_values_delta[i]);
+	}
+
+	fclose(fptr);
+
+}
+
+
+
+
+
+void test_counters_with_mmap() {
+    
+    
+    
+    
+    
+    uint64_t properties[] = {
+
+		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
+
+		/* no samples, but we have to specify at least one sample property */
+		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
+
+		/* OA unit configuration */
+		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
+		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
+
+		/* Note: no OA exponent specified in this case */
+	};
+
+	struct drm_i915_perf_open_param param = {
+		.flags = I915_PERF_FLAG_FD_CLOEXEC,
+		.num_properties = sizeof(properties) / 16,
+		.properties_ptr = (uintptr_t) properties
+	};
+
+	drm_intel_bufmgr *bufmgr;
+	drm_intel_context *context0, *context1;
+	struct intel_batchbuffer *batch;
+	struct igt_buf src[3], dst[3];
+	drm_intel_bo *bo;
+	uint32_t *report0_32, *report1_32;
+	int width = 800;
+	int height = 600;
+	uint32_t ctx_id = 0xffffffff;	// invalid id
+	int ret;
+	long long int cpu_ticks0, cpu_ticks1;
+
+	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
+	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
+
+	for(int i = 0; i < ARRAY_SIZE(src); i++) {
+		scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
+		scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
+	}
+
+	batch = intel_batchbuffer_alloc(bufmgr, devid);
+
+	context0 = drm_intel_gem_context_create(bufmgr);
+	context1 = drm_intel_gem_context_create(bufmgr);
+
+	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
+
+	properties[1] = ctx_id;
+
+	intel_batchbuffer_flush_with_context(batch, context0);
+
+	scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
+	scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
+
+	stream_fd = __perf_open(drm_fd, &param, false);
+
+	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
+
+	ret = drm_intel_bo_map(bo, true /* write enable */);
+    
+    
+    
+    
+    
+    #define MAP_SIZE 4096UL
+    #define MAP_MASK (MAP_SIZE - 1)
+
+    //#define BAR 0xc0000000
+    //#define BAR 0xed000000
+    #define BAR 0xed000000      // <-- ITS THIS ONE !!!!!!!!!!!!!!!!!!
+    //#define BAR 0x8c000000
+    //#define BAR 0x0c000000
+    //#define BAR 0x01f00000
+    //#define BAR 0x43109014
+    //#define BAR 0x0b010000
+    //#define BAR 0x40000000
+    //#define BAR 0x00000040
+    //#define BAR 0xFED10000	// offset 48h of device 0:00.0
+    //#define BAR 0x16150000	// offset 48h of device 0:02.0 161580dc
+    //#define BAR 0x010c0000  // offset 40h of device 0:02.0 010c7009
+    //#define BAR 0x00000000ed000000	// /sys/bus/pci/devices/0000:00:02.0/resource
+    //#define BAR 0x00000000ef120000	// /sys/bus/pci/devices/0000:00:04.0/resource
+    //#define BAR 0x00000000ef110000	// /sys/bus/pci/devices/0000:00:14.0/resource
+    //#define BAR 0x00000000ef138000	// /sys/bus/pci/devices/0000:00:14.2/resource
+    //#define BAR 0x00000000ef137000	// /sys/bus/pci/devices/0000:00:15.0/resource
+    //#define BAR 0x00000000ef136000	// /sys/bus/pci/devices/0000:00:15.1/resource
+    //#define BAR 0x00000000ef135000	// /sys/bus/pci/devices/0000:00:16.0/resource
+    //#define BAR 0x00000000ef130000	// /sys/bus/pci/devices/0000:00:17.0/resource
+    //#define BAR 0x0000000000000000	// /sys/bus/pci/devices/0000:00:1c.0/resource
+    //#define BAR 0x0000000000000000	// /sys/bus/pci/devices/0000:00:1c.4/resource
+    //#define BAR 0x0000000000000000	// /sys/bus/pci/devices/0000:00:1c.5/resource
+    //#define BAR 0x0000000000000000	// /sys/bus/pci/devices/0000:00:1f.0/resource
+    //#define BAR 0x00000000ef12c000	// /sys/bus/pci/devices/0000:00:1f.2/resource
+    //#define BAR 0x00000000ef128000	// /sys/bus/pci/devices/0000:00:1f.3/resource
+    //#define BAR 0x00000000ef132000	// /sys/bus/pci/devices/0000:00:1f.4/resource
+    //#define BAR 0x00000000ee000000	// /sys/bus/pci/devices/0000:01:00.0/resource
+    //#define BAR 0x000000000000d000	// /sys/bus/pci/devices/0000:02:00.0/resource
+    //#define BAR 0x00000000ef200000	// /sys/bus/pci/devices/0000:03:00.0/resource
+    //#define BAR 0xFEE50000
+    //#define BAR 0xb6e40000
+    //#define BAR 0xe0000000
+    //#define BAR 0xfed19001
+    //#define BAR 0xfed10001
+    //#define BAR 0xe0000001
+    //#define BAR 0xfed18001
+    //#define BAR 0x74000000
+    //#define BAR 0xde000000
+    //#define BAR 0x0de0000
+    //#define BAR 0xc000000c
+    //#define BAR 0xc0000000
+    //#define BAR 0x0000f001
+    //#define BAR 0x0000f000
+    //#define BAR 0x00000000
+    
+    
+    int fd;
+    
+    void *map_base_oacontrol, *virt_addr_oacontrol;
+	void *map_base_free_a4_lower, *map_base_free_a4_upper, *virt_addr_free_a4_lower, *virt_addr_free_a4_upper;
+    void *map_base_eu_ctr0, *virt_addr_eu_ctr0;
+	void *map_base_a7_lower, *map_base_a7_upper, *virt_addr_a7_lower, *virt_addr_a7_upper;
+	void *map_base_a8_lower, *map_base_a8_upper, *virt_addr_a8_lower, *virt_addr_a8_upper;
+	void *map_base_a9_lower, *map_base_a9_upper, *virt_addr_a9_lower, *virt_addr_a9_upper;
+	void *map_base_a10_lower, *map_base_a10_upper, *virt_addr_a10_lower, *virt_addr_a10_upper;
+	void *map_base_a11_lower, *map_base_a11_upper, *virt_addr_a11_lower, *virt_addr_a11_upper;
+	void *map_base_a12_lower, *map_base_a12_upper, *virt_addr_a12_lower, *virt_addr_a12_upper;
+	void *map_base_a13_lower, *map_base_a13_upper, *virt_addr_a13_lower, *virt_addr_a13_upper;
+	void *map_base_a14_lower, *map_base_a14_upper, *virt_addr_a14_lower, *virt_addr_a14_upper;
+	void *map_base_a15_lower, *map_base_a15_upper, *virt_addr_a15_lower, *virt_addr_a15_upper;
+	void *map_base_a16_lower, *map_base_a16_upper, *virt_addr_a16_lower, *virt_addr_a16_upper;
+	void *map_base_a17_lower, *map_base_a17_upper, *virt_addr_a17_lower, *virt_addr_a17_upper;
+	void *map_base_a18_lower, *map_base_a18_upper, *virt_addr_a18_lower, *virt_addr_a18_upper;
+	void *map_base_a19_lower, *map_base_a19_upper, *virt_addr_a19_lower, *virt_addr_a19_upper;
+	void *map_base_a20_lower, *map_base_a20_upper, *virt_addr_a20_lower, *virt_addr_a20_upper;
+    
+    off_t oacontrol;
+	off_t oaperf_free_a4_lower, oaperf_free_a4_upper;
+    off_t eu_control0;
+    off_t oaperf_a7_lower, oaperf_a7_upper;
+    off_t oaperf_a8_lower, oaperf_a8_upper;
+    off_t oaperf_a9_lower, oaperf_a9_upper;
+    off_t oaperf_a10_lower, oaperf_a10_upper;
+    off_t oaperf_a11_lower, oaperf_a11_upper;
+    off_t oaperf_a12_lower, oaperf_a12_upper;
+    off_t oaperf_a13_lower, oaperf_a13_upper;
+    off_t oaperf_a14_lower, oaperf_a14_upper;
+    off_t oaperf_a15_lower, oaperf_a15_upper;
+    off_t oaperf_a16_lower, oaperf_a16_upper;
+    off_t oaperf_a17_lower, oaperf_a17_upper;
+    off_t oaperf_a18_lower, oaperf_a18_upper;
+    off_t oaperf_a19_lower, oaperf_a19_upper;
+    off_t oaperf_a20_lower, oaperf_a20_upper;
+    
+    unsigned long read_oacontrol;
+    unsigned long read_free_a4_lower_start, read_free_a4_upper_start, read_free_a4_start;
+    unsigned long read_eu_ctr0;
+    unsigned long read_a7_lower_start, read_a7_upper_start, read_a7_start;
+    unsigned long read_a8_lower_start, read_a8_upper_start, read_a8_start;
+    unsigned long read_a9_lower_start, read_a9_upper_start, read_a9_start;
+    unsigned long read_a10_lower_start, read_a10_upper_start, read_a10_start;
+    unsigned long read_a11_lower_start, read_a11_upper_start, read_a11_start;
+    unsigned long read_a12_lower_start, read_a12_upper_start, read_a12_start;
+    unsigned long read_a13_lower_start, read_a13_upper_start, read_a13_start;
+    unsigned long read_a14_lower_start, read_a14_upper_start, read_a14_start;
+    unsigned long read_a15_lower_start, read_a15_upper_start, read_a15_start;
+    unsigned long read_a16_lower_start, read_a16_upper_start, read_a16_start;
+    unsigned long read_a17_lower_start, read_a17_upper_start, read_a17_start;
+    unsigned long read_a18_lower_start, read_a18_upper_start, read_a18_start;
+    unsigned long read_a19_lower_start, read_a19_upper_start, read_a19_start;
+    unsigned long read_a20_lower_start, read_a20_upper_start, read_a20_start;
+    
+    unsigned long read_free_a4_lower_end, read_free_a4_upper_end, read_free_a4_end;
+    unsigned long read_a7_lower_end, read_a7_upper_end, read_a7_end;
+    unsigned long read_a8_lower_end, read_a8_upper_end, read_a8_end;
+    unsigned long read_a9_lower_end, read_a9_upper_end, read_a9_end;
+    unsigned long read_a10_lower_end, read_a10_upper_end, read_a10_end;
+    unsigned long read_a11_lower_end, read_a11_upper_end, read_a11_end;
+    unsigned long read_a12_lower_end, read_a12_upper_end, read_a12_end;
+    unsigned long read_a13_lower_end, read_a13_upper_end, read_a13_end;
+    unsigned long read_a14_lower_end, read_a14_upper_end, read_a14_end;
+    unsigned long read_a15_lower_end, read_a15_upper_end, read_a15_end;
+    unsigned long read_a16_lower_end, read_a16_upper_end, read_a16_end;
+    unsigned long read_a17_lower_end, read_a17_upper_end, read_a17_end;
+    unsigned long read_a18_lower_end, read_a18_upper_end, read_a18_end;
+    unsigned long read_a19_lower_end, read_a19_upper_end, read_a19_end;
+    unsigned long read_a20_lower_end, read_a20_upper_end, read_a20_end;
+	
+    oacontrol = (unsigned long) (BAR + 0x2B00);
+	oaperf_free_a4_lower = (unsigned long) (BAR + 0x2960);
+	oaperf_free_a4_upper = (unsigned long) (BAR + 0x2964);
+	eu_control0 = (unsigned long) (BAR + 0xE458);
+    oaperf_a7_lower = (unsigned long) (BAR + 0x2838);
+    oaperf_a7_upper = (unsigned long) (BAR + 0x283C);
+    oaperf_a8_lower = (unsigned long) (BAR + 0x2840);
+    oaperf_a8_upper = (unsigned long) (BAR + 0x2844);
+    oaperf_a9_lower = (unsigned long) (BAR + 0x2848);
+    oaperf_a9_upper = (unsigned long) (BAR + 0x284C);
+    oaperf_a10_lower = (unsigned long) (BAR + 0x2850);
+    oaperf_a10_upper = (unsigned long) (BAR + 0x2854);
+    oaperf_a11_lower = (unsigned long) (BAR + 0x2858);
+    oaperf_a11_upper = (unsigned long) (BAR + 0x285C);
+    oaperf_a12_lower = (unsigned long) (BAR + 0x2860);
+    oaperf_a12_upper = (unsigned long) (BAR + 0x2864);
+    oaperf_a13_lower = (unsigned long) (BAR + 0x2868);
+    oaperf_a13_upper = (unsigned long) (BAR + 0x286C);
+    oaperf_a14_lower = (unsigned long) (BAR + 0x2870);
+    oaperf_a14_upper = (unsigned long) (BAR + 0x2874);
+    oaperf_a15_lower = (unsigned long) (BAR + 0x2878);
+    oaperf_a15_upper = (unsigned long) (BAR + 0x287C);
+    oaperf_a16_lower = (unsigned long) (BAR + 0x2880);
+    oaperf_a16_upper = (unsigned long) (BAR + 0x2884);
+    oaperf_a17_lower = (unsigned long) (BAR + 0x2888);
+    oaperf_a17_upper = (unsigned long) (BAR + 0x288C);
+    oaperf_a18_lower = (unsigned long) (BAR + 0x2890);
+    oaperf_a18_upper = (unsigned long) (BAR + 0x2894);
+    oaperf_a19_lower = (unsigned long) (BAR + 0x2898);
+    oaperf_a19_upper = (unsigned long) (BAR + 0x289C);
+    oaperf_a20_lower = (unsigned long) (BAR + 0x28A0);
+    oaperf_a20_upper = (unsigned long) (BAR + 0x28A4);
+    
+	fd = open("/dev/mem",O_RDWR | O_SYNC);
+	if(fd == -1){
+		printf(KRED "Error opening file\n" KNRM);
+		return;
+	}
+	
+	map_base_oacontrol =  mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oacontrol & ~MAP_MASK);
+	map_base_free_a4_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_free_a4_lower & ~MAP_MASK);
+	map_base_free_a4_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_free_a4_upper & ~MAP_MASK);
+	map_base_eu_ctr0 = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, eu_control0 & ~MAP_MASK);
+	map_base_a7_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a7_lower & ~MAP_MASK);
+	map_base_a7_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a7_upper & ~MAP_MASK);
+	map_base_a8_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a8_lower & ~MAP_MASK);
+	map_base_a8_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a8_upper & ~MAP_MASK);
+	map_base_a9_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a9_lower & ~MAP_MASK);
+	map_base_a9_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a9_upper & ~MAP_MASK);
+	map_base_a10_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a10_lower & ~MAP_MASK);
+	map_base_a10_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a10_upper & ~MAP_MASK);
+	map_base_a11_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a11_lower & ~MAP_MASK);
+	map_base_a11_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a11_upper & ~MAP_MASK);
+	map_base_a12_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a12_lower & ~MAP_MASK);
+	map_base_a12_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a12_upper & ~MAP_MASK);
+	map_base_a13_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a13_lower & ~MAP_MASK);
+	map_base_a13_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a13_upper & ~MAP_MASK);
+	map_base_a14_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a14_lower & ~MAP_MASK);
+	map_base_a14_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a14_upper & ~MAP_MASK);
+	map_base_a15_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a15_lower & ~MAP_MASK);
+	map_base_a15_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a15_upper & ~MAP_MASK);
+	map_base_a16_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a16_lower & ~MAP_MASK);
+	map_base_a16_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a16_upper & ~MAP_MASK);
+	map_base_a17_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a17_lower & ~MAP_MASK);
+	map_base_a17_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a17_upper & ~MAP_MASK);
+	map_base_a18_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a18_lower & ~MAP_MASK);
+	map_base_a18_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a18_upper & ~MAP_MASK);
+	map_base_a19_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a19_lower & ~MAP_MASK);
+	map_base_a19_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a19_upper & ~MAP_MASK);
+	map_base_a20_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a20_lower & ~MAP_MASK);
+	map_base_a20_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a20_upper & ~MAP_MASK);
+    
+    if(map_base_free_a4_lower == (void *) -1 || map_base_free_a4_upper == (void *) -1 || map_base_eu_ctr0 == (void *) -1 ||
+        map_base_a7_lower == (void *) -1 || map_base_a7_upper == (void *) -1 ||
+        map_base_a8_lower == (void *) -1 || map_base_a8_upper == (void *) -1 ||
+        map_base_a9_lower == (void *) -1 || map_base_a9_upper == (void *) -1 ||
+        map_base_a10_lower == (void *) -1 || map_base_a10_upper == (void *) -1 ||
+        map_base_a11_lower == (void *) -1 || map_base_a11_upper == (void *) -1 ||
+        map_base_a12_lower == (void *) -1 || map_base_a12_upper == (void *) -1 ||
+        map_base_a13_lower == (void *) -1 || map_base_a13_upper == (void *) -1 ||
+        map_base_a14_lower == (void *) -1 || map_base_a14_upper == (void *) -1 ||
+        map_base_a15_lower == (void *) -1 || map_base_a15_upper == (void *) -1 ||
+        map_base_a16_lower == (void *) -1 || map_base_a16_upper == (void *) -1 ||
+        map_base_a17_lower == (void *) -1 || map_base_a17_upper == (void *) -1 ||
+        map_base_a18_lower == (void *) -1 || map_base_a18_upper == (void *) -1 ||
+        map_base_a19_lower == (void *) -1 || map_base_a19_upper == (void *) -1 ||
+        map_base_a20_lower == (void *) -1 || map_base_a20_upper == (void *) -1 ||
+        map_base_oacontrol == (void *) -1
+    ) { 
+		printf(KRED "Error getting map address\n" KNRM);
+		return;
+	}
+	
+	virt_addr_oacontrol = map_base_oacontrol + (oacontrol & MAP_MASK);
+	virt_addr_free_a4_lower = map_base_free_a4_lower + (oaperf_free_a4_lower & MAP_MASK);
+	virt_addr_free_a4_upper = map_base_free_a4_upper + (oaperf_free_a4_upper & MAP_MASK);
+	virt_addr_eu_ctr0 = map_base_eu_ctr0 + (eu_control0 & MAP_MASK);
+	virt_addr_a7_lower = map_base_a7_lower + (oaperf_a7_lower & MAP_MASK);
+	virt_addr_a7_upper = map_base_a7_upper + (oaperf_a7_upper & MAP_MASK);
+	virt_addr_a8_lower = map_base_a8_lower + (oaperf_a8_lower & MAP_MASK);
+	virt_addr_a8_upper = map_base_a8_upper + (oaperf_a8_upper & MAP_MASK);
+	virt_addr_a9_lower = map_base_a9_lower + (oaperf_a9_lower & MAP_MASK);
+	virt_addr_a9_upper = map_base_a9_upper + (oaperf_a9_upper & MAP_MASK);
+	virt_addr_a10_lower = map_base_a10_lower + (oaperf_a10_lower & MAP_MASK);
+	virt_addr_a10_upper = map_base_a10_upper + (oaperf_a10_upper & MAP_MASK);
+	virt_addr_a11_lower = map_base_a11_lower + (oaperf_a11_lower & MAP_MASK);
+	virt_addr_a11_upper = map_base_a11_upper + (oaperf_a11_upper & MAP_MASK);
+	virt_addr_a12_lower = map_base_a12_lower + (oaperf_a12_lower & MAP_MASK);
+	virt_addr_a12_upper = map_base_a12_upper + (oaperf_a12_upper & MAP_MASK);
+	virt_addr_a13_lower = map_base_a13_lower + (oaperf_a13_lower & MAP_MASK);
+	virt_addr_a13_upper = map_base_a13_upper + (oaperf_a13_upper & MAP_MASK);
+	virt_addr_a14_lower = map_base_a14_lower + (oaperf_a14_lower & MAP_MASK);
+	virt_addr_a14_upper = map_base_a14_upper + (oaperf_a14_upper & MAP_MASK);
+	virt_addr_a15_lower = map_base_a15_lower + (oaperf_a15_lower & MAP_MASK);
+	virt_addr_a15_upper = map_base_a15_upper + (oaperf_a15_upper & MAP_MASK);
+	virt_addr_a16_lower = map_base_a16_lower + (oaperf_a16_lower & MAP_MASK);
+	virt_addr_a16_upper = map_base_a16_upper + (oaperf_a16_upper & MAP_MASK);
+	virt_addr_a17_lower = map_base_a17_lower + (oaperf_a17_lower & MAP_MASK);
+	virt_addr_a17_upper = map_base_a17_upper + (oaperf_a17_upper & MAP_MASK);
+	virt_addr_a18_lower = map_base_a18_lower + (oaperf_a18_lower & MAP_MASK);
+	virt_addr_a18_upper = map_base_a18_upper + (oaperf_a18_upper & MAP_MASK);
+	virt_addr_a19_lower = map_base_a19_lower + (oaperf_a19_lower & MAP_MASK);
+	virt_addr_a19_upper = map_base_a19_upper + (oaperf_a19_upper & MAP_MASK);
+	virt_addr_a20_lower = map_base_a20_lower + (oaperf_a20_lower & MAP_MASK);
+	virt_addr_a20_upper = map_base_a20_upper + (oaperf_a20_upper & MAP_MASK);
+    
+    
+    read_oacontrol = *((unsigned long *) virt_addr_oacontrol);
+    *((unsigned long *) virt_addr_oacontrol) = read_oacontrol | (1<<0);
+    
+    read_free_a4_lower_start = *((unsigned long *) virt_addr_free_a4_lower);
+    read_free_a4_upper_start = *((unsigned long *) virt_addr_free_a4_upper);
+    read_eu_ctr0 = *((unsigned long *) virt_addr_eu_ctr0);
+    read_a7_lower_start = *((unsigned long *) virt_addr_a7_lower);
+    read_a7_upper_start = *((unsigned long *) virt_addr_a7_upper);
+    read_a8_lower_start = *((unsigned long *) virt_addr_a8_lower);
+    read_a8_upper_start = *((unsigned long *) virt_addr_a8_upper);
+    read_a9_lower_start = *((unsigned long *) virt_addr_a9_lower);
+    read_a9_upper_start = *((unsigned long *) virt_addr_a9_upper);
+    read_a10_lower_start = *((unsigned long *) virt_addr_a10_lower);
+    read_a10_upper_start = *((unsigned long *) virt_addr_a10_upper);
+    read_a11_lower_start = *((unsigned long *) virt_addr_a11_lower);
+    read_a11_upper_start = *((unsigned long *) virt_addr_a11_upper);
+    read_a12_lower_start = *((unsigned long *) virt_addr_a12_lower);
+    read_a12_upper_start = *((unsigned long *) virt_addr_a12_upper);
+    read_a13_lower_start = *((unsigned long *) virt_addr_a13_lower);
+    read_a13_upper_start = *((unsigned long *) virt_addr_a13_upper);
+    read_a14_lower_start = *((unsigned long *) virt_addr_a14_lower);
+    read_a14_upper_start = *((unsigned long *) virt_addr_a14_upper);
+    read_a15_lower_start = *((unsigned long *) virt_addr_a15_lower);
+    read_a15_upper_start = *((unsigned long *) virt_addr_a15_upper);
+    read_a16_lower_start = *((unsigned long *) virt_addr_a16_lower);
+    read_a16_upper_start = *((unsigned long *) virt_addr_a16_upper);
+    read_a17_lower_start = *((unsigned long *) virt_addr_a17_lower);
+    read_a17_upper_start = *((unsigned long *) virt_addr_a17_upper);
+    read_a18_lower_start = *((unsigned long *) virt_addr_a18_lower);
+    read_a18_upper_start = *((unsigned long *) virt_addr_a18_upper);
+    read_a19_lower_start = *((unsigned long *) virt_addr_a19_lower);
+    read_a19_upper_start = *((unsigned long *) virt_addr_a19_upper);
+    read_a20_lower_start = *((unsigned long *) virt_addr_a20_lower);
+    read_a20_upper_start = *((unsigned long *) virt_addr_a20_upper);
+    read_free_a4_start = (((uint64_t) virt_addr_free_a4_upper) << 32) | (uint64_t) virt_addr_free_a4_lower;
+    read_a7_start = (((uint64_t) virt_addr_a7_upper) << 32) | (uint64_t) virt_addr_a7_lower;
+    read_a8_start = (((uint64_t) virt_addr_a8_upper) << 32) | (uint64_t) virt_addr_a8_lower;
+    read_a9_start = (((uint64_t) virt_addr_a9_upper) << 32) | (uint64_t) virt_addr_a9_lower;
+    read_a10_start = (((uint64_t) virt_addr_a10_upper) << 32) | (uint64_t) virt_addr_a10_lower;
+    read_a11_start = (((uint64_t) virt_addr_a11_upper) << 32) | (uint64_t) virt_addr_a11_lower;
+    read_a12_start = (((uint64_t) virt_addr_a12_upper) << 32) | (uint64_t) virt_addr_a12_lower;
+    read_a13_start = (((uint64_t) virt_addr_a13_upper) << 32) | (uint64_t) virt_addr_a13_lower;
+    read_a14_start = (((uint64_t) virt_addr_a14_upper) << 32) | (uint64_t) virt_addr_a14_lower;
+    read_a15_start = (((uint64_t) virt_addr_a15_upper) << 32) | (uint64_t) virt_addr_a15_lower;
+    read_a16_start = (((uint64_t) virt_addr_a16_upper) << 32) | (uint64_t) virt_addr_a16_lower;
+    read_a17_start = (((uint64_t) virt_addr_a17_upper) << 32) | (uint64_t) virt_addr_a17_lower;
+    read_a18_start = (((uint64_t) virt_addr_a18_upper) << 32) | (uint64_t) virt_addr_a18_lower;
+    read_a19_start = (((uint64_t) virt_addr_a19_upper) << 32) | (uint64_t) virt_addr_a19_lower;
+    read_a20_start = (((uint64_t) virt_addr_a20_upper) << 32) | (uint64_t) virt_addr_a20_lower;
+    
+	printf("Value of free-running A4: %lu\n", read_free_a4_start);
+	printf("Value of EU_CTR0: %u <-- should be zero\n" KNRM, read_eu_ctr0);
+    printf("Value of A7:  %lu\n", read_a7_start);
+    printf("Value of A8:  %lu\n", read_a8_start);
+    printf("Value of A9:  %lu\n", read_a9_start);
+    printf("Value of A10: %lu\n", read_a10_start);
+    printf("Value of A11: %lu\n", read_a11_start);
+    printf("Value of A12: %lu\n", read_a12_start);
+    printf("Value of A13: %lu\n", read_a13_start);
+    printf("Value of A14: %lu\n", read_a14_start);
+    printf("Value of A15: %lu\n", read_a15_start);
+    printf("Value of A16: %lu\n", read_a16_start);
+    printf("Value of A17: %lu\n", read_a17_start);
+    printf("Value of A18: %lu\n", read_a18_start);
+    printf("Value of A19: %lu\n", read_a19_start);
+    printf("Value of A20: %lu\n", read_a20_start);
+    
+    *((unsigned long *) virt_addr_eu_ctr0) = 3;
+    
+    fflush(stdout);
+    fflush(stdout);
+    
+    sleep(1);
+    
+    // do work
+    ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
+    clFlush(command_queue);
+    clFinish(command_queue);
+    
+    
+    read_free_a4_lower_end = *((unsigned long *) virt_addr_free_a4_lower);
+    read_free_a4_upper_end = *((unsigned long *) virt_addr_free_a4_upper);
+    read_eu_ctr0 = *((unsigned long *) virt_addr_eu_ctr0);
+    read_a7_lower_end = *((unsigned long *) virt_addr_a7_lower);
+    read_a7_upper_end = *((unsigned long *) virt_addr_a7_upper);
+    read_a8_lower_end = *((unsigned long *) virt_addr_a8_lower);
+    read_a8_upper_end = *((unsigned long *) virt_addr_a8_upper);
+    read_a9_lower_end = *((unsigned long *) virt_addr_a9_lower);
+    read_a9_upper_end = *((unsigned long *) virt_addr_a9_upper);
+    read_a10_lower_end = *((unsigned long *) virt_addr_a10_lower);
+    read_a10_upper_end = *((unsigned long *) virt_addr_a10_upper);
+    read_a11_lower_end = *((unsigned long *) virt_addr_a11_lower);
+    read_a11_upper_end = *((unsigned long *) virt_addr_a11_upper);
+    read_a12_lower_end = *((unsigned long *) virt_addr_a12_lower);
+    read_a12_upper_end = *((unsigned long *) virt_addr_a12_upper);
+    read_a13_lower_end = *((unsigned long *) virt_addr_a13_lower);
+    read_a13_upper_end = *((unsigned long *) virt_addr_a13_upper);
+    read_a14_lower_end = *((unsigned long *) virt_addr_a14_lower);
+    read_a14_upper_end = *((unsigned long *) virt_addr_a14_upper);
+    read_a15_lower_end = *((unsigned long *) virt_addr_a15_lower);
+    read_a15_upper_end = *((unsigned long *) virt_addr_a15_upper);
+    read_a16_lower_end = *((unsigned long *) virt_addr_a16_lower);
+    read_a16_upper_end = *((unsigned long *) virt_addr_a16_upper);
+    read_a17_lower_end = *((unsigned long *) virt_addr_a17_lower);
+    read_a17_upper_end = *((unsigned long *) virt_addr_a17_upper);
+    read_a18_lower_end = *((unsigned long *) virt_addr_a18_lower);
+    read_a18_upper_end = *((unsigned long *) virt_addr_a18_upper);
+    read_a19_lower_end = *((unsigned long *) virt_addr_a19_lower);
+    read_a19_upper_end = *((unsigned long *) virt_addr_a19_upper);
+    read_a20_lower_end = *((unsigned long *) virt_addr_a20_lower);
+    read_a20_upper_end = *((unsigned long *) virt_addr_a20_upper);
+    read_free_a4_end = (((uint64_t) virt_addr_free_a4_upper) << 32) | (uint64_t) virt_addr_free_a4_lower;
+    read_a7_end = (((uint64_t) virt_addr_a7_upper) << 32) | (uint64_t) virt_addr_a7_lower;
+    read_a8_end = (((uint64_t) virt_addr_a8_upper) << 32) | (uint64_t) virt_addr_a8_lower;
+    read_a9_end = (((uint64_t) virt_addr_a9_upper) << 32) | (uint64_t) virt_addr_a9_lower;
+    read_a10_end = (((uint64_t) virt_addr_a10_upper) << 32) | (uint64_t) virt_addr_a10_lower;
+    read_a11_end = (((uint64_t) virt_addr_a11_upper) << 32) | (uint64_t) virt_addr_a11_lower;
+    read_a12_end = (((uint64_t) virt_addr_a12_upper) << 32) | (uint64_t) virt_addr_a12_lower;
+    read_a13_end = (((uint64_t) virt_addr_a13_upper) << 32) | (uint64_t) virt_addr_a13_lower;
+    read_a14_end = (((uint64_t) virt_addr_a14_upper) << 32) | (uint64_t) virt_addr_a14_lower;
+    read_a15_end = (((uint64_t) virt_addr_a15_upper) << 32) | (uint64_t) virt_addr_a15_lower;
+    read_a16_end = (((uint64_t) virt_addr_a16_upper) << 32) | (uint64_t) virt_addr_a16_lower;
+    read_a17_end = (((uint64_t) virt_addr_a17_upper) << 32) | (uint64_t) virt_addr_a17_lower;
+    read_a18_end = (((uint64_t) virt_addr_a18_upper) << 32) | (uint64_t) virt_addr_a18_lower;
+    read_a19_end = (((uint64_t) virt_addr_a19_upper) << 32) | (uint64_t) virt_addr_a19_lower;
+    read_a20_end = (((uint64_t) virt_addr_a20_upper) << 32) | (uint64_t) virt_addr_a20_lower;
+    
+    
+    printf("\n");
+	printf("Value of free-running A4: %lu\n", read_free_a4_end);
+	printf("Value of EU_CTR0: %u <-- should be three\n" KNRM, read_eu_ctr0);
+    printf("Value of A7:  %lu\n", read_a7_end);
+    printf("Value of A8:  %lu\n", read_a8_end);
+    printf("Value of A9:  %lu\n", read_a9_end);
+    printf("Value of A10: %lu\n", read_a10_end);
+    printf("Value of A11: %lu\n", read_a11_end);
+    printf("Value of A12: %lu\n", read_a12_end);
+    printf("Value of A13: %lu\n", read_a13_end);
+    printf("Value of A14: %lu\n", read_a14_end);
+    printf("Value of A15: %lu\n", read_a15_end);
+    printf("Value of A16: %lu\n", read_a16_end);
+    printf("Value of A17: %lu\n", read_a17_end);
+    printf("Value of A18: %lu\n", read_a18_end);
+    printf("Value of A19: %lu\n", read_a19_end);
+    printf("Value of A20: %lu\n", read_a20_end);
+    
+    printf("\n");
+	printf("Delta of free-running A4: %lu\n", read_free_a4_end - read_free_a4_start);
+    printf("Delta of A7:  %lu\n", read_a7_end - read_a7_start);
+    printf("Delta of A8:  %lu\n", read_a8_end - read_a8_start);
+    printf("Delta of A9:  %lu\n", read_a9_end - read_a9_start);
+    printf("Delta of A10: %lu\n", read_a10_end - read_a10_start);
+    printf("Delta of A11: %lu\n", read_a11_end - read_a11_start);
+    printf("Delta of A12: %lu\n", read_a12_end - read_a12_start);
+    printf("Delta of A13: %lu\n", read_a13_end - read_a13_start);
+    printf("Delta of A14: %lu\n", read_a14_end - read_a14_start);
+    printf("Delta of A15: %lu\n", read_a15_end - read_a15_start);
+    printf("Delta of A16: %lu\n", read_a16_end - read_a16_start);
+    printf("Delta of A17: %lu\n", read_a17_end - read_a17_start);
+    printf("Delta of A18: %lu\n", read_a18_end - read_a18_start);
+    printf("Delta of A19: %lu\n", read_a19_end - read_a19_start);
+    printf("Delta of A20: %lu\n", read_a20_end - read_a20_start);
+    
+    
+    read_oacontrol = *((unsigned long *) virt_addr_oacontrol);
+    *((unsigned long *) virt_addr_oacontrol) = read_oacontrol & ~(1<<0);
+    
+	
+	if(munmap(map_base_oacontrol, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_free_a4_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_free_a4_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_eu_ctr0, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a7_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a7_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a8_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a8_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a9_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a9_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a10_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a10_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a11_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a11_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a12_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a12_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a13_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a13_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a14_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a14_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a15_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a15_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a16_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a16_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a17_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a17_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a18_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a18_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a19_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a19_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a20_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+	if(munmap(map_base_a20_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
+    
+    close(fd);
+    
+    
+    
+    
+    
+    for (int i = 0; i < ARRAY_SIZE(src); i++) {
+		drm_intel_bo_unreference(src[i].bo);
+		drm_intel_bo_unreference(dst[i].bo);
+	}
+
+	drm_intel_bo_unmap(bo);
+	drm_intel_bo_unreference(bo);
+	intel_batchbuffer_free(batch);
+	drm_intel_gem_context_destroy(context0);
+	drm_intel_gem_context_destroy(context1);
+	drm_intel_bufmgr_destroy(bufmgr);
+	__perf_close(stream_fd);
+    
+    
+    
+}
+
+
+void test_counters_with_lib() {
+    
+    
+    
+    
+    
+    
+    
+    uint64_t properties[] = {
+
+		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
+
+		/* no samples, but we have to specify at least one sample property */
+		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
+
+		/* OA unit configuration */
+		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
+		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
+
+		/* Note: no OA exponent specified in this case */
+	};
+
+	struct drm_i915_perf_open_param param = {
+		.flags = I915_PERF_FLAG_FD_CLOEXEC,
+		.num_properties = sizeof(properties) / 16,
+		.properties_ptr = (uintptr_t) properties
+	};
+
+	drm_intel_bufmgr *bufmgr;
+	drm_intel_context *context0, *context1;
+	struct intel_batchbuffer *batch;
+	struct igt_buf src[3], dst[3];
+	drm_intel_bo *bo;
+	uint32_t *report0_32, *report1_32;
+	int width = 800;
+	int height = 600;
+	uint32_t ctx_id = 0xffffffff;	// invalid id
+	int ret;
+	long long int cpu_ticks0, cpu_ticks1;
+
+	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
+	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
+
+	for(int i = 0; i < ARRAY_SIZE(src); i++) {
+		scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
+		scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
+	}
+
+	batch = intel_batchbuffer_alloc(bufmgr, devid);
+
+	context0 = drm_intel_gem_context_create(bufmgr);
+	context1 = drm_intel_gem_context_create(bufmgr);
+
+	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
+
+	properties[1] = ctx_id;
+
+	intel_batchbuffer_flush_with_context(batch, context0);
+
+	scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
+	scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
+
+	stream_fd = __perf_open(drm_fd, &param, false);
+
+	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
+
+	ret = drm_intel_bo_map(bo, true /* write enable */);
+    
+    
+    
+    
+    
+    
+    
+    
+    struct pci_device *pci_dev = intel_get_pci_device();
+    uint32_t devid, gen;
+	int mmio_bar, mmio_size;
+	int err;
+
+	devid = pci_dev->device_id;
+	if (IS_GEN2(devid))
+		mmio_bar = 1;
+	else
+		mmio_bar = 0;
+
+	gen = intel_gen(devid);
+	if (gen < 3)       mmio_size = 512*1024;
+	else if (gen < 5)  mmio_size = 512*1024;
+	else               mmio_size = 2*1024*1024;
+	
+	
+	
+	printf("before intel_register_access_init(), igt_global_mmio = %x\n", igt_global_mmio);
+	
+	err = intel_register_access_init(pci_dev, 0, drm_fd);
+	if (err==-1) printf(KRED "error at intel_register_access_init()\n", KNRM);
+	
+	
+    
+    printf("mmio_bar = %d\n", mmio_bar);
+	printf("mmio_size = %d\n", mmio_size);
+	printf("gen = %u\n", gen);
+	printf("pci_dev->regions[mmio_bar].base_addr = %x\n", pci_dev->regions[mmio_bar].base_addr);
+	printf("igt_global_mmio = %x\n", igt_global_mmio);
+	
+	//err = pci_device_map_range (pci_dev, pci_dev->regions[mmio_bar].base_addr, mmio_size, PCI_DEV_MAP_FLAG_WRITABLE, &igt_global_mmio);
+    
+	//if (err==-1) printf(KRED "error at pci_device_map_range()\n", KNRM);
+	
+	
+	uint32_t bar = pci_dev->regions[mmio_bar].base_addr;
+	
+	uint32_t oaperf_a4_lower_free_addr = 0x2960;
+	uint32_t oaperf_a4_upper_free_addr = 0x2964;
+	uint32_t eu_perf_cnt_ctl_0_addr = 0xE458;
+	uint32_t eu_perf_cnt_ctl_1_addr = 0xE558;
+	uint32_t eu_perf_cnt_ctl_2_addr = 0xE658;
+	uint32_t oacontrol = 0x2B00;
+	uint32_t oaperf_a7_lower_addr = 0x2838;
+	uint32_t oaperf_a7_upper_addr = 0x283C;
+    uint32_t oaperf_a8_lower_addr = 0x2840;
+    uint32_t oaperf_a8_upper_addr = 0x2844;
+    uint32_t oaperf_a9_lower_addr = 0x2848;
+    uint32_t oaperf_a9_upper_addr = 0x284C;
+    uint32_t oaperf_a10_lower_addr = 0x2850;
+    uint32_t oaperf_a10_upper_addr = 0x2854;
+    uint32_t oaperf_a11_lower_addr = 0x2858;
+    uint32_t oaperf_a11_upper_addr = 0x285C;
+    uint32_t oaperf_a12_lower_addr = 0x2860;
+    uint32_t oaperf_a12_upper_addr = 0x2864;
+    uint32_t oaperf_a13_lower_addr = 0x2868;
+    uint32_t oaperf_a13_upper_addr = 0x286C;
+    uint32_t oaperf_a14_lower_addr = 0x2870;
+    uint32_t oaperf_a14_upper_addr = 0x2874;
+    uint32_t oaperf_a15_lower_addr = 0x2878;
+    uint32_t oaperf_a15_upper_addr = 0x287C;
+    uint32_t oaperf_a16_lower_addr = 0x2880;
+    uint32_t oaperf_a16_upper_addr = 0x2884;
+    uint32_t oaperf_a17_lower_addr = 0x2888;
+    uint32_t oaperf_a17_upper_addr = 0x288C;
+    uint32_t oaperf_a18_lower_addr = 0x2890;
+    uint32_t oaperf_a18_upper_addr = 0x2894;
+    uint32_t oaperf_a19_lower_addr = 0x2898;
+    uint32_t oaperf_a19_upper_addr = 0x289C;
+    uint32_t oaperf_a20_lower_addr = 0x28A0;
+    uint32_t oaperf_a20_upper_addr = 0x28A4;
+	
+	uint32_t oacontrol_value_start=0, oacontrol_value_end=0;
+	uint32_t eu_perf_cnt_ctl_0_value_start=0, eu_perf_cnt_ctl_0_value_end=0;
+	uint32_t eu_perf_cnt_ctl_1_value_start=0, eu_perf_cnt_ctl_1_value_end=0;
+	uint32_t eu_perf_cnt_ctl_2_value_start=0, eu_perf_cnt_ctl_2_value_end=0;
+	uint32_t oaperf_a4_lower_free_value_start=0, oaperf_a4_lower_free_value_end=0;
+	uint32_t oaperf_a4_upper_free_value_start=0, oaperf_a4_upper_free_value_end=0;
+	uint32_t oaperf_a7_lower_value_start=0, oaperf_a7_lower_value_end=0;
+	uint32_t oaperf_a7_upper_value_start=0, oaperf_a7_upper_value_end=0;
+    uint32_t oaperf_a8_lower_value_start=0, oaperf_a8_lower_value_end=0;
+    uint32_t oaperf_a8_upper_value_start=0, oaperf_a8_upper_value_end=0;
+    uint32_t oaperf_a9_lower_value_start=0, oaperf_a9_lower_value_end=0;
+    uint32_t oaperf_a9_upper_value_start=0, oaperf_a9_upper_value_end=0;
+    uint32_t oaperf_a10_lower_value_start=0, oaperf_a10_lower_value_end=0;
+    uint32_t oaperf_a10_upper_value_start=0, oaperf_a10_upper_value_end=0;
+    uint32_t oaperf_a11_lower_value_start=0, oaperf_a11_lower_value_end=0;
+    uint32_t oaperf_a11_upper_value_start=0, oaperf_a11_upper_value_end=0;
+    uint32_t oaperf_a12_lower_value_start=0, oaperf_a12_lower_value_end=0;
+    uint32_t oaperf_a12_upper_value_start=0, oaperf_a12_upper_value_end=0;
+    uint32_t oaperf_a13_lower_value_start=0, oaperf_a13_lower_value_end=0;
+    uint32_t oaperf_a13_upper_value_start=0, oaperf_a13_upper_value_end=0;
+    uint32_t oaperf_a14_lower_value_start=0, oaperf_a14_lower_value_end=0;
+    uint32_t oaperf_a14_upper_value_start=0, oaperf_a14_upper_value_end=0;
+    uint32_t oaperf_a15_lower_value_start=0, oaperf_a15_lower_value_end=0;
+    uint32_t oaperf_a15_upper_value_start=0, oaperf_a15_upper_value_end=0;
+    uint32_t oaperf_a16_lower_value_start=0, oaperf_a16_lower_value_end=0;
+    uint32_t oaperf_a16_upper_value_start=0, oaperf_a16_upper_value_end=0;
+    uint32_t oaperf_a17_lower_value_start=0, oaperf_a17_lower_value_end=0;
+    uint32_t oaperf_a17_upper_value_start=0, oaperf_a17_upper_value_end=0;
+    uint32_t oaperf_a18_lower_value_start=0, oaperf_a18_lower_value_end=0;
+    uint32_t oaperf_a18_upper_value_start=0, oaperf_a18_upper_value_end=0;
+    uint32_t oaperf_a19_lower_value_start=0, oaperf_a19_lower_value_end=0;
+    uint32_t oaperf_a19_upper_value_start=0, oaperf_a19_upper_value_end=0;
+    uint32_t oaperf_a20_lower_value_start=0, oaperf_a20_lower_value_end=0;
+    uint32_t oaperf_a20_upper_value_start=0, oaperf_a20_upper_value_end=0;
+	
+	#define OACONTROL_COUNTER_SELECT_SHIFT 2
+	#define PERFORMANCE_COUNTER_ENABLE     (1 << 0)
+	uint32_t counter_format = 5;	// 0b101
+	
+	uint32_t dword_for_counting_flops = 3;			//    3 = 0b 0000 0000 0011
+	uint32_t dword_for_counting_movs = 1026;		// 1026 = 0b 0100 0000 0010
+	uint32_t dword_for_counting_ternary_ins = 516;	//  516 = 0b 0010 0000 0100
+	
+	//intel_register_write(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
+	//oaperf_a4_lower_free_value = intel_register_read(oaperf_a4_lower_free_addr);
+	//oaperf_a4_upper_free_value = intel_register_read(oaperf_a4_upper_free_addr);
+	//intel_register_write(eu_perf_cnt_ctl_0_addr, 3);
+	
+	uint32_t oacontrol_default = INREG(oacontrol);
+	printf("oacontrol: "); print_binary(oacontrol_default, 32);
+	printf("value ot write to oacontrol: "); print_binary(counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE, 32);
+	
+	
+	OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
+	oacontrol_value_start = INREG(oacontrol);
+	
+	
+	
+	
+	
+	
+	//OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
+	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
+	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
+	
+	
+	eu_perf_cnt_ctl_0_value_start = INREG(eu_perf_cnt_ctl_0_addr);
+	eu_perf_cnt_ctl_1_value_start = INREG(eu_perf_cnt_ctl_1_addr);
+	eu_perf_cnt_ctl_2_value_start = INREG(eu_perf_cnt_ctl_2_addr);
+	oaperf_a4_lower_free_value_start = INREG(oaperf_a4_lower_free_addr);
+	oaperf_a4_upper_free_value_start = INREG(oaperf_a4_upper_free_addr);
+	oaperf_a7_lower_value_start = INREG(oaperf_a7_lower_addr);
+	oaperf_a7_upper_value_start = INREG(oaperf_a7_upper_addr);
+	oaperf_a8_lower_value_start = INREG(oaperf_a8_lower_addr);
+	oaperf_a8_upper_value_start = INREG(oaperf_a8_upper_addr);
+	oaperf_a9_lower_value_start = INREG(oaperf_a9_lower_addr);
+	oaperf_a9_upper_value_start = INREG(oaperf_a9_upper_addr);
+	oaperf_a10_lower_value_start = INREG(oaperf_a10_lower_addr);
+	oaperf_a10_upper_value_start = INREG(oaperf_a10_upper_addr);
+	oaperf_a11_lower_value_start = INREG(oaperf_a11_lower_addr);
+	oaperf_a11_upper_value_start = INREG(oaperf_a11_upper_addr);
+	oaperf_a12_lower_value_start = INREG(oaperf_a12_lower_addr);
+	oaperf_a12_upper_value_start = INREG(oaperf_a12_upper_addr);
+	oaperf_a13_lower_value_start = INREG(oaperf_a13_lower_addr);
+	oaperf_a13_upper_value_start = INREG(oaperf_a13_upper_addr);
+	oaperf_a14_lower_value_start = INREG(oaperf_a14_lower_addr);
+	oaperf_a14_upper_value_start = INREG(oaperf_a14_upper_addr);
+	oaperf_a15_lower_value_start = INREG(oaperf_a15_lower_addr);
+	oaperf_a15_upper_value_start = INREG(oaperf_a15_upper_addr);
+	oaperf_a16_lower_value_start = INREG(oaperf_a16_lower_addr);
+	oaperf_a16_upper_value_start = INREG(oaperf_a16_upper_addr);
+	oaperf_a17_lower_value_start = INREG(oaperf_a17_lower_addr);
+	oaperf_a17_upper_value_start = INREG(oaperf_a17_upper_addr);
+	oaperf_a18_lower_value_start = INREG(oaperf_a18_lower_addr);
+	oaperf_a18_upper_value_start = INREG(oaperf_a18_upper_addr);
+	oaperf_a19_lower_value_start = INREG(oaperf_a19_lower_addr);
+	oaperf_a19_upper_value_start = INREG(oaperf_a19_upper_addr);
+	oaperf_a20_lower_value_start = INREG(oaperf_a20_lower_addr);
+	oaperf_a20_upper_value_start = INREG(oaperf_a20_upper_addr);
+	
+	//OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
+	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
+	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
+	
+	
+	// do work
+    ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL); clCheckError(ret, __LINE__);
+    
+	//OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
+	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
+	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
+    
+    clFlush(command_queue);		clCheckError(ret, __LINE__);
+    
+	//OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
+	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
+	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
+    
+    clFinish(command_queue);	clCheckError(ret, __LINE__);
+	
+	//sleep(2);
+    //OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
+	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
+	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
+	
+	
+	oacontrol_value_end = INREG(oacontrol);
+	
+	eu_perf_cnt_ctl_0_value_end = INREG(eu_perf_cnt_ctl_0_addr);
+	eu_perf_cnt_ctl_1_value_end = INREG(eu_perf_cnt_ctl_1_addr);
+	eu_perf_cnt_ctl_2_value_end = INREG(eu_perf_cnt_ctl_2_addr);
+	oaperf_a4_lower_free_value_end = INREG(oaperf_a4_lower_free_addr);
+	oaperf_a4_upper_free_value_end = INREG(oaperf_a4_upper_free_addr);
+	oaperf_a7_lower_value_end = INREG(oaperf_a7_lower_addr);
+	oaperf_a7_upper_value_end = INREG(oaperf_a7_upper_addr);
+	oaperf_a8_lower_value_end = INREG(oaperf_a8_lower_addr);
+	oaperf_a8_upper_value_end = INREG(oaperf_a8_upper_addr);
+	oaperf_a9_lower_value_end = INREG(oaperf_a9_lower_addr);
+	oaperf_a9_upper_value_end = INREG(oaperf_a9_upper_addr);
+	oaperf_a10_lower_value_end = INREG(oaperf_a10_lower_addr);
+	oaperf_a10_upper_value_end = INREG(oaperf_a10_upper_addr);
+	oaperf_a11_lower_value_end = INREG(oaperf_a11_lower_addr);
+	oaperf_a11_upper_value_end = INREG(oaperf_a11_upper_addr);
+	oaperf_a12_lower_value_end = INREG(oaperf_a12_lower_addr);
+	oaperf_a12_upper_value_end = INREG(oaperf_a12_upper_addr);
+	oaperf_a13_lower_value_end = INREG(oaperf_a13_lower_addr);
+	oaperf_a13_upper_value_end = INREG(oaperf_a13_upper_addr);
+	oaperf_a14_lower_value_end = INREG(oaperf_a14_lower_addr);
+	oaperf_a14_upper_value_end = INREG(oaperf_a14_upper_addr);
+	oaperf_a15_lower_value_end = INREG(oaperf_a15_lower_addr);
+	oaperf_a15_upper_value_end = INREG(oaperf_a15_upper_addr);
+	oaperf_a16_lower_value_end = INREG(oaperf_a16_lower_addr);
+	oaperf_a16_upper_value_end = INREG(oaperf_a16_upper_addr);
+	oaperf_a17_lower_value_end = INREG(oaperf_a17_lower_addr);
+	oaperf_a17_upper_value_end = INREG(oaperf_a17_upper_addr);
+	oaperf_a18_lower_value_end = INREG(oaperf_a18_lower_addr);
+	oaperf_a18_upper_value_end = INREG(oaperf_a18_upper_addr);
+	oaperf_a19_lower_value_end = INREG(oaperf_a19_lower_addr);
+	oaperf_a19_upper_value_end = INREG(oaperf_a19_upper_addr);
+	oaperf_a20_lower_value_end = INREG(oaperf_a20_lower_addr);
+	oaperf_a20_upper_value_end = INREG(oaperf_a20_upper_addr);
+	
+	
+	uint64_t oaperf_a4_free_start = (((uint64_t) oaperf_a4_upper_free_value_start) << 32) | (uint64_t) oaperf_a4_lower_free_value_start;
+	uint64_t oaperf_a7_start = (((uint64_t) oaperf_a7_upper_value_start) << 32) | (uint64_t) oaperf_a7_lower_value_start;
+	uint64_t oaperf_a8_start = (((uint64_t) oaperf_a8_upper_value_start) << 32) | (uint64_t) oaperf_a8_lower_value_start;
+	uint64_t oaperf_a9_start = (((uint64_t) oaperf_a9_upper_value_start) << 32) | (uint64_t) oaperf_a9_lower_value_start;
+	uint64_t oaperf_a10_start = (((uint64_t) oaperf_a10_upper_value_start) << 32) | (uint64_t) oaperf_a10_lower_value_start;
+	uint64_t oaperf_a11_start = (((uint64_t) oaperf_a11_upper_value_start) << 32) | (uint64_t) oaperf_a11_lower_value_start;
+	uint64_t oaperf_a12_start = (((uint64_t) oaperf_a12_upper_value_start) << 32) | (uint64_t) oaperf_a12_lower_value_start;
+	uint64_t oaperf_a13_start = (((uint64_t) oaperf_a13_upper_value_start) << 32) | (uint64_t) oaperf_a13_lower_value_start;
+	uint64_t oaperf_a14_start = (((uint64_t) oaperf_a14_upper_value_start) << 32) | (uint64_t) oaperf_a14_lower_value_start;
+	uint64_t oaperf_a15_start = (((uint64_t) oaperf_a15_upper_value_start) << 32) | (uint64_t) oaperf_a15_lower_value_start;
+	uint64_t oaperf_a16_start = (((uint64_t) oaperf_a16_upper_value_start) << 32) | (uint64_t) oaperf_a16_lower_value_start;
+	uint64_t oaperf_a17_start = (((uint64_t) oaperf_a17_upper_value_start) << 32) | (uint64_t) oaperf_a17_lower_value_start;
+	uint64_t oaperf_a18_start = (((uint64_t) oaperf_a18_upper_value_start) << 32) | (uint64_t) oaperf_a18_lower_value_start;
+	uint64_t oaperf_a19_start = (((uint64_t) oaperf_a19_upper_value_start) << 32) | (uint64_t) oaperf_a19_lower_value_start;
+	uint64_t oaperf_a20_start = (((uint64_t) oaperf_a20_upper_value_start) << 32) | (uint64_t) oaperf_a20_lower_value_start;
+	
+	uint64_t oaperf_a4_free_end = (((uint64_t) oaperf_a4_upper_free_value_end) << 32) | (uint64_t) oaperf_a4_lower_free_value_end;
+	uint64_t oaperf_a7_end = (((uint64_t) oaperf_a7_upper_value_end) << 32) | (uint64_t) oaperf_a7_lower_value_end;
+	uint64_t oaperf_a8_end = (((uint64_t) oaperf_a8_upper_value_end) << 32) | (uint64_t) oaperf_a8_lower_value_end;
+	uint64_t oaperf_a9_end = (((uint64_t) oaperf_a9_upper_value_end) << 32) | (uint64_t) oaperf_a9_lower_value_end;
+	uint64_t oaperf_a10_end = (((uint64_t) oaperf_a10_upper_value_end) << 32) | (uint64_t) oaperf_a10_lower_value_end;
+	uint64_t oaperf_a11_end = (((uint64_t) oaperf_a11_upper_value_end) << 32) | (uint64_t) oaperf_a11_lower_value_end;
+	uint64_t oaperf_a12_end = (((uint64_t) oaperf_a12_upper_value_end) << 32) | (uint64_t) oaperf_a12_lower_value_end;
+	uint64_t oaperf_a13_end = (((uint64_t) oaperf_a13_upper_value_end) << 32) | (uint64_t) oaperf_a13_lower_value_end;
+	uint64_t oaperf_a14_end = (((uint64_t) oaperf_a14_upper_value_end) << 32) | (uint64_t) oaperf_a14_lower_value_end;
+	uint64_t oaperf_a15_end = (((uint64_t) oaperf_a15_upper_value_end) << 32) | (uint64_t) oaperf_a15_lower_value_end;
+	uint64_t oaperf_a16_end = (((uint64_t) oaperf_a16_upper_value_end) << 32) | (uint64_t) oaperf_a16_lower_value_end;
+	uint64_t oaperf_a17_end = (((uint64_t) oaperf_a17_upper_value_end) << 32) | (uint64_t) oaperf_a17_lower_value_end;
+	uint64_t oaperf_a18_end = (((uint64_t) oaperf_a18_upper_value_end) << 32) | (uint64_t) oaperf_a18_lower_value_end;
+	uint64_t oaperf_a19_end = (((uint64_t) oaperf_a19_upper_value_end) << 32) | (uint64_t) oaperf_a19_lower_value_end;
+	uint64_t oaperf_a20_end = (((uint64_t) oaperf_a20_upper_value_end) << 32) | (uint64_t) oaperf_a20_lower_value_end;
+	
+	uint64_t oaperf_a4_free_delta = oaperf_a4_free_end - oaperf_a4_free_start;
+	uint64_t oaperf_a7_delta = oaperf_a7_end - oaperf_a7_start;
+	uint64_t oaperf_a8_delta = oaperf_a8_end - oaperf_a8_start;
+	uint64_t oaperf_a9_delta = oaperf_a9_end - oaperf_a9_start;
+	uint64_t oaperf_a10_delta = oaperf_a10_end - oaperf_a10_start;
+	uint64_t oaperf_a11_delta = oaperf_a11_end - oaperf_a11_start;
+	uint64_t oaperf_a12_delta = oaperf_a12_end - oaperf_a12_start;
+	uint64_t oaperf_a13_delta = oaperf_a13_end - oaperf_a13_start;
+	uint64_t oaperf_a14_delta = oaperf_a14_end - oaperf_a14_start;
+	uint64_t oaperf_a15_delta = oaperf_a15_end - oaperf_a15_start;
+	uint64_t oaperf_a16_delta = oaperf_a16_end - oaperf_a16_start;
+	uint64_t oaperf_a17_delta = oaperf_a17_end - oaperf_a17_start;
+	uint64_t oaperf_a18_delta = oaperf_a18_end - oaperf_a18_start;
+	uint64_t oaperf_a19_delta = oaperf_a19_end - oaperf_a19_start;
+	uint64_t oaperf_a20_delta = oaperf_a20_end - oaperf_a20_start;
+	
+	
+	printf("\n");
+	printf("oacontrol_start = %u ", oacontrol_value_start); print_binary(oacontrol_value_start, 32);
+	printf("eu_perf_cnt_ctl_0_start = %u ", eu_perf_cnt_ctl_0_value_start); print_binary(eu_perf_cnt_ctl_0_value_start, 32);
+	printf("eu_perf_cnt_ctl_1_start = %u ", eu_perf_cnt_ctl_1_value_start); print_binary(eu_perf_cnt_ctl_1_value_start, 32);
+	printf("eu_perf_cnt_ctl_2_start = %u ", eu_perf_cnt_ctl_2_value_start); print_binary(eu_perf_cnt_ctl_2_value_start, 32);
+	printf("oaperf_a4_free_start = %lu\n", oaperf_a4_free_start);
+	printf("oaperf_a7_start  = %lu\n", oaperf_a7_start);
+	printf("oaperf_a8_start  = %lu\n", oaperf_a8_start);
+	printf("oaperf_a9_start  = %lu\n", oaperf_a9_start);
+	printf("oaperf_a10_start = %lu\n", oaperf_a10_start);
+	printf("oaperf_a11_start = %lu\n", oaperf_a11_start);
+	printf("oaperf_a12_start = %lu\n", oaperf_a12_start);
+	printf("oaperf_a13_start = %lu\n", oaperf_a13_start);
+	printf("oaperf_a14_start = %lu\n", oaperf_a14_start);
+	printf("oaperf_a15_start = %lu\n", oaperf_a15_start);
+	printf("oaperf_a16_start = %lu\n", oaperf_a16_start);
+	printf("oaperf_a17_start = %lu\n", oaperf_a17_start);
+	printf("oaperf_a18_start = %lu\n", oaperf_a18_start);
+	printf("oaperf_a19_start = %lu\n", oaperf_a19_start);
+	printf("oaperf_a20_start = %lu\n", oaperf_a20_start);
+	
+	printf("\n");
+	printf("oacontrol_end = %u ", oacontrol_value_end); print_binary(oacontrol_value_end, 32);
+	printf("eu_perf_cnt_ctl_0_end = %u ", eu_perf_cnt_ctl_0_value_end); print_binary(eu_perf_cnt_ctl_0_value_end, 32);
+	printf("eu_perf_cnt_ctl_1_end = %u ", eu_perf_cnt_ctl_1_value_end); print_binary(eu_perf_cnt_ctl_1_value_end, 32);
+	printf("eu_perf_cnt_ctl_2_end = %u ", eu_perf_cnt_ctl_2_value_end); print_binary(eu_perf_cnt_ctl_2_value_end, 32);
+	printf("oaperf_a4_free_end = %lu\n", oaperf_a4_free_end);
+	printf("oaperf_a7_end  = %lu\n", oaperf_a7_end);
+	printf("oaperf_a8_end  = %lu\n", oaperf_a8_end);
+	printf("oaperf_a9_end  = %lu\n", oaperf_a9_end);
+	printf("oaperf_a10_end = %lu\n", oaperf_a10_end);
+	printf("oaperf_a11_end = %lu\n", oaperf_a11_end);
+	printf("oaperf_a12_end = %lu\n", oaperf_a12_end);
+	printf("oaperf_a13_end = %lu\n", oaperf_a13_end);
+	printf("oaperf_a14_end = %lu\n", oaperf_a14_end);
+	printf("oaperf_a15_end = %lu\n", oaperf_a15_end);
+	printf("oaperf_a16_end = %lu\n", oaperf_a16_end);
+	printf("oaperf_a17_end = %lu\n", oaperf_a17_end);
+	printf("oaperf_a18_end = %lu\n", oaperf_a18_end);
+	printf("oaperf_a19_end = %lu\n", oaperf_a19_end);
+	printf("oaperf_a20_end = %lu\n", oaperf_a20_end);
+	
+	printf("\n");
+	printf("oaperf_a4_free_delta = %lu\n", oaperf_a4_free_delta);
+	printf("oaperf_a7_delta  = %lu\n", oaperf_a7_delta);
+	printf("oaperf_a8_delta  = %lu\n", oaperf_a8_delta);
+	printf("oaperf_a9_delta  = %lu\n", oaperf_a9_delta);
+	printf("oaperf_a10_delta = %lu\n", oaperf_a10_delta);
+	printf("oaperf_a11_delta = %lu\n", oaperf_a11_delta);
+	printf("oaperf_a12_delta = %lu\n", oaperf_a12_delta);
+	printf("oaperf_a13_delta = %lu\n", oaperf_a13_delta);
+	printf("oaperf_a14_delta = %lu\n", oaperf_a14_delta);
+	printf("oaperf_a15_delta = %lu\n", oaperf_a15_delta);
+	printf("oaperf_a16_delta = %lu\n", oaperf_a16_delta);
+	printf("oaperf_a17_delta = %lu\n", oaperf_a17_delta);
+	printf("oaperf_a18_delta = %lu\n", oaperf_a18_delta);
+	printf("oaperf_a19_delta = %lu\n", oaperf_a19_delta);
+	printf("oaperf_a20_delta = %lu\n", oaperf_a20_delta);
+	
+	
+    
+    
+    OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | 0);
+	
+    
+	intel_register_access_fini();
+	
+	
+	
+	
+	
+	FILE *f = fopen("results_lib.csv","a");
+	if(f==NULL) { 
+		printf(KRED "Error opening file at %d\n", __LINE__);
+		exit(-1);
+	}
+	if ( (size_t) ftell(f) == 0)
+		fprintf(f, "A4_free\tA7\tA8\tA9\tA10\tA11\tA12\tA13\tA14\tA15\tA16\tA17\tA18\tA19\tA20\n");
+	
+	fprintf(f, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\n", 
+			oaperf_a4_free_delta, oaperf_a7_delta, oaperf_a8_delta, oaperf_a9_delta,
+			oaperf_a10_delta, oaperf_a11_delta, oaperf_a12_delta, oaperf_a13_delta,
+			oaperf_a14_delta, oaperf_a15_delta, oaperf_a16_delta, oaperf_a17_delta,
+			oaperf_a18_delta, oaperf_a19_delta, oaperf_a20_delta
+   		);
+    
+	fclose(f);
+	
+	
+	
+	for (int i = 0; i < ARRAY_SIZE(src); i++) {
+		drm_intel_bo_unreference(src[i].bo);
+		drm_intel_bo_unreference(dst[i].bo);
+	}
+
+	drm_intel_bo_unmap(bo);
+	drm_intel_bo_unreference(bo);
+	intel_batchbuffer_free(batch);
+	drm_intel_gem_context_destroy(context0);
+	drm_intel_gem_context_destroy(context1);
+	drm_intel_bufmgr_destroy(bufmgr);
+	__perf_close(stream_fd);
+	
+}
+    
 

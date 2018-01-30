@@ -1,6 +1,13 @@
 #ifndef __KERNEL_BUILDER_H__
 #define __KERNEL_BUILDER_H__
 
+typedef enum operation {
+	NOP,
+	FLOP,
+	MEM,
+	HYB
+} operation_t;
+
 typedef enum flop_op {
 	ADD,
 	SUB,
@@ -23,6 +30,8 @@ int flop_per_op[] {
 	[MAD] = 2
 };
 
+void str_tolower(char *str);
+void str_toupper(char *str);
 
 int build_flops_kernel(int flops, int simd, flop_op_t op);
 int build_mem_kernel(int loads, int stores, int simd, mem_op_t op);

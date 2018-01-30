@@ -1,3 +1,17 @@
+ 
+ 
+__kernel void single_flop(__global float* a) {
+//__kernel void single_flop() {
+     //int i = get_global_id(0);
+     //a[i] = a[i] *2.0;
+     //a[0] = a[0]+2.0;
+     //a[0] = a[1];
+    a[0] = 2.0f*2.0f;
+    a[1] = 2.0f*2.0f;
+    //a[2] = 2.0f*2.0f;
+    //a[3] = 2.0f*2.0f;
+ }
+ 
  /** flops_light
   * lightweight computational kernel
   * just for testing
@@ -9,7 +23,7 @@
 	int i = get_global_id(0);
 	int j;
 	
-	for(j = 0; j < 10000; j++) {
+	for(j = 0; j < 1; j++) {
 		a[i] = a[i] * 2.0 + 1.0;
 		b[i] = b[i] * 2.0 + 1.0;
 		c[i] = c[i] * 2.0 + 1.0;
@@ -31,7 +45,7 @@ __kernel void flops_max(__global float* a,
 	int i = get_global_id(0);
 	int j;
 	
-	for(j = 0; j < 1000000; j++) {
+	for(j = 0; j < 10000000; j++) {
 		a[i] = a[i] * 2.0 + 1.0;
 		b[i] = b[i] * 2.0 + 1.0;
 		c[i] = c[i] * 2.0 + 1.0;
@@ -57,5 +71,18 @@ __kernel void load_store(__global char *src, __global char *dst) {
 		dst[i+2] = src[i+2];
 		dst[i+3] = src[i+3];
 		dst[i+4] = src[i+4];
+	}
+}
+
+/** ternary kernel
+ * comprised of ternary operations
+ */
+__kernel void ternary(__global float *a, __global float *b) {
+	
+	int i = get_global_id(0);
+	int j;
+	
+	for(j = 0; j < 100000; j++) {
+		a[i] = b[i] > 0 ? 1.0f : -1.0f;
 	}
 }

@@ -129,6 +129,74 @@ enum fine_event_filter {
 
 
 
+typedef struct counters_info {
+
+	/* counters read through MMIO */
+
+	uint32_t mmio_a_counters_32_values_start[4];
+	uint32_t mmio_a_counters_32_values_end[4];
+	uint32_t mmio_a_counters_32_values_delta[4];
+
+	uint64_t mmio_a_counters_40_values_start[32];
+	uint64_t mmio_a_counters_40_values_end[32];
+	uint64_t mmio_a_counters_40_values_delta[32];
+
+	uint32_t mmio_b_counters_values_start[8];
+	uint32_t mmio_b_counters_values_end[8];
+	uint32_t mmio_b_counters_values_delta[8];
+
+	/* counters read through MI_RPC */
+
+	uint32_t mirpc_timestamp_start;
+	uint32_t mirpc_timestamp_end;
+	uint32_t mirpc_timestamp_delta;
+
+	uint32_t mirpc_gpu_ticks_start;
+	uint32_t mirpc_gpu_ticks_end;
+	uint32_t mirpc_gpu_ticks_delta;
+
+	uint32_t mirpc_ctx_id_start;
+	uint32_t mirpc_ctx_id_end;
+
+	uint32_t mirpc_slice_clock_start;
+	uint32_t mirpc_slice_clock_end;
+	uint32_t mirpc_unslice_clock_start;
+	uint32_t mirpc_unslice_clock_end;
+
+	char* mirpc_reason_start[30];
+	char* mirpc_reason_end[30];
+
+	uint32_t mirpc_a_counters_32_values_start[4];
+	uint32_t mirpc_a_counters_32_values_end[4];
+	uint32_t mirpc_a_counters_32_values_delta[4];
+
+	uint64_t mirpc_a_counters_40_values_start[32];
+	uint64_t mirpc_a_counters_40_values_end[32];
+	uint64_t mirpc_a_counters_40_values_delta[32];
+
+	uint32_t mirpc_b_counters_values_start[8];
+	uint32_t mirpc_b_counters_values_end[8];
+	uint32_t mirpc_b_counters_values_delta[8];
+
+	uint32_t mirpc_c_counters_values_start[8];
+	uint32_t mirpc_c_counters_values_end[8];
+	uint32_t mirpc_c_counters_values_delta[8];
+
+	/* Other relevant info */
+
+	uint64_t cpu_ticks_start;
+	uint64_t cpu_ticks_end;
+	uint64_t cpu_ticks_delta;
+
+	uint32_t gpu_clock_start;
+	uint32_t gpu_clock_end;
+	uint32_t cpu_clock_start;
+	uint32_t cpu_clock_end;
+
+}counters_info_t;
+
+
+
 
 /* Temporarily copy i915-perf uapi here to avoid a dependency on libdrm's
  * i915_drm.h copy being updated with the i915-perf interface before this
@@ -425,8 +493,16 @@ uint32_t send_mi_store_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_add
 void write_to_flexible_eu_registers(void);
 
 
+uint32_t create_filtering_word(enum increment_event_filter increment, enum coarse_event_filter coarse, enum fine_event_filter fine);
 
+void read_counters_with_mmio(void);
 
+int enable_aggregating_counters(int eu_flexible_counter_num, uint32_t programable_dword);
 
+void print_report_card(counters_info_t counters);
+
+void test_counters_with_mmap();
+
+void test_counters_with_lib();
 
 #endif
