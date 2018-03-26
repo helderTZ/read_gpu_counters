@@ -9,6 +9,8 @@
 
 #include <CL/cl.h>
 
+#include "papi.h"
+
 #define KNRM  "\x1B[0m"
 #define KRED  "\x1B[31m"
 #define KGRN  "\x1B[32m"
@@ -28,7 +30,7 @@ cl_context context;
 cl_command_queue command_queue;
 cl_program program;
 cl_kernel kernel;
-cl_mem a, b, c, d, e, f, g;
+cl_mem a, b;
 
 cl_build_status build_status;
 
@@ -41,8 +43,9 @@ cpu_set_t my_set;
 char kernel_choice[50];
 
 
-
-
+// PAPI vars
+int EventSet;
+long long int *papi_values;
 
 
 
@@ -52,6 +55,9 @@ char kernel_choice[50];
 // =================================================================
 
 
+
+#define OACONTROL_COUNTER_SELECT_SHIFT 2
+#define PERFORMANCE_COUNTER_ENABLE     (1 << 0)
 
 #define GEN6_MI_REPORT_PERF_COUNT ((0x28 << 23) | (3 - 2))
 #define GEN8_MI_REPORT_PERF_COUNT ((0x28 << 23) | (4 - 2))
@@ -128,72 +134,43 @@ enum fine_event_filter {
 };
 
 
-
-typedef struct counters_info {
-
-	/* counters read through MMIO */
-
-	uint32_t mmio_a_counters_32_values_start[4];
-	uint32_t mmio_a_counters_32_values_end[4];
-	uint32_t mmio_a_counters_32_values_delta[4];
-
-	uint64_t mmio_a_counters_40_values_start[32];
-	uint64_t mmio_a_counters_40_values_end[32];
-	uint64_t mmio_a_counters_40_values_delta[32];
-
-	uint32_t mmio_b_counters_values_start[8];
-	uint32_t mmio_b_counters_values_end[8];
-	uint32_t mmio_b_counters_values_delta[8];
-
-	/* counters read through MI_RPC */
-
-	uint32_t mirpc_timestamp_start;
-	uint32_t mirpc_timestamp_end;
-	uint32_t mirpc_timestamp_delta;
-
-	uint32_t mirpc_gpu_ticks_start;
-	uint32_t mirpc_gpu_ticks_end;
-	uint32_t mirpc_gpu_ticks_delta;
-
-	uint32_t mirpc_ctx_id_start;
-	uint32_t mirpc_ctx_id_end;
-
-	uint32_t mirpc_slice_clock_start;
-	uint32_t mirpc_slice_clock_end;
-	uint32_t mirpc_unslice_clock_start;
-	uint32_t mirpc_unslice_clock_end;
-
-	char* mirpc_reason_start[30];
-	char* mirpc_reason_end[30];
-
-	uint32_t mirpc_a_counters_32_values_start[4];
-	uint32_t mirpc_a_counters_32_values_end[4];
-	uint32_t mirpc_a_counters_32_values_delta[4];
-
-	uint64_t mirpc_a_counters_40_values_start[32];
-	uint64_t mirpc_a_counters_40_values_end[32];
-	uint64_t mirpc_a_counters_40_values_delta[32];
-
-	uint32_t mirpc_b_counters_values_start[8];
-	uint32_t mirpc_b_counters_values_end[8];
-	uint32_t mirpc_b_counters_values_delta[8];
-
-	uint32_t mirpc_c_counters_values_start[8];
-	uint32_t mirpc_c_counters_values_end[8];
-	uint32_t mirpc_c_counters_values_delta[8];
-
-	/* Other relevant info */
-
-	uint64_t cpu_ticks_start;
-	uint64_t cpu_ticks_end;
+typedef struct report_card {
+	uint32_t timestamp_delta;
+	uint64_t ocl_nanoseconds;
 	uint64_t cpu_ticks_delta;
+	uint32_t gpu_ticks_delta;
+	uint32_t ctx_id;
+	uint32_t slice_freq;
+	uint32_t unslice_freq;
+	uint32_t gpu_cur_freq;
+	uint32_t cpu_cur_freq;
+	char gpu_time_string[30];
+	char cpu_time_string[30];
+	char reasons[31];
+	uint64_t a_counters_delta[36];
+	uint32_t b_counters_delta[8];
+	uint32_t c_counters_delta[8];
+	long long int papi_psys_energy;
+	long long int papi_pkg_energy;
+	long long int papi_pp0_energy;
+	long long int papi_dram_energy;
+	float psys_energy;
+	float pkg_energy;
+	float pp0_energy;
+	float dram_energy;
+	float gpu_energy;
+	float psys_power_ocl;
+	float pkg_power_ocl;
+	float pp0_power_ocl;
+	float dram_power_ocl;
+	float gpu_power_ocl;
+	float psys_power_gput;
+	float pkg_power_gput;
+	float pp0_power_gput;
+	float dram_power_gput;
+	float gpu_power_gput;
+} report_card_t;
 
-	uint32_t gpu_clock_start;
-	uint32_t gpu_clock_end;
-	uint32_t cpu_clock_start;
-	uint32_t cpu_clock_end;
-
-}counters_info_t;
 
 
 
@@ -460,11 +437,9 @@ bool init_sys_info(void);
 /* print_reports
  * calculates deltas between two OA reports and displays them
  */
-void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long long int cpu_ticks0, long long int cpu_ticks1, uint64_t cpu_cur_freq, uint64_t gpu_cur_freq, int dump);
+report_card_t print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long long int cpu_ticks0, long long int cpu_ticks1, uint64_t cpu_cur_freq, uint64_t gpu_cur_freq, long long int ocl_nanoseconds, long long int *papi_values, int dump,int quiet, char *filename);
 
-
-
-void test_counters_with_opencl(int dump);
+void print_report_card(report_card_t rep_card, char *filename);
 
 /* read_i915_module_ref
  * returns a reference to the i915 module  (??)
@@ -477,32 +452,30 @@ int i915_perf_add_config(int fd, struct drm_i915_perf_oa_config *config);
 
 void i915_perf_remove_config(int fd, uint64_t config_id);
 
-/* Registers required by userspace. This list should be maintained by
- * the OA configs developers and agreed upon with kernel developers as
- * some of the registers have bits used by the kernel (for workarounds
- * for instance) and other bits that need to be set by the OA configs.
- */
-void test_whitelisted_registers_userspace_config(void);
-
 void print_binary(int val, int len);
 
 void send_mi_load_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_address, uint32_t *memory_address, uint32_t ggtt, uint32_t async_mode);
 
 uint32_t send_mi_store_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_address, uint32_t ggtt,uint32_t pred_enable);
 
-void write_to_flexible_eu_registers(void);
-
-
 uint32_t create_filtering_word(enum increment_event_filter increment, enum coarse_event_filter coarse, enum fine_event_filter fine);
 
-void read_counters_with_mmio(void);
+uint64_t umax(int length, uint64_t *vector);
 
-int enable_aggregating_counters(int eu_flexible_counter_num, uint32_t programable_dword);
+uint64_t umin(int length, uint64_t *vector);
 
-void print_report_card(counters_info_t counters);
+uint64_t umedian(int length, uint64_t *vector);
+int64_t median(int length, int64_t *vector);
+float fmedian(int length, float *vector);
 
-void test_counters_with_mmap();
+uint64_t average(int length, uint64_t *vector);
 
-void test_counters_with_lib();
+void measure_overheads();
+
+void read_counters_rpc(int dump, int power_smoothing);
+
+void read_counters_mmio();
+
+void profile_through_opencl();
 
 #endif

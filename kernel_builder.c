@@ -2,34 +2,110 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 #include "kernel_builder.h"
 
 
-int build_flops_kernel(int flops, int simd, flop_op_t op) {
 
-	int i;
-	int iter = (flops*flop_per_op[op])/(simd/4);
 
-	if( !(simd==4 || simd==8 || simd==16 || simd==32) )
-		return -1;
+	
+void str_tolower(char *str) {
 
-	FILE *f_kernel = fopen("custom_kernel.cl", "w");
+	char *p = str;
+	for( ; *p; ++p) 
+		//*p = tolower((unsigned char)*p);
+		*p = (*p) + 32;
 
-	fprintf(f_kernel, "__kernel void custom(__global float%d *a) {\n", simd);
+}
+
+void str_toupper(char *str) {
+
+	char *p = str;
+	for( ; *p; ++p) 
+		//p = toupper((unsigned char)*p);
+		*p = (*p) - 32;
+
+}
+
+const char* simd2string(int simd) {
+	
+	switch(simd) {
+		case 1: return "";
+		case 2: return "2";
+		case 4: return "4";
+		case 8: return "8";
+		case 16: return "16";
+		default: return "-1";
+	}
+}
+
+bool validate_op_flop(const char *op) {
+	
+	if 		(strcmp(op, "ADD")==0) 	return true;
+	else if (strcmp(op, "SUB")==0) 	return true;
+	else if (strcmp(op, "MUL")==0) 	return true;
+	else if (strcmp(op, "DIV")==0) 	return true;
+	else if (Strcmp(op, "MAD")==0) 	return true;
+	else							return false;
+}
+
+bool validate_op_mem(const char *op) {
+	
+	if 		(strcmp(op, "LD")==0) 	return true;
+	else if (strcmp(op, "ST")==0) 	return true;
+	else if (strcmp(op, "HYB")==0) 	return true;
+	else							return false;
+}
+
+bool validate_simd(const char *simd) {
+	
+	switch(simd) {
+		case 1:
+		case 2:
+		case 4:
+		case 8:
+		case 16:
+			return true;
+		default:
+			return false;
+	}
+}
+
+int op_base_flops(const char *op) {
+	
+	if 		(strcmp(op, "ADD")==0) 	return 1;
+	else if (strcmp(op, "SUB")==0) 	return 1;
+	else if (strcmp(op, "MUL")==0) 	return 1;
+	else if (strcmp(op, "DIV")==0) 	return 1;
+	else if (Strcmp(op, "MAD")==0) 	return 2;
+	else							return 0;
+}
+
+
+
+
+int build_flops_kernel(int flops ,int simd, const char *op) {
+	
+	if (!validate_op_flop(op)) return -1;
+	if (!validate_simd(simd)) return -1;
+	
+		int i;
+	int flops_per_op = op_base_flops(op);
+
+	FILE *f_kernel = fopen("kernels/custom_kernel.cl", "w");
+
+	fprintf(f_kernel, "__kernel void flop_custom(__global float%s *a, int iter) {\n", simd2string(simd));
 	fprintf(f_kernel, "\tint i = get_global_id(0);\n");
 	fprintf(f_kernel, "\tint j;\n");
-	fprintf(f_kernel, "\tfor(j = 0; j < %d; j++) {\n",iter);
+	fprintf(f_kernel, "\tfor(j = 0; j < iter; j++) {\n");
 	
 	for(i = 0; i < iter; i++) {
-		switch(op) {
-			case ADD: fprintf(f_kernel, "\t\ta[i] = a[i] + 1.0f;\n"); break;
-			case SUB: fprintf(f_kernel, "\t\ta[i] = a[i] - 1.0f;\n"); break;
-			case MUL: fprintf(f_kernel, "\t\ta[i] = a[i] * 2.0f;\n"); break;
-			case DIV: fprintf(f_kernel, "\t\ta[i] = a[i] / 2.0f;\n"); break;
-			case MAD: fprintf(f_kernel, "\t\ta[i] = a[i] * 2.0f + 1.0f;\n"); break;
-			default: return -1;
-		}
+		if 		(strcmp(op, "ADD")==0) fprintf(f_kernel, "\t\ta[i] = a[i] + 1.0f;\n");
+		else if (strcmp(op, "SUB")==0) fprintf(f_kernel, "\t\ta[i] = a[i] - 1.0f;\n");
+		else if (strcmp(op, "MUL")==0) fprintf(f_kernel, "\t\ta[i] = a[i] * 2.0f;\n");
+		else if (strcmp(op, "DIV")==0) fprintf(f_kernel, "\t\ta[i] = a[i] / 2.0f;\n");
+		else if (strcmp(op, "MAD")==0) fprintf(f_kernel, "\t\ta[i] = a[i] * 2.0f + 1.0f;\n");
 	}
 	
 	fprintf(f_kernel, "\t}\n}");                
@@ -41,28 +117,38 @@ int build_flops_kernel(int flops, int simd, flop_op_t op) {
 
 
 
-int build_mem_kernel(int loads, int stores, int simd, mem_op_t op) {
+int build_mem_kernel(int loads, int stores, int simd, const char *op) {
 
+	if (!validate_op_mem(op)) return -1;
+	if (!validate_simd(simd)) return -1;
+	
 	int i;
-	int iter = (loads+stores)/simd;
 
-	if( !(simd==4 || simd==8 || simd==16 || simd==32) )
+	if( !(simd==1 || simd==2 || simd==4 || simd==8 || simd==16) )
 		return -1;
 
-	FILE *f_kernel = fopen("custom_kernel.cl", "w");
+	FILE *f_kernel = fopen("kernels/custom_kernel.cl", "w");
 	
-	fprintf(f_kernel, "__kernel void custom(__global float%d *a, __global float%d *b) {\n", simd, simd);
+	fprintf(f_kernel, "__kernel void mem_custom(__global float%s *a, __global float%s *b, int iter, int loads, int stores) {\n", simd2string(simd), simd2string(simd));
 	fprintf(f_kernel, "\tint i = get_global_id(0);\n");
-	fprintf(f_kernel, "\tint j;\n");
-	fprintf(f_kernel, "\tfor(j = 0; j < %d; j++) {\n",iter);
+	fprintf(f_kernel, "\tint j, k;\n");
+	fprintf(f_kernel, "\tfor(j = 0; j < iter; j++) {\n");
 	
 	for(i = 0; i < iter; i++) {
-		switch(op) {
-			case LD: fprintf(f_kernel, "\t\tfloat%d temp = a[i];\n", simd); break;
-			case ST: fprintf(f_kernel, "\t\ta[i] = 2;\n"); break;
-			case HYBRID: fprintf(f_kernel, "\t\ta[i] = b[i];\n"); break;
-			default: return -1;
+		if (strcmp(op, "LD")==0) {
+			fprintf(f_kernel, "\t\tfloat%d temp;\n", simd);
+			//fprintf(f_kernel, "\t\tfor(k = 0; k < loads; k++) {\n");
+			fprintf(f_kernel, "\t\t\ttemp = a[i];\n");
+			fprintf(f_kernel, "\t\t}\n");
+		}			
+		else if (strcmp(op, "ST")==0) {
+			//fprintf(f_kernel, "\t\tfor(k = 0; k < stores; k++) {\n");
+			fprintf(f_kernel, "\t\t\tfloat%d temp = (float%d)(j);\n", simd, simd);
+			fprintf(f_kernel, "\t\t\ta[i] = temp;\n");
+			fprintf(f_kernel, "\t\t}\n");
 		}
+		else if (strcmp(op, "HYB")==0) {
+			fprintf(f_kernel, "\t\ta[i] = b[i];\n");
 	}
 	
 	fprintf(f_kernel, "\t}\n}");  
@@ -87,28 +173,11 @@ int build_hybrid_kernel(int flops, int loads, int stores) {
 
 
 
-void str_tolower(char *str) {
-
-	char *p = str;
-	for( ; *p; ++p) 
-		*p = tolower((unsigned char)*p);
-		//*p = (*p) + 32;
-
-}
-
-void str_toupper(char *str) {
-
-	char *p = str;
-	for( ; *p; ++p) 
-		*p = toupper((unsigned char)*p);
-		//*p = (*p) - 32;
-
-}
 
 
 
 
-
+/*
 int main(int argc, char **argv) {
 
 	operation_t op = NOP;
@@ -162,3 +231,5 @@ int main(int argc, char **argv) {
 	
 	if(err!=0) printf("Err = %d\n", err);
 }
+*/
+

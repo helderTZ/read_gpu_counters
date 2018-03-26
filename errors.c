@@ -104,7 +104,7 @@ const char* clGetErrorString(int errorCode) {
  */
 int clCheckError(int errorCode, int line) {
     if (errorCode != CL_SUCCESS) {
-        printf(KRED "Line: %d, Error %d: %s\n" KNRM, line, errorCode, clGetErrorString(errorCode));
+        fprintf(stderr, KRED "Line: %d, Error %d: %s\n" KNRM, line, errorCode, clGetErrorString(errorCode));
     }
     return errorCode;
 }

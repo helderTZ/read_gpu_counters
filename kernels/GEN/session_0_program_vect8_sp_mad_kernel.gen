@@ -1,0 +1,63 @@
+LABEL0
+         mov      (1|M0)         null<1>:ud    0xA308F73:ud                    
+(W)      mov      (8|M0)         r5.0<1>:ud    r0.0<1;1,0>:ud                  
+(W)      or       (1|M0)         cr0.0<1>:ud   cr0.0<0;1,0>:ud   0x4C0:uw         {Switch}
+(W)      mul      (1|M0)         r126.0<1>:d   r8.4<0;1,0>:d     r5.1<0;1,0>:d   
+(W)      mov      (8|M0)         r127.0<1>:d   r5.0<8;8,1>:d                    {Compacted}
+         add      (16|M0)        r124.0<1>:d   r1.0<8;8,1>:uw    r126.0<0;1,0>:d 
+         add      (16|M16)       r122.0<1>:d   r2.0<8;8,1>:uw    r126.0<0;1,0>:d 
+         add      (16|M0)        r124.0<1>:d   r124.0<8;8,1>:d   r7.0<0;1,0>:d    {Compacted}
+         add      (16|M16)       r122.0<1>:d   r122.0<8;8,1>:d   r7.0<0;1,0>:d   
+         shl      (8|M0)         r3.0<1>:q     r124.0<8;8,1>:d   5:w             
+         shl      (8|M8)         r120.0<1>:q   r125.0<8;8,1>:d   5:w             
+         shl      (8|M16)        r118.0<1>:q   r122.0<8;8,1>:d   5:w             
+         shl      (8|M24)        r116.0<1>:q   r123.0<8;8,1>:d   5:w             
+         add      (8|M0)         r9.0<1>:q     r8.0<0;1,0>:q     r3.0<4;4,1>:q   
+         add      (8|M0)         r21.0<1>:q    r8.1<0;1,0>:q     r3.0<4;4,1>:q   
+         add      (8|M8)         r11.0<1>:q    r8.0<0;1,0>:q     r120.0<4;4,1>:q 
+         add      (8|M8)         r23.0<1>:q    r8.1<0;1,0>:q     r120.0<4;4,1>:q 
+         add      (8|M16)        r112.0<1>:q   r8.0<0;1,0>:q     r118.0<4;4,1>:q 
+         add      (8|M16)        r25.0<1>:q    r8.1<0;1,0>:q     r118.0<4;4,1>:q 
+         add      (8|M24)        r114.0<1>:q   r8.0<0;1,0>:q     r116.0<4;4,1>:q 
+         add      (8|M24)        r27.0<1>:q    r8.1<0;1,0>:q     r116.0<4;4,1>:q 
+         add      (8|M0)         r13.0<1>:uq   r9.0<4;4,1>:uq    0x10:uw         
+         add      (8|M0)         r46.0<1>:uq   r21.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r15.0<1>:uq   r11.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r48.0<1>:uq   r23.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r17.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r123.0<1>:uq  r25.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r19.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r125.0<1>:uq  r27.0<4;4,1>:uq   0x10:uw         
+         send     (16|M0)        r96:w         r9:uq             0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r30:w         r21:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r104:w        r13:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r38:w         r46:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r80:w         r112:uq           0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r46:w         r25:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r88:w         r17:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r54:w         r123:uq           0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         add      (8|M0)         r123.0<1>:uq  r9.0<4;4,1>:uq    0x10:uw         
+         add      (8|M8)         r125.0<1>:uq  r11.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r119.0<1>:uq  r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r121.0<1>:uq  r114.0<4;4,1>:uq  0x10:uw         
+         mad      (16|M0)        r64.0<1>:f    r30.0<8;1>:f      r96.0<8;1>:f      r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r66.0<1>:f    r32.0<8;1>:f      r98.0<8;1>:f      r32.0<1>:f       {Compacted}
+         mad      (16|M0)        r68.0<1>:f    r34.0<8;1>:f      r100.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M0)        r70.0<1>:f    r36.0<8;1>:f      r102.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M0)        r72.0<1>:f    r38.0<8;1>:f      r104.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M0)        r74.0<1>:f    r40.0<8;1>:f      r106.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mad      (16|M0)        r76.0<1>:f    r42.0<8;1>:f      r108.0<8;1>:f     r42.0<1>:f       {Compacted}
+         mad      (16|M0)        r78.0<1>:f    r44.0<8;1>:f      r110.0<8;1>:f     r44.0<1>:f       {Compacted}
+         mad      (16|M16)       r13.0<1>:f    r46.0<8;1>:f      r80.0<8;1>:f      r46.0<1>:f       {Compacted}
+         mad      (16|M16)       r15.0<1>:f    r48.0<8;1>:f      r82.0<8;1>:f      r48.0<1>:f       {Compacted}
+         mad      (16|M16)       r17.0<1>:f    r50.0<8;1>:f      r84.0<8;1>:f      r50.0<1>:f       {Compacted}
+         mad      (16|M16)       r19.0<1>:f    r52.0<8;1>:f      r86.0<8;1>:f      r52.0<1>:f       {Compacted}
+         mad      (16|M16)       r21.0<1>:f    r54.0<8;1>:f      r88.0<8;1>:f      r54.0<1>:f       {Compacted}
+         mad      (16|M16)       r23.0<1>:f    r56.0<8;1>:f      r90.0<8;1>:f      r56.0<1>:f       {Compacted}
+         mad      (16|M16)       r25.0<1>:f    r58.0<8;1>:f      r92.0<8;1>:f      r58.0<1>:f       {Compacted}
+         mad      (16|M16)       r27.0<1>:f    r60.0<8;1>:f      r94.0<8;1>:f      r60.0<1>:f       {Compacted}
+         sends    (16|M0)        null:w        r9                r64               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M0)        null:w        r123              r72               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r112              r13               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r119              r21               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (8|M0)         null:ud       r127:ud           0x4D00027  0x2000010 {EOT} //  spawner  wr:1, rd:0, fc: 0x10

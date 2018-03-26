@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 #include <CL/cl.h>
 #include "errors.h"
 
@@ -12,26 +13,9 @@
 
 #include <sched.h>
 
-/*
-// OpenCL Global vars
-cl_platform_id platform;
-cl_device_id device;
-cl_context context;
-cl_command_queue command_queue;
-cl_program program;
-cl_kernel kernel;
-cl_mem a, b, c, d, e, f, g;
 
-cl_build_status build_status;
-
-size_t global;
-size_t local;
-
-// set affinity 
-cpu_set_t my_set;
-
-char kernel_choice[50];
-*/
+extern char kernel_choice[50];
+extern long long int *papi_values;
 
 
 
@@ -474,7 +458,7 @@ void emit_report_perf_count(struct intel_batchbuffer *batch,
 		OUT_RELOC(dst_bo, I915_GEM_DOMAIN_INSTRUCTION, I915_GEM_DOMAIN_INSTRUCTION, dst_offset);
 		OUT_BATCH(report_id);
 		ADVANCE_BATCH();
-        printf("GEN8_MI_REPORT_PERF_COUNT: %d\n", GEN8_MI_REPORT_PERF_COUNT);
+        //printf("GEN8_MI_REPORT_PERF_COUNT: %d\n", GEN8_MI_REPORT_PERF_COUNT);
 	}
 }
 
@@ -579,7 +563,7 @@ bool init_sys_info(void) {
 				test_set_uuid = "882fa433-1f4a-4a67-a962-c741888fe5f5";
 				break;
 			default:
-				printf(KRED "unsupported Skylake GT size\n" KNRM);
+				fprintf(stderr, KRED "unsupported Skylake GT size\n" KNRM);
 				return false;
 			}
 			timestamp_frequency = 12000000;
@@ -597,7 +581,7 @@ bool init_sys_info(void) {
 				test_set_uuid = "f1792f32-6db2-4b50-b4b2-557128f1688d";
 				break;
 			default:
-				printf(KRED "unsupported Kabylake GT size\n" KNRM);
+				fprintf(stderr, KRED "unsupported Kabylake GT size\n" KNRM);
 				return false;
 			}
 			timestamp_frequency = 12000000;
@@ -612,12 +596,12 @@ bool init_sys_info(void) {
 				test_set_uuid = "74fb4902-d3d3-4237-9e90-cbdc68d0a446";
 				break;
 			default:
-				printf(KRED "unsupported Cannonlake GT size\n" KNRM);
+				fprintf(stderr, KRED "unsupported Cannonlake GT size\n" KNRM);
 				return false;
 			}
 			timestamp_frequency = 12000000;
 		} else {
-			printf(KRED "unsupported GT\n" KNRM);
+			fprintf(stderr, KRED "unsupported GT\n" KNRM);
 			return false;
 		}
 
@@ -636,23 +620,75 @@ bool init_sys_info(void) {
 }
 
 
+
+void print_report_card(report_card_t rep_card, char *filename) {
+	
+	FILE *f_output = fopen(filename, "a");
+	
+	int i;
+	if ( f_output && (size_t) ftell(f_output) == 0) {
+		fprintf(f_output, "OCL_TIME\tTIMESTAMP\tGPU_TICKS\tCPU_TICKS\tCTX_ID\tSLICE_CLK[mhz]\tUNSLICE_CLK[mhz]\tGPU_CLK[mhz]\tCPU_CLK[khz]\tGPU_TIME[s]\tCPU_TIME[s]\tREASON\t");
+		for(i=0; i<36; i++) {
+			fprintf(f_output, "A%d\t", i);
+		}
+		for(i=0; i<8; i++)
+			fprintf(f_output, "B%d\t", i);
+		for(i=0; i<8; i++)
+			fprintf(f_output, "C%d\t", i);
+		fprintf(f_output, "PSYS_ENERGY\tPACKAGE_ENERGY\tPP0_ENERGY\tDRAM_ENERGY\tRAPL_ENERGY_GPU\t");
+		fprintf(f_output, "\n");
+	}
+	
+	fprintf(f_output, "%lu\t", rep_card.ocl_nanoseconds);
+	fprintf(f_output, "%u\t",  rep_card.timestamp_delta);
+	fprintf(f_output, "%lu\t", rep_card.timestamp_delta);
+	fprintf(f_output, "%u\t",  rep_card.gpu_ticks_delta);
+	fprintf(f_output, "%u\t",  rep_card.cpu_ticks_delta);
+	fprintf(f_output, "%u\t",  rep_card.ctx_id);
+	fprintf(f_output, "%u\t",  rep_card.slice_freq);
+	fprintf(f_output, "%u\t",  rep_card.unslice_freq);
+	fprintf(f_output, "%u\t",  rep_card.gpu_cur_freq);
+	fprintf(f_output, "%u\t",  rep_card.cpu_cur_freq);
+	fprintf(f_output, "%s\t",  rep_card.gpu_time_string);
+	fprintf(f_output, "%s\t",  rep_card.cpu_time_string);
+	fprintf(f_output, "%s\t",  rep_card.reasons);
+	
+	for(int p = 0; p < 36; p++) fprintf(f_output, "%lu\t",  rep_card.a_counters_delta[p]);
+	for(int p = 0; p < 8; p++) fprintf(f_output, "%lu\t",  rep_card.b_counters_delta[p]);
+	for(int p = 0; p < 8; p++) fprintf(f_output, "%lu\t",  rep_card.c_counters_delta[p]);
+	
+	fprintf(f_output, "%lu\t",  rep_card.papi_psys_energy);
+	fprintf(f_output, "%lu\t",  rep_card.papi_pkg_energy);
+	fprintf(f_output, "%lu\t",  rep_card.papi_pp0_energy);
+	fprintf(f_output, "%lu\t",  rep_card.papi_dram_energy);
+	fprintf(f_output, "%lu\t",  0);	// gpu from papi
+	
+	fclose(f_output);
+	
+}
+
+
+
+
 /* print_reports
  * calculates deltas between two OA reports and displays them
  */
-void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long long int cpu_ticks0, long long int cpu_ticks1, uint64_t cpu_cur_freq, uint64_t gpu_cur_freq, int dump) {
+report_card_t print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long long int cpu_ticks0, long long int cpu_ticks1, uint64_t cpu_cur_freq, uint64_t gpu_cur_freq, long long int ocl_nanoseconds, long long int *papi_values, int dump, int quiet, char *filename) {
 
 	FILE *f_output = NULL;
 	struct oa_format format = get_oa_format(fmt);
 	uint32_t gpu_ticks0;
 	uint32_t gpu_ticks1;
+	report_card_t card;
 
 	if (dump) {
-		f_output = fopen("counters.csv", "a");
+		if (filename == NULL) 	f_output = fopen("counters.csv", "a");
+		else					f_output = fopen(filename, "a");
 	}
 
 	int i;
 	if ( f_output && (size_t) ftell(f_output) == 0 && dump) {
-		fprintf(f_output, "TIMESTAMP\tGPU_TICKS\tCPU_TICKS\tCTX_ID\tSLICE_CLK[mhz]\tUNSLICE_CLK[mhz]\tGPU_CLK[mhz]\tCPU_CLK[khz]\tGPU_TIME[s]\tCPU_TIME[s]\tREASON\t");
+		fprintf(f_output, "OCL_TIME\tTIMESTAMP\tGPU_TICKS\tCPU_TICKS\tCTX_ID\tSLICE_CLK[mhz]\tUNSLICE_CLK[mhz]\tGPU_CLK[mhz]\tCPU_CLK[khz]\tGPU_TIME[s]\tCPU_TIME[s]\tREASON\t");
 		for(i=0; i<format.n_a40; i++) {
 			if (undefined_a_counters[i]) continue; 
 			else fprintf(f_output, "A%d\t", i);
@@ -666,23 +702,31 @@ void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long lon
 			fprintf(f_output, "B%d\t", i);
 		for(i=0; i<format.n_c; i++)
 			fprintf(f_output, "C%d\t", i);
+		fprintf(f_output, "PSYS_ENERGY\tPACKAGE_ENERGY\tPP0_ENERGY\tDRAM_ENERGY\tRAPL_ENERGY_GPU\t");
 		fprintf(f_output, "\n");
 	}
+	
+	// ocl time
+	if (dump) fprintf(f_output, "%lu\t", ocl_nanoseconds);
+	card.ocl_nanoseconds = ocl_nanoseconds;
 
 	// timestamp
-	printf("TIMESTAMP: 1st = %u, 2nd = %u, delta = %u\n", oa_report0[1], oa_report1[1], oa_report1[1] - oa_report0[1]);
-	if (dump) fprintf(f_output, "%u\t", oa_report1[1]);
+	if (!quiet) printf("TIMESTAMP: 1st = %u, 2nd = %u, delta = %u\n", oa_report0[1], oa_report1[1], oa_report1[1] - oa_report0[1]);
+	if (dump) fprintf(f_output, "%u\t", oa_report1[1] - oa_report0[1]);
+	card.timestamp_delta = oa_report1[1] - oa_report0[1];
 
 	// gpu ticks
 	if (IS_HASWELL(devid) && format.n_c == 0) {
-		printf("HASWELL does no support GPU_TICKS\n");	//this doesnt make sense, they have a separate function for reading this, wth ????
+		if (!quiet) printf("HASWELL does no support GPU_TICKS\n");	//this doesnt make sense, they have a separate function for reading this, wth ????
 	} else {
 		gpu_ticks0 = read_report_ticks(oa_report0, fmt);
 		gpu_ticks1 = read_report_ticks(oa_report1, fmt);
 
-		printf("CLOCK TICKS: 1st = %u, 2nd = %u, delta = %u\n", gpu_ticks0, gpu_ticks1, gpu_ticks1 - gpu_ticks0);
+		if (!quiet) printf("CLOCK TICKS: 1st = %u, 2nd = %u, delta = %u\n", gpu_ticks0, gpu_ticks1, gpu_ticks1 - gpu_ticks0);
 		if (dump) fprintf(f_output, "%u\t", gpu_ticks1-gpu_ticks0);
 		if (dump) fprintf(f_output, "%u\t", cpu_ticks1-cpu_ticks0);
+		card.gpu_ticks_delta = gpu_ticks1-gpu_ticks0;
+		card.cpu_ticks_delta = cpu_ticks1-cpu_ticks0;
 
 	}
 
@@ -695,17 +739,18 @@ void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long lon
 		sprintf(reasons, "%s,%s", reason0, reason1);
 
 		// context id
-		printf("CTX_ID: 1st = %u, 2nd = %u\n", oa_report0[2], oa_report1[2]);
+		if (!quiet) printf("CTX_ID: 1st = %u, 2nd = %u\n", oa_report0[2], oa_report1[2]);
 		if (dump) fprintf(f_output, "%u\t", oa_report1[2]);
+		card.ctx_id = oa_report1[2];
 
 		// frequency
 		gen8_read_report_clock_ratios(oa_report0, &slice_freq0, &unslice_freq0);
 		gen8_read_report_clock_ratios(oa_report1, &slice_freq1, &unslice_freq1);
-		printf("SLICE CLK: 1st = %u MHz, 2nd = %u MHz ,delta = %d\n", slice_freq0, slice_freq1, (int)slice_freq1 - (int)slice_freq0);
-		printf("USLICE CLK: 1st = %u MHz, 2nd = %u MHz ,delta = %d\n", unslice_freq0, unslice_freq1, (int)unslice_freq1 - (int)unslice_freq0);
+		if (!quiet) printf("SLICE CLK: 1st = %u MHz, 2nd = %u MHz ,delta = %d\n", slice_freq0, slice_freq1, (int)slice_freq1 - (int)slice_freq0);
+		if (!quiet) printf("USLICE CLK: 1st = %u MHz, 2nd = %u MHz ,delta = %d\n", unslice_freq0, unslice_freq1, (int)unslice_freq1 - (int)unslice_freq0);
 
 		// reason
-		printf("REASONS: \"%s\", 2nd = \"%s\"\n", reason0, reason1);
+		if (!quiet) printf("REASONS: \"%s\", 2nd = \"%s\"\n", reason0, reason1);
 
 		// have comma as decimal separator instead of dot
 		float gpu_time_s = (float)(gpu_ticks1-gpu_ticks0) * (1/((float)gpu_cur_freq*1e6));
@@ -726,6 +771,15 @@ void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long lon
 		if (dump) fprintf(f_output, "%s\t", gpu_time_string);
 		if (dump) fprintf(f_output, "%s\t", cpu_time_string);
 		if (dump) fprintf(f_output, "%s\t", reasons);
+		
+		card.slice_freq = slice_freq1;
+		card.unslice_freq = unslice_freq1;
+		card.gpu_cur_freq = gpu_cur_freq;
+		card.cpu_cur_freq = cpu_cur_freq;
+		strcpy(card.gpu_time_string, gpu_time_string);
+		strcpy(card.cpu_time_string, cpu_time_string);
+		strcpy(card.reasons, reasons);
+		
 
 	}
 
@@ -735,11 +789,12 @@ void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long lon
 		uint64_t value0 = gen8_read_40bit_a_counter(oa_report0, fmt, j);
 		uint64_t value1 = gen8_read_40bit_a_counter(oa_report1, fmt, j);
 		uint64_t delta = gen8_40bit_a_delta(value0, value1);
-
+		
 		if (undefined_a_counters[j]) continue;
-
-		printf("A%-2d: 1st = %lu, 2nd = %lu, delta = %lu\n", j, value0, value1, delta);
+		
+		if (!quiet) printf("A%-2d: 1st = %lu, 2nd = %lu, delta = %lu\n", j, value0, value1, delta);
 		if (dump) fprintf(f_output, "%lu\t", delta);
+		card.a_counters_delta[j] = delta;
 	}
 
 	// regular 32bit A counters
@@ -751,8 +806,9 @@ void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long lon
 		int a_id = format.first_a + j;
 		if (undefined_a_counters[a_id]) continue;
 
-		printf("A%-2d: 1st = %u, 2nd = %u, delta = %u\n", a_id, a0[j], a1[j], delta);
+		if (!quiet) printf("A%-2d: 1st = %u, 2nd = %u, delta = %u\n", a_id, a0[j], a1[j], delta);
 		if (dump) fprintf(f_output, "%u\t", delta);
+		card.a_counters_delta[a_id] = delta;
 	}
 
 	// B counters
@@ -761,8 +817,9 @@ void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long lon
 		uint32_t *b1 = (uint32_t *) ( ((uint8_t *)oa_report1) + format.b_off );
 		uint32_t delta = b1[j] - b0[j];
 
-		printf("B%-2d: 1st = %u, 2nd = %u, delta = %u\n", j, b0[j], b1[j], delta);
+		if (!quiet) printf("B%-2d: 1st = %u, 2nd = %u, delta = %u\n", j, b0[j], b1[j], delta);
 		if (dump) fprintf(f_output, "%u\t", delta);
+		card.b_counters_delta[j] = delta;
 	}
 
 	// C counters
@@ -771,463 +828,45 @@ void print_reports(uint32_t *oa_report0, uint32_t *oa_report1, int fmt, long lon
 		uint32_t *c1 = (uint32_t *) ( ((uint8_t *)oa_report1) + format.c_off );
 		uint32_t delta = c1[j] - c0[j];
 
-		printf("C%-2d: 1st = %u, 2nd = %u, delta = %u\n", j, c0[j], c1[j], delta);
+		if (!quiet) printf("C%-2d: 1st = %u, 2nd = %u, delta = %u\n", j, c0[j], c1[j], delta);
 		if (dump) fprintf(f_output, "%lu\t", delta);
+		card.c_counters_delta[j] = delta;
 	}
-
 	
-
+	
+	if (dump) fprintf(f_output, "%lu\t%lu\t%lu\t%lu\t%lu", papi_values[0], papi_values[1], papi_values[2], papi_values[3], 0);
+	card.papi_psys_energy = papi_values[0];
+	card.papi_pkg_energy = papi_values[1];
+	card.papi_pp0_energy = papi_values[2];
+	card.papi_dram_energy = papi_values[3];
+	card.psys_energy = papi_values[0]/1.0e9;
+	card.pkg_energy = papi_values[1]/1.0e9;
+	card.pp0_energy = papi_values[2]/1.0e9;
+	card.dram_energy = papi_values[3]/1.0e9;
+	card.gpu_energy = card.pkg_energy - card.pp0_energy - card.dram_energy;
+	card.psys_power_ocl = card.psys_energy / card.ocl_nanoseconds;
+	card.pkg_power_ocl  = card.pkg_energy  / card.ocl_nanoseconds;
+	card.pp0_power_ocl  = card.pp0_energy  / card.ocl_nanoseconds;
+	card.dram_power_ocl = card.dram_energy / card.ocl_nanoseconds;
+	card.gpu_power_ocl  = card.gpu_energy  / card.ocl_nanoseconds;
+	card.psys_power_gput = card.psys_energy / card.gpu_ticks_delta;
+	card.pkg_power_gput  = card.pkg_energy  / card.gpu_ticks_delta;
+	card.pp0_power_gput  = card.pp0_energy  / card.gpu_ticks_delta;
+	card.dram_power_gput = card.dram_energy / card.gpu_ticks_delta;
+	card.gpu_power_gput  = card.gpu_energy  / card.gpu_ticks_delta;
+	
 	if (dump) {
 		fprintf(f_output, "\n");
 		fclose(f_output);
 	}
-
-}
-
-
-
-
-
-
-
-
-
-void test_counters_with_opencl(int dump) {
-
-
-
-	// ========================================================== //
-	// ====================== PRELIMINARIES ===================== //
-	// ========================================================== //
-
-
-	uint64_t properties[] = {
-
-		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
-
-		/* no samples, but we have to specify at least one sample property */
-		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
-
-		/* OA unit configuration */
-		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
-		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
-
-		/* Note: no OA exponent specified in this case */
-	};
-
-	struct drm_i915_perf_open_param param = {
-		.flags = I915_PERF_FLAG_FD_CLOEXEC,
-		.num_properties = sizeof(properties) / 16,
-		.properties_ptr = (uintptr_t) properties
-	};
-
-	drm_intel_bufmgr *bufmgr;
-	drm_intel_context *context0, *context1;
-	struct intel_batchbuffer *batch;
-	struct igt_buf src[3], dst[3];
-	drm_intel_bo *bo;
-	uint32_t *report0_32, *report1_32;
-	int width = 800;
-	int height = 600;
-	uint32_t ctx_id = 0xffffffff;	// invalid id
-	int ret;
-	long long int cpu_ticks0, cpu_ticks1;
-
-	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
-	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
-
-	for(int i = 0; i < ARRAY_SIZE(src); i++) {
-		scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
-		scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
-	}
-
-	batch = intel_batchbuffer_alloc(bufmgr, devid);
-
-	context0 = drm_intel_gem_context_create(bufmgr);
-	context1 = drm_intel_gem_context_create(bufmgr);
-
-	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
-
-	properties[1] = ctx_id;
-
-	intel_batchbuffer_flush_with_context(batch, context0);
-
-	scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
-	scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
-
-	stream_fd = __perf_open(drm_fd, &param, false);
-
-	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
-
-	ret = drm_intel_bo_map(bo, true /* write enable */);
-
-
-
-    printf("pci_dev->regions[mmio_bar].base_addr = %x\n", intel_get_pci_device()->regions[0].base_addr);
-
-
-	// ========================================================== //
-	// =============== CONFIGURE FLEXIBLE COUNTERS ============== //
-	// ========================================================== //
-
-	// count flops
-	enum increment_event_filter inc_event = EU_FPU0_FPU1_PIPELINES_CONCURRENTLY_ACTIVE;
-	enum coarse_event_filter coarse_event = NO_COARSE_FILTER;
-	enum fine_event_filter fine_event = NO_FINE_FILTER;
-	// count movs
-	enum increment_event_filter inc_event2 = EU_SEND_PIPELINE_ACTIVE;
-	enum coarse_event_filter coarse_event2 = NO_COARSE_FILTER;
-	enum fine_event_filter fine_event2 = CYCLES_WHERE_MOV_INSTRUCTIONS_ARE_BEING_EXECUTED;
-	// eu0 row0
-	//enum increment_event_filter inc_event = EU_FPU0_FPU1_PIPELINES_CONCURRENTLY_ACTIVE;
-	//enum coarse_event_filter coarse_event = ROW_EQUALS_0;
-	//enum fine_event_filter fine_event = EU_NUM_EQUALS_0;
-
-	// setup dword to write to register
-	uint32_t dword = 0;
-	dword = dword | (uint32_t) inc_event;
-	dword = dword | ( (uint32_t) coarse_event << 4);
-	dword = dword | ( (uint32_t) fine_event << 8);
-	uint32_t dword2 = 0;
-	dword2 = dword2 | (uint32_t) inc_event2;
-	dword2 = dword2 | ( (uint32_t) coarse_event2 << 4);
-	dword2 = dword2 | ( (uint32_t) fine_event2 << 8);
-
-
-	int err;
-	uint32_t reg_value;
-
-	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd);
-	if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
-
-	// write EU_PERF_CNT_CTL0
-	intel_register_write(0xE458, dword);
-	intel_register_write(0xE558, dword2);
-
-	// read
-	reg_value = intel_register_read(0xE458);
-	printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
-
-	intel_register_access_fini();
-
-	// ==================================//
-
-
-
-	// read counters via mmio
-
-	uint32_t a_counter_32_adresses[4] = {0x2900, 0x2904, 0x2908, 0x292C};
-	uint32_t a_counters_40_low_addresses[32] = {0x2800, 0x2808, 0x2810, 0x2818, 0x2820, 0x2828, 0x2830,
-												0x2838, 0x2840, 0x2848, 0x2850, 0x2858, 0x2860, 0x2868,
-												0x2870, 0x2878, 0x2880, 0x2888, 0x2890, 0x2898, 0x28A0,
-												0x28A8, 0x28B0, 0x28B8, 0x28C0, 0x28C8, 0x28D0, 0x28D8,
-												0x28E0, 0x28E8, 0x28F0, 0x28F8};
-	uint32_t a_counters_40_high_addresses[32] = {0x2804, 0x280C, 0x2814, 0x281C, 0x2824, 0x282C, 0x2834,
-												 0x283C, 0x2844, 0x284C, 0x2854, 0x285C, 0x2864, 0x286C,
-												 0x2874, 0x287C, 0x2884, 0x288C, 0x2894, 0x289C, 0x28A4,
-												 0x28AC, 0x28B4, 0x28BC, 0x28C4, 0x28CC, 0x28D4, 0x28DC,
-												 0x28E0, 0x28EC, 0x28F4, 0x28FC};
-	uint32_t b_counters_addresses[8] = {0x2920, 0x2924, 0x2928, 0x292C, 0x2930, 0x2934, 0x2938, 0x293C};
-	uint32_t a_counters_32_offset = 64;
-
-	uint32_t a_counters_32_values_start[4] = {0};
-	uint32_t a_counters_40_low_values_start[32] = {0};
-	uint32_t a_counters_40_high_values_start[32] = {0};
-	uint64_t a_counters_40_values_start[32] = {0};
-	uint32_t b_counters_values_start[8] = {0};
-
-	uint32_t a_counters_32_values_end[4] = {0};
-	uint32_t a_counters_40_low_values_end[32] = {0};
-	uint32_t a_counters_40_high_values_end[32] = {0};
-	uint64_t a_counters_40_values_end[32] = {0};
-	uint32_t b_counters_values_end[8] = {0};
-
-	uint32_t a_counters_32_values_delta[4] = {0};
-	uint64_t a_counters_40_values_delta[32] = {0};
-	uint32_t b_counters_values_delta[8] = {0};
-
-	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd);
-	if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
-
-
-	intel_register_write(0xE458, 0);//dword);
-	intel_register_write(0xE558, 0);//dword2);
-
-
-	// read all counters
-	for (int i = 0; i < 32; i++) {
-		a_counters_40_low_values_start[i] = intel_register_read(a_counters_40_low_addresses[i]);
-		a_counters_40_high_values_start[i] = intel_register_read(a_counters_40_high_addresses[i]);
-	}
-	for (int i = 0; i < 4; i++) {
-		a_counters_32_values_start[i] = intel_register_read(a_counter_32_adresses[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		b_counters_values_start[i] = intel_register_read(b_counters_addresses[i]);
-	}
-
-	intel_register_write(0xE458, dword);
-	printf("0xE458 = %u\n", intel_register_read(0xE458));
-
-	// do work
-    ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
-    clFlush(command_queue);
-    clFinish(command_queue);
-
-	printf("0xE458 = %u\n", intel_register_read(0xE458));
-
-	// read all counters
-    for (int i = 0; i < 32; i++) {
-		a_counters_40_low_values_end[i] = intel_register_read(a_counters_40_low_addresses[i]);
-		a_counters_40_high_values_end[i] = intel_register_read(a_counters_40_high_addresses[i]);
-	}
-	for (int i = 0; i < 4; i++) {
-		a_counters_32_values_end[i] = intel_register_read(a_counter_32_adresses[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		b_counters_values_end[i] = intel_register_read(b_counters_addresses[i]);
-	}
-
 	
-	printf("0xE458 = %u\n", intel_register_read(0xE458));
-
-
-	for (int i = 0; i < 32; i++) {
-		a_counters_40_values_start[i] = ( (uint64_t) a_counters_40_high_values_start[i] << 32 ) | (uint64_t) a_counters_40_low_values_start[i];
-		a_counters_40_values_end[i] = ( (uint64_t) a_counters_40_high_values_end[i] << 32 ) | (uint64_t) a_counters_40_low_values_end[i];
-		a_counters_40_values_delta[i] = a_counters_40_values_end[i] - a_counters_40_values_start[i];
-	}
-	for (int i = 0; i < 4; i++) {
-		a_counters_32_values_delta[i] = a_counters_32_values_end[i] - a_counters_32_values_start[i];
-	}
-	for (int i = 0; i < 8; i++) {
-		b_counters_values_delta[i] = b_counters_values_end[i] - b_counters_values_start[i];
-	}
-
-
-	int last_index;
-
-	printf("before work, counters through mmio:\n");
-	for (int i = 0; i < 32; i++) {
-		printf("A%d: %s%u\n", i, (i>9) ? "" : " ", a_counters_40_values_start[i]);
-		last_index = i;
-	}
-	for (int i = 0; i < 4; i++) {
-		printf("A%d: %u\n", i+last_index, a_counters_32_values_start[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		printf("B%d: %u\n", i, b_counters_values_start[i]);		
-	}
-
-
-	printf("\nafter work, counters through mmio:\n");
-	for (int i = 0; i < 32; i++) {
-		printf("A%d: %s%u\n", i, (i>9) ? "" : " ", a_counters_40_values_end[i]);
-		last_index = i;
-	}
-	for (int i = 0; i < 4; i++) {
-		printf("A%d: %u\n", i+last_index, a_counters_32_values_end[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		printf("B%d: %u\n", i, b_counters_values_end[i]);		
-	}
-
-	printf("delta of counters\n");
-	for (int i = 0; i < 32; i++) {
-		printf("A%d: %s%u\n", i, (i>9) ? "" : " ", a_counters_40_values_delta[i]);
-		last_index = i;
-	}
-	for (int i = 0; i < 4; i++) {
-		printf("A%d: %u\n", i+last_index, a_counters_32_values_delta[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		printf("B%d: %u\n", i, b_counters_values_delta[i]);		
-	}
-
-
-	intel_register_access_fini();
-
-	printf("================================\n");
-
-
-
-
-	// ========================================================== //
-	// ====================== READ COUNTERS ===================== //
-	// ========================================================== //
-
-
-	emit_report_perf_count(batch,
-							bo,
-							0,  		 /* report dst offset */
-							0xdeadbeef); /* report id */ 
-
-	/* Explicitly flush here (even though the render_copy() call
-	 * will itself flush before/after the copy) to clarify that
-	 * that the PIPE_CONTROL + MI_RPC commands will be in a
-	 * separate batch from the copy.
-	 */
-	intel_batchbuffer_flush_with_context(batch, context0);
-
-	cpu_ticks0 = read_tsc_start();
-
-	// do work
-    ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
-    clFlush(command_queue);
-    clFinish(command_queue);
-
-    cpu_ticks1 = read_tsc_end();
-
-	/* Another redundant flush to clarify batch bo is free to reuse */
-	intel_batchbuffer_flush_with_context(batch, context0);
-
-	emit_report_perf_count(batch,
-							bo,
-							256,   		 /* report dst offset */
-							0xbeefbeef); /* report id */
-
-	intel_batchbuffer_flush_with_context(batch, context1);
-
-	ret = drm_intel_bo_map(bo, false /* write enable */);
-
-	report0_32 = bo->virtual;
-
-	report1_32 = report0_32 + 64;
-
-	// read cpu frequency
-	uint64_t cpu_cur_freq;
-	int cur_cpu = 0;
-	char buf[512];
-	snprintf(buf, sizeof(buf), "/sys/devices/system/cpu/cpu%u/cpufreq/scaling_cur_freq", cur_cpu);
-	ret = read_u64_file(buf, &cpu_cur_freq);
-
-	// read gpu frequency
-	uint64_t gpu_cur_freq;
-	snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_cur_freq_mhz", card);
-	ret = read_u64_file(buf, &gpu_cur_freq);
-
-	printf("\n=================================================\n");
-	print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, dump);
-	printf("=================================================\n");
-
-	//for(int i = 0; i < 256/64; i++) {
-	//	printf("===========================================================\n");
-	//	printf("======================== report %d =========================\n", i);
-	//	printf("===========================================================\n");
-	//
-	//	print_reports(report0_32 + i, report1_32 + i, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, dump);
-	//
-	//	printf("\n");
-	//}
-
-
-	/*
-
-
-	// ========================================================== //
-	// ================== prepare report card =================== //
-	// ========================================================== //
-
-	counters_info_t counters;
-	int i;
-
-	// mmio
-	for(i=0; i<4; i++) {
-		counters.mmio_a_counters_32_values_start[i] = a_counters_32_values_start[i];
-		counters.mmio_a_counters_32_values_end[i]   = a_counters_32_values_end[i];
-		counters.mmio_a_counters_32_values_delta[i] = a_counters_32_values_delta[i];
-	}
-	for(i=0; i<32; i++) {
-		counters.mmio_a_counters_40_values_start[i] = a_counters_40_values_start[i];
-		counters.mmio_a_counters_40_values_end[i]   = a_counters_40_values_end[i];
-		counters.mmio_a_counters_40_values_delta[i] = a_counters_40_values_delta[i];
-	}
-	for(i=0; i<8; i++) {
-		counters.mmio_b_counters_values_start[i] = b_counters_values_start[i];
-		counters.mmio_b_counters_values_end[i]   = b_counters_values_end[i];
-		counters.mmio_b_counters_values_delta[i] = b_counters_values_delta[i];
-	}
-
-	// mi_rpc
-	counters.mirpc_timestamp_start = report0_32[1];
-	counters.mirpc_timestamp_end   = report1_32[1];
-	counters.mirpc_timestamp_delta = report1_32[1] - report0_32[1];
-
-	counters.mirpc_gpu_ticks_start = read_report_ticks(report0_32, test_oa_format);
-	counters.mirpc_gpu_ticks_end   = read_report_ticks(report1_32, test_oa_format);
-	counters.mirpc_gpu_ticks_delta = counters.mirpc_gpu_ticks_end - counters.mirpc_gpu_ticks_start;
-
-	counters.mirpc_ctx_id_start = report0_32[2];
-	counters.mirpc_ctx_id_end   = report1_32[2];
-
-	gen8_read_report_clock_ratios(report0_32, &counters.mirpc_slice_clock_start, &counters.mirpc_unslice_clock_start);
-	gen8_read_report_clock_ratios(report1_32, &counters.mirpc_slice_clock_end, &counters.mirpc_unslice_clock_end);
-
-	strcpy(counters.mirpc_reason_start, gen8_read_report_reason(report0_32));
-	strcpy(counters.mirpc_reason_end, gen8_read_report_reason(report1_32));
-
-	int j;
-	for(j=0, i=0; j < get_oa_format(test_oa_format).n_a40; j++, i++) {
-		counters.mirpc_a_counters_40_values_start[i] = gen8_read_40bit_a_counter(report0_32, test_oa_format, j);
-		counters.mirpc_a_counters_40_values_end[i]   = gen8_read_40bit_a_counter(report1_32, test_oa_format, j);
-		counters.mirpc_a_counters_40_values_delta[i] = gen8_40bit_a_delta(counters.mirpc_a_counters_40_values_start[i], counters.mirpc_a_counters_40_values_end[i]);
-		if (undefined_a_counters[j]) continue;
-	}
-	for(j=0, i=0; j < get_oa_format(test_oa_format).n_a; j++, i++) {
-		counters.mirpc_a_counters_32_values_start[i] = *((uint32_t *) ( ((uint8_t *)report0_32) + get_oa_format(test_oa_format).a_off ));
-		counters.mirpc_a_counters_32_values_end[i]   = *((uint32_t *) ( ((uint8_t *)report1_32) + get_oa_format(test_oa_format).a_off ));
-		counters.mirpc_a_counters_32_values_delta[i] = counters.mirpc_a_counters_32_values_start[i] - counters.mirpc_a_counters_32_values_end[i];
-		int a_id = get_oa_format(test_oa_format).first_a + j;
-		if (undefined_a_counters[a_id]) continue;
-	}
-	for (j=0, i=0; j < get_oa_format(test_oa_format).n_b; j++, i++) {
-		counters.mirpc_b_counters_values_start[i] = *((uint32_t *) ( ((uint8_t *)report0_32) + get_oa_format(test_oa_format).b_off ));
-		counters.mirpc_b_counters_values_end[i]   = *((uint32_t *) ( ((uint8_t *)report1_32) + get_oa_format(test_oa_format).b_off ));
-		counters.mirpc_b_counters_values_delta[i] = counters.mirpc_b_counters_values_start[i] - counters.mirpc_b_counters_values_end[i];
-	}
-	for (j=0, i=0; j < get_oa_format(test_oa_format).n_c; j++, i++) {
-		counters.mirpc_c_counters_values_start[i] = *((uint32_t *) ( ((uint8_t *)report0_32) + get_oa_format(test_oa_format).c_off ));
-		counters.mirpc_c_counters_values_end[i]   = *((uint32_t *) ( ((uint8_t *)report1_32) + get_oa_format(test_oa_format).c_off ));
-		counters.mirpc_c_counters_values_delta[i] = counters.mirpc_c_counters_values_start[i] - counters.mirpc_c_counters_values_end[i];
-	}
-
-	// others
-
-	counters.cpu_ticks_start = cpu_ticks0;
-	counters.cpu_ticks_end   = cpu_ticks1;
-	counters.cpu_ticks_start = cpu_ticks1 - cpu_ticks0;
-
-	counters.gpu_clock_start = cpu_cur_freq;
-	counters.gpu_clock_end   = cpu_cur_freq;
-
-	counters.cpu_clock_start = gpu_cur_freq;
-	counters.cpu_clock_end   = gpu_cur_freq;
-
-	print_report_card(counters);
-
-
-	*/
-
-
-
-
-
-
-
-	for (int i = 0; i < ARRAY_SIZE(src); i++) {
-		drm_intel_bo_unreference(src[i].bo);
-		drm_intel_bo_unreference(dst[i].bo);
-	}
-
-	drm_intel_bo_unmap(bo);
-	drm_intel_bo_unreference(bo);
-	intel_batchbuffer_free(batch);
-	drm_intel_gem_context_destroy(context0);
-	drm_intel_gem_context_destroy(context1);
-	drm_intel_bufmgr_destroy(bufmgr);
-	__perf_close(stream_fd);
+	return card;
 
 }
+
+
+
+
 
 
 
@@ -1310,132 +949,6 @@ void i915_perf_remove_config(int fd, uint64_t config_id)
 				&config_id), 0);
 }
 
-
-
-
-
-
-
-
-/* Registers required by userspace. This list should be maintained by
- * the OA configs developers and agreed upon with kernel developers as
- * some of the registers have bits used by the kernel (for workarounds
- * for instance) and other bits that need to be set by the OA configs.
- */
-void
-test_whitelisted_registers_userspace_config(void)
-{
-
-	struct drm_i915_perf_oa_config config;
-	const char *uuid = "01234567-0123-0123-0123-0123456789ab";
-	uint32_t mux_regs[200];
-	uint32_t b_counters_regs[200];
-	uint32_t flex_regs[200];
-	uint32_t i;
-	uint64_t config_id;
-	char path[512];
-	int ret;
-	const uint32_t flex[] = {
-		0xe458,
-		0xe558,
-		0xe658,
-		0xe758,
-		0xe45c,
-		0xe55c,
-		0xe65c
-	};
-
-	snprintf(path, sizeof(path), "/sys/class/drm/card%d/metrics/%s/id", card, uuid);
-
-	if (read_u64_file(path, &config_id))
-		i915_perf_remove_config(drm_fd, config_id);
-
-	memset(&config, 0, sizeof(config));
-	memcpy(config.uuid, uuid, sizeof(config.uuid));
-
-	/* OASTARTTRIG[1-8] */
-	for (i = 0x2710; i <= 0x272c; i += 4) {
-		b_counters_regs[config.n_boolean_regs * 2] = i;
-		b_counters_regs[config.n_boolean_regs * 2 + 1] = 0;
-		config.n_boolean_regs++;
-	}
-	/* OAREPORTTRIG[1-8] */
-	for (i = 0x2740; i <= 0x275c; i += 4) {
-		b_counters_regs[config.n_boolean_regs * 2] = i;
-		b_counters_regs[config.n_boolean_regs * 2 + 1] = 0;
-		config.n_boolean_regs++;
-	}
-	config.boolean_regs_ptr = (uintptr_t) b_counters_regs;
-
-	if (intel_gen(devid) >= 8) {
-		/* Flex EU registers, only from Gen8+. */
-		for (i = 0; i < ARRAY_SIZE(flex); i++) {
-			flex_regs[config.n_flex_regs * 2] = flex[i];
-			flex_regs[config.n_flex_regs * 2 + 1] = 0;
-			config.n_flex_regs++;
-		}
-		config.flex_regs_ptr = (uintptr_t) flex_regs;
-	}
-
-	/* Mux registers (too many of them, just checking bounds) */
-	i = 0;
-
-	/* NOA_WRITE */
-	mux_regs[i++] = 0x9800;
-	mux_regs[i++] = 0;
-
-	if (IS_HASWELL(devid)) {
-		/* Haswell specific. undocumented... */
-		mux_regs[i++] = 0x9ec0;
-		mux_regs[i++] = 0;
-
-		mux_regs[i++] = 0x25100;
-		mux_regs[i++] = 0;
-		mux_regs[i++] = 0x2ff90;
-		mux_regs[i++] = 0;
-	}
-
-	if (intel_gen(devid) >= 8) {
-		/* NOA_CONFIG */
-		mux_regs[i++] = 0xD04;
-		mux_regs[i++] = 0;
-		mux_regs[i++] = 0xD2C;
-		mux_regs[i++] = 0;
-		/* WAIT_FOR_RC6_EXIT */
-		mux_regs[i++] = 0x20CC;
-		mux_regs[i++] = 0;
-	}
-
-	/* HALF_SLICE_CHICKEN2 (shared with kernel workaround) */
-	mux_regs[i++] = 0xE180;
-	mux_regs[i++] = 0;
-
-	if (IS_CHERRYVIEW(devid)) {
-		/* Cherryview specific. undocumented... */
-		mux_regs[i++] = 0x182300;
-		mux_regs[i++] = 0;
-		mux_regs[i++] = 0x1823A4;
-		mux_regs[i++] = 0;
-	}
-
-	/* PERFCNT[12] */
-	mux_regs[i++] = 0x91B8;
-	mux_regs[i++] = 0;
-	/* PERFMATRIX */
-	mux_regs[i++] = 0x91C8;
-	mux_regs[i++] = 0;
-
-	config.mux_regs_ptr = (uintptr_t) mux_regs;
-	config.n_mux_regs = i / 2;
-
-	/* Create a new config */
-	ret = igt_ioctl(drm_fd, DRM_IOCTL_I915_PERF_ADD_CONFIG, &config);
-	if (ret > 0) printf(KGRN "[OK] Config added\n" KNRM); /* Config 0 should be used by the kernel */
-	else         printf(KRED "[NOT OK] Error adding config\n" KNRM);
-	config_id = ret;
-
-	//i915_perf_remove_config(drm_fd, config_id);
-}
 
 
 
@@ -1581,253 +1094,6 @@ uint32_t send_mi_store_reg_mem(struct intel_batchbuffer *batch, uint32_t reg_add
 }
 
 
-void write_to_flexible_eu_registers(void) {
-
-	printf("\n\n");
-	printf("========================================================\n");
-	printf("=================== EU_PERF_CNT_CTL0 ===================\n");
-	printf("========================================================\n");
-
-
-
-	// setup necessary driver stuff
-	uint64_t properties[] = {
-		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
-		/* no samples, but we have to specify at least one sample property */
-		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
-		/* OA unit configuration */
-		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
-		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
-		/* Note: no OA exponent specified in this case */
-	};
-
-	struct drm_i915_perf_open_param param = {
-		.flags = I915_PERF_FLAG_FD_CLOEXEC,
-		.num_properties = sizeof(properties) / 16,
-		.properties_ptr = (uintptr_t) properties
-	};
-
-	drm_intel_bufmgr *bufmgr;
-	struct intel_batchbuffer *batch;
-	drm_intel_bo *bo;
-	drm_intel_context *context0;
-	uint32_t ctx_id = 0;
-	int width = 800;
-	int height = 600;
-	int ret;
-
-	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
-	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
-
-	//for(int i = 0; i < ARRAY_SIZE(src); i++) {
-	//	scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
-	//	scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
-	//}
-
-	batch = intel_batchbuffer_alloc(bufmgr, devid);
-
-	context0 = drm_intel_gem_context_create(bufmgr);
-	//context1 = drm_intel_gem_context_create(bufmgr);
-
-	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
-	//
-	properties[1] = ctx_id;
-	//
-	intel_batchbuffer_flush_with_context(batch, context0);
-
-	//scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
-	//scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
-
-	stream_fd = __perf_open(drm_fd, &param, false);
-
-	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
-
-	ret = drm_intel_bo_map(bo, true /* write enable */);
-
-
-
-
-
-
-
-	// ====================================================================== //
-	// =================== setup bits for EU_PERF_CNT_CTL0 ================== //
-	// ====================================================================== //
-
-
-	// Configure Agregate EU Counter 0 (A7) @ 0xE458
-	// register: EU_PERF_CNT_CTL0
-	// specify increment event at bits 3:0
-	// specify course event filter at bits 7:4
-	// specify fine event filter at bits 11:8
-
-	// count flops
-	enum increment_event_filter inc_event = EU_FPU0_FPU1_PIPELINES_CONCURRENTLY_ACTIVE;
-	enum coarse_event_filter coarse_event = NO_COARSE_FILTER;
-	enum fine_event_filter fine_event = NO_FINE_FILTER;
-
-	// setup dword to write to register
-	uint32_t dword = 0;
-	dword = dword | (uint32_t) inc_event;
-	dword = dword | ( (uint32_t) coarse_event << 4);
-	dword = dword | ( (uint32_t) fine_event << 8);
-	//uint32_t dword = 0x7FFFFFFF;
-	//dword = dword | (uint32_t) ~inc_event;
-	//dword = dword | ( (uint32_t) ~coarse_event << 4);
-	//dword = dword | ( (uint32_t) ~fine_event << 8);
-
-	// print binary word for debug
-	printf("EU_PERF_CNT_CTL0: ");
-	print_binary((int)dword, 32);
-
-
-	// get mmio aperture address of EU_PERF_CNT_CTL0
-	// (I have no idea what I'm doing)
-	//uint32_t reg_address = 0xE458;
-	uint32_t reg_address = 0xE458 + BAR;
-
-	uint32_t reg_contents;
-
-
-
-
-	// ====================================================================== //
-	// this is not working
-
-	//uint32_t handle = gem_create(drm_fd, 4096);
-	//
-	////uint32_t* reg = (uint32_t*) gem_mmap__cpu(drm_fd, handle, 0, 4096, 0);
-	//uint32_t* reg = (uint32_t*) gem_mmap__wc(drm_fd, handle, 0, 4096, 0);
-	////uint32_t* reg = (uint32_t*) gem_mmap__gtt(drm_fd, handle, 4096, 0);
-	//
-	//int drm_fd_rdwr = prime_handle_to_fd_for_mmap(drm_fd, handle);
-	//
-	//prime_sync_start(drm_fd_rdwr, true);
-	//
-	//prime_sync_end(drm_fd_rdwr, true);
-	//
-	////*reg = dword;
-	//gem_write(drm_fd_rdwr, handle, 0, &dword, sizeof(dword));
-	// ====================================================================== //
-
-	int err = 0;
-	uint32_t reg_value = 0;
-
-	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
-	
-	// read EU_PERF_CNT_CTL0, should be 0
-	reg_value = intel_register_read(0xE458);
-	//printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
-
-	// write EU_PERF_CNT_CTL0
-	intel_register_write(0xE458, dword);
-
-	// read again
-	reg_value = intel_register_read(0xE458);
-	//printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
-
-	intel_register_access_fini();
-
-
-	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
-	reg_value = intel_register_read(0xE458);
-	//printf("EU_PERF_CNT_CTL0 @ 0xE458: %u\n", reg_value);
-	intel_register_access_fini();
-
-	// read free running counters
-	uint32_t free_running_a_counters[8] = {0};
-	uint32_t free_running_a_addresses[8] = {0x2960, 0x2964, 0x2968, 0x296C, 0x2970, 0x2974, 0x2978, 0x297C};
-	uint32_t free_running_a_names[8] = {4, 4, 6, 6, 19, 19, 20, 20};
-
-	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd); if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
-	for (int i = 0; i < 8; i++) {
-		free_running_a_counters[i] = intel_register_read(free_running_a_addresses[i]);
-		printf("A%d: %u\n", free_running_a_names[i], free_running_a_counters[i]);
-	}
-	intel_register_access_fini();
-
-
-
-
-	// ====================================================================== //
-	// ======================== MI_LOAD_REGISTER_MEM ======================== //
-	// ====================================================================== //
-
-	//uint32_t command_dword0 = 0;
-	//command_dword0 = command_dword0 | 2;
-	//command_dword0 = command_dword0 | ( (GGTT | ASYNC_MODE) << 21);
-	//command_dword0 = command_dword0 | (0x29 << 23);
-	//
-	//uint32_t command_dword1 = 0;
-	//command_dword1 = command_dword1 | (graphics_address << 2);
-	//
-	//uint64_t command_dword2_3 = 0;
-	//command_dword2_3 = command_dword2_3 | ((uint64_t)&dword << 2);
-	//uint32_t command_dword2 = (uint32_t)((command_dword2_3 & 0x7fff0000) >> 32);
-	//uint32_t command_dword3 = (uint32_t)(command_dword2_3 & 0x00007fff);
-	//
-	//printf("MI_LOAD_REGISTER_MEM: \n");
-	//print_binary(command_dword0, 32);
-	//print_binary(command_dword1, 32);
-	//print_binary(command_dword2, 32);
-	//print_binary(command_dword3, 32);
-
-	//send_mi_load_reg_mem(batch, reg_address, &dword, GGTT, ASYNC_MODE);
-
-
-
-	// ====================================================================== //
-	// ======================== MI_STORE_REGISTER_MEM ======================= //
-	// ====================================================================== //
-
-	//command_dword0 = 0;
-	//command_dword0 = command_dword0 | 2;
-	//command_dword0 = command_dword0 | ( (GGTT | PRED_ENABLE) << 22);
-	//command_dword0 = command_dword0 | (0x24 << 23);
-	//
-	//command_dword1 = 0;
-	//command_dword1 = command_dword1 | (graphics_address << 2);
-	//
-	//command_dword2_3 = 0;
-	//command_dword2_3 = command_dword2_3 | ((uint64_t)&reg_contents << 2);
-	//command_dword2 = (uint32_t)((command_dword2_3 & 0x7fff0000) >> 32); 
-	//command_dword3 = (uint32_t)(command_dword2_3 & 0x00007fff);
-	//
-	//printf("MI_STORE_REGISTER_MEM: \n");
-	//print_binary(command_dword0, 32);
-	//print_binary(command_dword1, 32);
-	//print_binary(command_dword2, 32);
-	//print_binary(command_dword3, 32);
-
-	reg_contents = send_mi_store_reg_mem(batch, reg_address, GGTT, PRED_ENABLE);
-
-
-	//printf("EU_PERF_CNT_CTL0: ");
-	//print_binary((int)reg_contents, 32);
-	//printf("                = %u\n", reg_contents);
-
-
-
-
-
-	drm_intel_bo_unmap(bo);
-	drm_intel_bo_unreference(bo);
-	intel_batchbuffer_free(batch);
-	drm_intel_bufmgr_destroy(bufmgr);
-	__perf_close(stream_fd);
-
-
-	printf("========================================================\n");
-	printf("\n\n");
-
-
-
-}
-
-
-
-
-
 
 
 uint32_t create_filtering_word(enum increment_event_filter increment,
@@ -1845,1023 +1111,270 @@ uint32_t create_filtering_word(enum increment_event_filter increment,
 
 
 
-
-
-
-
-void read_counters_with_mmio() {
-
-	// apparently this is required
-	uint64_t properties[] = {
-		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
-		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
-		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
-		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
-	};
-
-	struct drm_i915_perf_open_param param = {
-		.flags = I915_PERF_FLAG_FD_CLOEXEC,
-		.num_properties = sizeof(properties) / 16,
-		.properties_ptr = (uintptr_t) properties
-	};
-
-	drm_intel_bufmgr *bufmgr;
-	struct intel_batchbuffer *batch;
-	drm_intel_bo *bo;
-	drm_intel_context *context0;
-	uint32_t ctx_id = 0;
-	int width = 800;
-	int height = 600;
-	int ret;
-
-	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
-	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
-
-	//for(int i = 0; i < ARRAY_SIZE(src); i++) {
-	//	scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
-	//	scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
-	//}
-
-	batch = intel_batchbuffer_alloc(bufmgr, devid);
-
-	context0 = drm_intel_gem_context_create(bufmgr);
-	//context1 = drm_intel_gem_context_create(bufmgr);
-
-	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
-	//
-	properties[1] = ctx_id;
-	//
-	intel_batchbuffer_flush_with_context(batch, context0);
-
-	//scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
-	//scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
-
-	stream_fd = __perf_open(drm_fd, &param, false);
-
-	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
-
-	ret = drm_intel_bo_map(bo, true /* write enable */);
-
-
-
-
-
-
-
-
-
-
-
-
-	uint32_t a_counter_32_adresses[4] = {0x2900, 0x2904, 0x2908, 0x292C};
-	uint32_t a_counters_40_low_addresses[32] = {0x2800, 0x2808, 0x2810, 0x2818, 0x2820, 0x2828, 0x2830,
-												0x2838, 0x2840, 0x2848, 0x2850, 0x2858, 0x2860, 0x2868,
-												0x2870, 0x2878, 0x2880, 0x2888, 0x2890, 0x2898, 0x28A0,
-												0x28A8, 0x28B0, 0x28B8, 0x28C0, 0x28C8, 0x28D0, 0x28D8,
-												0x28E0, 0x28E8, 0x28F0, 0x28F8};
-	uint32_t a_counters_40_high_addresses[32] = {0x2804, 0x280C, 0x2814, 0x281C, 0x2824, 0x282C, 0x2834,
-												 0x283C, 0x2844, 0x284C, 0x2854, 0x285C, 0x2864, 0x286C,
-												 0x2874, 0x287C, 0x2884, 0x288C, 0x2894, 0x289C, 0x28A4,
-												 0x28AC, 0x28B4, 0x28BC, 0x28C4, 0x28CC, 0x28D4, 0x28DC,
-												 0x28E0, 0x28EC, 0x28F4, 0x28FC};
-	uint32_t b_counters_addresses[8] = {0x2920, 0x2924, 0x2928, 0x292C, 0x2930, 0x2934, 0x2938, 0x293C};
-	uint32_t a_counters_32_offset = 64;
-
-	uint32_t a_counters_32_values_start[4] = {0};
-	uint32_t a_counters_32_values_end[4] = {0};
-	uint32_t a_counters_32_values[4] = {0};
-	uint32_t a_counters_40_low_values_start[32] = {0};
-	uint32_t a_counters_40_low_values_end[32] = {0};
-	uint32_t a_counters_40_low_values[32] = {0};
-	uint32_t a_counters_40_high_values_start[32] = {0};
-	uint32_t a_counters_40_high_values_end[32] = {0};
-	uint32_t a_counters_40_high_values[32] = {0};
-	uint64_t a_counters_40_values_start[32] = {0};
-	uint64_t a_counters_40_values_end[32] = {0};
-	uint64_t a_counters_40_values[32] = {0};
-	uint32_t b_counters_values_start[8] = {0};
-	uint32_t b_counters_values_end[8] = {0};
-	uint32_t b_counters_values[8] = {0};
-
-
-
-	// count flops
-	enum increment_event_filter inc_event = EU_FPU0_FPU1_PIPELINES_CONCURRENTLY_ACTIVE;
-	enum coarse_event_filter coarse_event = NO_COARSE_FILTER;
-	enum fine_event_filter fine_event = NO_FINE_FILTER;
-
-	// setup dword to write to register
-	uint32_t dword = 0;
-	dword = dword | (uint32_t) inc_event;
-	dword = dword | ( (uint32_t) coarse_event << 4);
-	dword = dword | ( (uint32_t) fine_event << 8);
-	//uint32_t dword = 0x7FFFFFFF;
-	//dword = dword | (uint32_t) ~inc_event;
-	//dword = dword | ( (uint32_t) ~coarse_event << 4);
-	//dword = dword | ( (uint32_t) ~fine_event << 8);
-	printf("EU_PERF_CNT_CTL0: "); print_binary(dword, 32);
-
-
-
-	int err;
-	err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd);
-	if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
-
-
-
-	intel_register_write(0xE458, dword);
-
-
-
-
-	for (int i = 0; i < 32; i++) {
-		a_counters_40_low_values_start[i] = intel_register_read(a_counters_40_low_addresses[i]);
-		a_counters_40_high_values_start[i] = intel_register_read(a_counters_40_high_addresses[i]);
-		a_counters_40_values_start[i] = ( (uint64_t) a_counters_40_high_values[i] << 32 ) | (uint64_t) a_counters_40_low_values[i];
-	}
-	for (int i = 0; i < 4; i++) {
-		a_counters_32_values_start[i] = intel_register_read(a_counter_32_adresses[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		b_counters_values_start[i] = intel_register_read(b_counters_addresses[i]);
-	}
-
-
-
-	intel_register_access_fini();
-
-
-
-
-	// do work
-    err = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL); clCheckError(err, __LINE__);
-    clFlush(command_queue);
-    clFinish(command_queue);
-
-
-
-    err = intel_register_access_init(intel_get_pci_device(), 0, drm_fd);
-	if(err==-1) printf(KRED "ERROR at pci\n" KNRM);
-
-
-
-
-    for (int i = 0; i < 32; i++) {
-		a_counters_40_low_values_end[i] = intel_register_read(a_counters_40_low_addresses[i]);
-		a_counters_40_high_values_end[i] = intel_register_read(a_counters_40_high_addresses[i]);
-		a_counters_40_values_end[i] = ( (uint64_t) a_counters_40_high_values[i] << 32 ) | (uint64_t) a_counters_40_low_values[i];
-	}
-	for (int i = 0; i < 4; i++) {
-		a_counters_32_values_end[i] = intel_register_read(a_counter_32_adresses[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		b_counters_values_end[i] = intel_register_read(b_counters_addresses[i]);
-	}
-
-
-
-	intel_register_access_fini();
-
-
-
-
-	for (int i = 0; i < 32; i++) {
-		a_counters_40_values[i] = a_counters_40_values_end[i] - a_counters_40_values_start[i];
-	}
-	for (int i = 0; i < 4; i++) {
-		a_counters_32_values[i] = a_counters_32_values_end[i] - a_counters_32_values_start[i];
-	}
-	for (int i = 0; i < 8; i++) {
-		b_counters_values[i] = b_counters_values_end[i] - b_counters_values_start[i];
-	}
-
-
-	int last_index;
-	for (int i = 0; i < 32; i++) {
-		printf("A%d: %s1st = %lu 2nd = %lu delta = %lu\n", i, (i>9) ? "" : " ", a_counters_40_values_start[i], a_counters_40_values_end[i], a_counters_40_values[i]);
-		last_index = i;
-	}
-	for (int i = 0; i < 4; i++) {
-		printf("A%d: 1st = %u 2nd = %u delta = %u\n", i+last_index, a_counters_32_values_start[i], a_counters_32_values_end[i], a_counters_32_values[i]);
-	}
-	for (int i = 0; i < 8; i++) {
-		printf("B%d: 1st = %u 2nd = %u delta = %u\n", i, b_counters_values_start[i], b_counters_values_end[i], b_counters_values[i]);		
-	}
-
-
+uint64_t umax(int length, uint64_t *vector) {
 	
-
-
-
-
-	drm_intel_bo_unmap(bo);
-	drm_intel_bo_unreference(bo);
-	intel_batchbuffer_free(batch);
-	drm_intel_gem_context_destroy(context0);
-	drm_intel_bufmgr_destroy(bufmgr);
-	__perf_close(stream_fd);
-
-
-
+	uint64_t maximum = 0;
+	int i;
+	
+	for(i = 0; i < length; i++) {
+		if(vector[i] > maximum)
+			maximum = vector[i];
+	}
+	
+	return maximum;
 }
 
-
-
-
-int enable_aggregating_counters(int eu_flexible_counter_num, uint32_t programable_dword) {
-
-	int eu_perf_cnt_ctl[7] = {0xE458, 0xE558, 0xE658, 0xE758, 0xE45C, 0xE55C, 0xE65C};
-
-	if (eu_flexible_counter_num < 0 || eu_flexible_counter_num > 7)
-		return -1;
-
-	if (intel_register_access_init(intel_get_pci_device(), 0, drm_fd))
-		return -1;
-
-	intel_register_write(eu_perf_cnt_ctl[eu_flexible_counter_num], programable_dword);
-
-	intel_register_access_fini();
-
-	return 0;
-
+uint64_t umin(int length, uint64_t *vector) {
+	
+	uint64_t minimum = 0xFFFFFFFFFFFFFFFF;
+	int i;
+	
+	for(i = 0; i < length; i++) {
+		if(vector[i] < minimum)
+			minimum = vector[i];
+	}
+	
+	return minimum;
 }
 
-
-
-void print_report_card(counters_info_t counters) {
-
-	FILE *fptr;
-	int i, last_index;
-
-	fptr = fopen("report_card.txt", "w");
-
-
-
-	fprintf(fptr, "========= Ticks and clocks info =========\n");
-
-	fprintf(fptr, "\tCPU ticks before workload: %lu\n", counters.cpu_ticks_start);
-	fprintf(fptr, "\tCPU ticks after workload:  %lu\n", counters.cpu_ticks_end);
-	fprintf(fptr, "\tCPU ticks delta:           %lu\n", counters.cpu_ticks_delta);
-	fprintf(fptr, "\tGPU clock before workload: %u\n", counters.gpu_clock_start);
-	fprintf(fptr, "\tGPU clock after workload:  %u\n", counters.gpu_clock_end);
-	fprintf(fptr, "\tCPU clock before workload: %u\n", counters.cpu_clock_start);
-	fprintf(fptr, "\tCPU clock after workload:  %u\n", counters.cpu_clock_end);
-
-	fprintf(fptr, "\n========= MMIO counters =========\n");
-
-	fprintf(fptr, "\tBefore workload\n");
-	for(i = 0; i < 32; i++) {
-		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mmio_a_counters_40_values_start[i]);
-		last_index = i;
-	}
-	for(i = 0; i < 4; i++) {
-		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mmio_a_counters_32_values_start[i]);
-	}
-	for(i = 0; i < 8; i++) {
-		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mmio_b_counters_values_start[i]);
-	}
-
-	fprintf(fptr, "\tAfter workload\n");
-	for(i = 0; i < 32; i++) {
-		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mmio_a_counters_40_values_end[i]);
-		last_index = i;
-	}
-	for(i = 0; i < 4; i++) {
-		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mmio_a_counters_32_values_end[i]);
-	}
-	for(i = 0; i < 8; i++) {
-		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mmio_b_counters_values_end[i]);
-	}
-
-	fprintf(fptr, "\tDeltas\n");
-	for(i = 0; i < 32; i++) {
-		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mmio_a_counters_40_values_delta[i]);
-		last_index = i;
-	}
-	for(i = 0; i < 4; i++) {
-		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mmio_a_counters_32_values_delta[i]);
-	}
-	for(i = 0; i < 8; i++) {
-		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mmio_b_counters_values_delta[i]);
-	}
-
-	fprintf(fptr, "\n========= MI_RPC counters =========\n");
-
-	fprintf(fptr, "\tBefore workload\n");
-	fprintf(fptr, "\t\tTimestamp: %u\n", counters.mirpc_timestamp_start);
-	fprintf(fptr, "\t\tContext ID: %u\n", counters.mirpc_ctx_id_start);
-	fprintf(fptr, "\t\tReason: %s\n", counters.mirpc_reason_start);
-	for(i = 0; i < 32; i++) {
-		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mirpc_a_counters_40_values_start[i]);
-		last_index = i;
-	}
-	for(i = 0; i < 4; i++) {
-		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mirpc_a_counters_32_values_start[i]);
-	}
-	for(i = 0; i < 8; i++) {
-		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mirpc_b_counters_values_start[i]);
-	}
-
-	fprintf(fptr, "\tAfter workload\n");
-	fprintf(fptr, "\t\tTimestamp: %u\n", counters.mirpc_timestamp_end);
-	fprintf(fptr, "\t\tContext ID: %u\n", counters.mirpc_ctx_id_end);
-	fprintf(fptr, "\t\tReason: %s\n", counters.mirpc_reason_end);
-	for(i = 0; i < 32; i++) {
-		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mirpc_a_counters_40_values_end[i]);
-		last_index = i;
-	}
-	for(i = 0; i < 4; i++) {
-		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mirpc_a_counters_32_values_end[i]);
-	}
-	for(i = 0; i < 8; i++) {
-		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mirpc_b_counters_values_end[i]);
-	}
-
-	fprintf(fptr, "\tDeltas\n");
-	fprintf(fptr, "\t\tTimestamp: %u\n", counters.mirpc_timestamp_delta);
-	for(i = 0; i < 32; i++) {
-		fprintf(fptr, "\t\tA%d: %s%lu\n", i, (i>9) ? "" : " ", counters.mirpc_a_counters_40_values_delta[i]);
-		last_index = i;
-	}
-	for(i = 0; i < 4; i++) {
-		fprintf(fptr, "\t\tA%d: %u\n", last_index+i, counters.mirpc_a_counters_32_values_delta[i]);
-	}
-	for(i = 0; i < 8; i++) {
-		fprintf(fptr, "\t\tB%d: %u\n", last_index+i, counters.mirpc_b_counters_values_delta[i]);
-	}
-
-	fclose(fptr);
-
-}
-
-
-
-
-
-void test_counters_with_mmap() {
-    
-    
-    
-    
-    
-    uint64_t properties[] = {
-
-		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
-
-		/* no samples, but we have to specify at least one sample property */
-		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
-
-		/* OA unit configuration */
-		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
-		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
-
-		/* Note: no OA exponent specified in this case */
-	};
-
-	struct drm_i915_perf_open_param param = {
-		.flags = I915_PERF_FLAG_FD_CLOEXEC,
-		.num_properties = sizeof(properties) / 16,
-		.properties_ptr = (uintptr_t) properties
-	};
-
-	drm_intel_bufmgr *bufmgr;
-	drm_intel_context *context0, *context1;
-	struct intel_batchbuffer *batch;
-	struct igt_buf src[3], dst[3];
-	drm_intel_bo *bo;
-	uint32_t *report0_32, *report1_32;
-	int width = 800;
-	int height = 600;
-	uint32_t ctx_id = 0xffffffff;	// invalid id
-	int ret;
-	long long int cpu_ticks0, cpu_ticks1;
-
-	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
-	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
-
-	for(int i = 0; i < ARRAY_SIZE(src); i++) {
-		scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
-		scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
-	}
-
-	batch = intel_batchbuffer_alloc(bufmgr, devid);
-
-	context0 = drm_intel_gem_context_create(bufmgr);
-	context1 = drm_intel_gem_context_create(bufmgr);
-
-	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
-
-	properties[1] = ctx_id;
-
-	intel_batchbuffer_flush_with_context(batch, context0);
-
-	scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
-	scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
-
-	stream_fd = __perf_open(drm_fd, &param, false);
-
-	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
-
-	ret = drm_intel_bo_map(bo, true /* write enable */);
-    
-    
-    
-    
-    
-    #define MAP_SIZE 4096UL
-    #define MAP_MASK (MAP_SIZE - 1)
-
-    //#define BAR 0xc0000000
-    //#define BAR 0xed000000
-    #define BAR 0xed000000      // <-- ITS THIS ONE !!!!!!!!!!!!!!!!!!
-    //#define BAR 0x8c000000
-    //#define BAR 0x0c000000
-    //#define BAR 0x01f00000
-    //#define BAR 0x43109014
-    //#define BAR 0x0b010000
-    //#define BAR 0x40000000
-    //#define BAR 0x00000040
-    //#define BAR 0xFED10000	// offset 48h of device 0:00.0
-    //#define BAR 0x16150000	// offset 48h of device 0:02.0 161580dc
-    //#define BAR 0x010c0000  // offset 40h of device 0:02.0 010c7009
-    //#define BAR 0x00000000ed000000	// /sys/bus/pci/devices/0000:00:02.0/resource
-    //#define BAR 0x00000000ef120000	// /sys/bus/pci/devices/0000:00:04.0/resource
-    //#define BAR 0x00000000ef110000	// /sys/bus/pci/devices/0000:00:14.0/resource
-    //#define BAR 0x00000000ef138000	// /sys/bus/pci/devices/0000:00:14.2/resource
-    //#define BAR 0x00000000ef137000	// /sys/bus/pci/devices/0000:00:15.0/resource
-    //#define BAR 0x00000000ef136000	// /sys/bus/pci/devices/0000:00:15.1/resource
-    //#define BAR 0x00000000ef135000	// /sys/bus/pci/devices/0000:00:16.0/resource
-    //#define BAR 0x00000000ef130000	// /sys/bus/pci/devices/0000:00:17.0/resource
-    //#define BAR 0x0000000000000000	// /sys/bus/pci/devices/0000:00:1c.0/resource
-    //#define BAR 0x0000000000000000	// /sys/bus/pci/devices/0000:00:1c.4/resource
-    //#define BAR 0x0000000000000000	// /sys/bus/pci/devices/0000:00:1c.5/resource
-    //#define BAR 0x0000000000000000	// /sys/bus/pci/devices/0000:00:1f.0/resource
-    //#define BAR 0x00000000ef12c000	// /sys/bus/pci/devices/0000:00:1f.2/resource
-    //#define BAR 0x00000000ef128000	// /sys/bus/pci/devices/0000:00:1f.3/resource
-    //#define BAR 0x00000000ef132000	// /sys/bus/pci/devices/0000:00:1f.4/resource
-    //#define BAR 0x00000000ee000000	// /sys/bus/pci/devices/0000:01:00.0/resource
-    //#define BAR 0x000000000000d000	// /sys/bus/pci/devices/0000:02:00.0/resource
-    //#define BAR 0x00000000ef200000	// /sys/bus/pci/devices/0000:03:00.0/resource
-    //#define BAR 0xFEE50000
-    //#define BAR 0xb6e40000
-    //#define BAR 0xe0000000
-    //#define BAR 0xfed19001
-    //#define BAR 0xfed10001
-    //#define BAR 0xe0000001
-    //#define BAR 0xfed18001
-    //#define BAR 0x74000000
-    //#define BAR 0xde000000
-    //#define BAR 0x0de0000
-    //#define BAR 0xc000000c
-    //#define BAR 0xc0000000
-    //#define BAR 0x0000f001
-    //#define BAR 0x0000f000
-    //#define BAR 0x00000000
-    
-    
-    int fd;
-    
-    void *map_base_oacontrol, *virt_addr_oacontrol;
-	void *map_base_free_a4_lower, *map_base_free_a4_upper, *virt_addr_free_a4_lower, *virt_addr_free_a4_upper;
-    void *map_base_eu_ctr0, *virt_addr_eu_ctr0;
-	void *map_base_a7_lower, *map_base_a7_upper, *virt_addr_a7_lower, *virt_addr_a7_upper;
-	void *map_base_a8_lower, *map_base_a8_upper, *virt_addr_a8_lower, *virt_addr_a8_upper;
-	void *map_base_a9_lower, *map_base_a9_upper, *virt_addr_a9_lower, *virt_addr_a9_upper;
-	void *map_base_a10_lower, *map_base_a10_upper, *virt_addr_a10_lower, *virt_addr_a10_upper;
-	void *map_base_a11_lower, *map_base_a11_upper, *virt_addr_a11_lower, *virt_addr_a11_upper;
-	void *map_base_a12_lower, *map_base_a12_upper, *virt_addr_a12_lower, *virt_addr_a12_upper;
-	void *map_base_a13_lower, *map_base_a13_upper, *virt_addr_a13_lower, *virt_addr_a13_upper;
-	void *map_base_a14_lower, *map_base_a14_upper, *virt_addr_a14_lower, *virt_addr_a14_upper;
-	void *map_base_a15_lower, *map_base_a15_upper, *virt_addr_a15_lower, *virt_addr_a15_upper;
-	void *map_base_a16_lower, *map_base_a16_upper, *virt_addr_a16_lower, *virt_addr_a16_upper;
-	void *map_base_a17_lower, *map_base_a17_upper, *virt_addr_a17_lower, *virt_addr_a17_upper;
-	void *map_base_a18_lower, *map_base_a18_upper, *virt_addr_a18_lower, *virt_addr_a18_upper;
-	void *map_base_a19_lower, *map_base_a19_upper, *virt_addr_a19_lower, *virt_addr_a19_upper;
-	void *map_base_a20_lower, *map_base_a20_upper, *virt_addr_a20_lower, *virt_addr_a20_upper;
-    
-    off_t oacontrol;
-	off_t oaperf_free_a4_lower, oaperf_free_a4_upper;
-    off_t eu_control0;
-    off_t oaperf_a7_lower, oaperf_a7_upper;
-    off_t oaperf_a8_lower, oaperf_a8_upper;
-    off_t oaperf_a9_lower, oaperf_a9_upper;
-    off_t oaperf_a10_lower, oaperf_a10_upper;
-    off_t oaperf_a11_lower, oaperf_a11_upper;
-    off_t oaperf_a12_lower, oaperf_a12_upper;
-    off_t oaperf_a13_lower, oaperf_a13_upper;
-    off_t oaperf_a14_lower, oaperf_a14_upper;
-    off_t oaperf_a15_lower, oaperf_a15_upper;
-    off_t oaperf_a16_lower, oaperf_a16_upper;
-    off_t oaperf_a17_lower, oaperf_a17_upper;
-    off_t oaperf_a18_lower, oaperf_a18_upper;
-    off_t oaperf_a19_lower, oaperf_a19_upper;
-    off_t oaperf_a20_lower, oaperf_a20_upper;
-    
-    unsigned long read_oacontrol;
-    unsigned long read_free_a4_lower_start, read_free_a4_upper_start, read_free_a4_start;
-    unsigned long read_eu_ctr0;
-    unsigned long read_a7_lower_start, read_a7_upper_start, read_a7_start;
-    unsigned long read_a8_lower_start, read_a8_upper_start, read_a8_start;
-    unsigned long read_a9_lower_start, read_a9_upper_start, read_a9_start;
-    unsigned long read_a10_lower_start, read_a10_upper_start, read_a10_start;
-    unsigned long read_a11_lower_start, read_a11_upper_start, read_a11_start;
-    unsigned long read_a12_lower_start, read_a12_upper_start, read_a12_start;
-    unsigned long read_a13_lower_start, read_a13_upper_start, read_a13_start;
-    unsigned long read_a14_lower_start, read_a14_upper_start, read_a14_start;
-    unsigned long read_a15_lower_start, read_a15_upper_start, read_a15_start;
-    unsigned long read_a16_lower_start, read_a16_upper_start, read_a16_start;
-    unsigned long read_a17_lower_start, read_a17_upper_start, read_a17_start;
-    unsigned long read_a18_lower_start, read_a18_upper_start, read_a18_start;
-    unsigned long read_a19_lower_start, read_a19_upper_start, read_a19_start;
-    unsigned long read_a20_lower_start, read_a20_upper_start, read_a20_start;
-    
-    unsigned long read_free_a4_lower_end, read_free_a4_upper_end, read_free_a4_end;
-    unsigned long read_a7_lower_end, read_a7_upper_end, read_a7_end;
-    unsigned long read_a8_lower_end, read_a8_upper_end, read_a8_end;
-    unsigned long read_a9_lower_end, read_a9_upper_end, read_a9_end;
-    unsigned long read_a10_lower_end, read_a10_upper_end, read_a10_end;
-    unsigned long read_a11_lower_end, read_a11_upper_end, read_a11_end;
-    unsigned long read_a12_lower_end, read_a12_upper_end, read_a12_end;
-    unsigned long read_a13_lower_end, read_a13_upper_end, read_a13_end;
-    unsigned long read_a14_lower_end, read_a14_upper_end, read_a14_end;
-    unsigned long read_a15_lower_end, read_a15_upper_end, read_a15_end;
-    unsigned long read_a16_lower_end, read_a16_upper_end, read_a16_end;
-    unsigned long read_a17_lower_end, read_a17_upper_end, read_a17_end;
-    unsigned long read_a18_lower_end, read_a18_upper_end, read_a18_end;
-    unsigned long read_a19_lower_end, read_a19_upper_end, read_a19_end;
-    unsigned long read_a20_lower_end, read_a20_upper_end, read_a20_end;
+int64_t median(int length, int64_t *vector) {
 	
-    oacontrol = (unsigned long) (BAR + 0x2B00);
-	oaperf_free_a4_lower = (unsigned long) (BAR + 0x2960);
-	oaperf_free_a4_upper = (unsigned long) (BAR + 0x2964);
-	eu_control0 = (unsigned long) (BAR + 0xE458);
-    oaperf_a7_lower = (unsigned long) (BAR + 0x2838);
-    oaperf_a7_upper = (unsigned long) (BAR + 0x283C);
-    oaperf_a8_lower = (unsigned long) (BAR + 0x2840);
-    oaperf_a8_upper = (unsigned long) (BAR + 0x2844);
-    oaperf_a9_lower = (unsigned long) (BAR + 0x2848);
-    oaperf_a9_upper = (unsigned long) (BAR + 0x284C);
-    oaperf_a10_lower = (unsigned long) (BAR + 0x2850);
-    oaperf_a10_upper = (unsigned long) (BAR + 0x2854);
-    oaperf_a11_lower = (unsigned long) (BAR + 0x2858);
-    oaperf_a11_upper = (unsigned long) (BAR + 0x285C);
-    oaperf_a12_lower = (unsigned long) (BAR + 0x2860);
-    oaperf_a12_upper = (unsigned long) (BAR + 0x2864);
-    oaperf_a13_lower = (unsigned long) (BAR + 0x2868);
-    oaperf_a13_upper = (unsigned long) (BAR + 0x286C);
-    oaperf_a14_lower = (unsigned long) (BAR + 0x2870);
-    oaperf_a14_upper = (unsigned long) (BAR + 0x2874);
-    oaperf_a15_lower = (unsigned long) (BAR + 0x2878);
-    oaperf_a15_upper = (unsigned long) (BAR + 0x287C);
-    oaperf_a16_lower = (unsigned long) (BAR + 0x2880);
-    oaperf_a16_upper = (unsigned long) (BAR + 0x2884);
-    oaperf_a17_lower = (unsigned long) (BAR + 0x2888);
-    oaperf_a17_upper = (unsigned long) (BAR + 0x288C);
-    oaperf_a18_lower = (unsigned long) (BAR + 0x2890);
-    oaperf_a18_upper = (unsigned long) (BAR + 0x2894);
-    oaperf_a19_lower = (unsigned long) (BAR + 0x2898);
-    oaperf_a19_upper = (unsigned long) (BAR + 0x289C);
-    oaperf_a20_lower = (unsigned long) (BAR + 0x28A0);
-    oaperf_a20_upper = (unsigned long) (BAR + 0x28A4);
-    
-	fd = open("/dev/mem",O_RDWR | O_SYNC);
-	if(fd == -1){
-		printf(KRED "Error opening file\n" KNRM);
-		return;
+	int64_t temp;
+	int i, j;
+	
+	// sort in ascending order
+	for(i = 0; i < length-1; i++) {
+		for(j = 1; j < length; j++) {
+			if(vector[i] > vector[j]) {
+				// swap elements
+				temp = vector[j];
+				vector[j] = vector[i];
+				vector[i] = temp;
+			}
+		}
 	}
 	
-	map_base_oacontrol =  mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oacontrol & ~MAP_MASK);
-	map_base_free_a4_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_free_a4_lower & ~MAP_MASK);
-	map_base_free_a4_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_free_a4_upper & ~MAP_MASK);
-	map_base_eu_ctr0 = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, eu_control0 & ~MAP_MASK);
-	map_base_a7_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a7_lower & ~MAP_MASK);
-	map_base_a7_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a7_upper & ~MAP_MASK);
-	map_base_a8_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a8_lower & ~MAP_MASK);
-	map_base_a8_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a8_upper & ~MAP_MASK);
-	map_base_a9_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a9_lower & ~MAP_MASK);
-	map_base_a9_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a9_upper & ~MAP_MASK);
-	map_base_a10_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a10_lower & ~MAP_MASK);
-	map_base_a10_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a10_upper & ~MAP_MASK);
-	map_base_a11_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a11_lower & ~MAP_MASK);
-	map_base_a11_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a11_upper & ~MAP_MASK);
-	map_base_a12_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a12_lower & ~MAP_MASK);
-	map_base_a12_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a12_upper & ~MAP_MASK);
-	map_base_a13_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a13_lower & ~MAP_MASK);
-	map_base_a13_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a13_upper & ~MAP_MASK);
-	map_base_a14_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a14_lower & ~MAP_MASK);
-	map_base_a14_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a14_upper & ~MAP_MASK);
-	map_base_a15_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a15_lower & ~MAP_MASK);
-	map_base_a15_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a15_upper & ~MAP_MASK);
-	map_base_a16_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a16_lower & ~MAP_MASK);
-	map_base_a16_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a16_upper & ~MAP_MASK);
-	map_base_a17_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a17_lower & ~MAP_MASK);
-	map_base_a17_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a17_upper & ~MAP_MASK);
-	map_base_a18_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a18_lower & ~MAP_MASK);
-	map_base_a18_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a18_upper & ~MAP_MASK);
-	map_base_a19_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a19_lower & ~MAP_MASK);
-	map_base_a19_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a19_upper & ~MAP_MASK);
-	map_base_a20_lower = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a20_lower & ~MAP_MASK);
-	map_base_a20_upper = mmap(0, MAP_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, oaperf_a20_upper & ~MAP_MASK);
-    
-    if(map_base_free_a4_lower == (void *) -1 || map_base_free_a4_upper == (void *) -1 || map_base_eu_ctr0 == (void *) -1 ||
-        map_base_a7_lower == (void *) -1 || map_base_a7_upper == (void *) -1 ||
-        map_base_a8_lower == (void *) -1 || map_base_a8_upper == (void *) -1 ||
-        map_base_a9_lower == (void *) -1 || map_base_a9_upper == (void *) -1 ||
-        map_base_a10_lower == (void *) -1 || map_base_a10_upper == (void *) -1 ||
-        map_base_a11_lower == (void *) -1 || map_base_a11_upper == (void *) -1 ||
-        map_base_a12_lower == (void *) -1 || map_base_a12_upper == (void *) -1 ||
-        map_base_a13_lower == (void *) -1 || map_base_a13_upper == (void *) -1 ||
-        map_base_a14_lower == (void *) -1 || map_base_a14_upper == (void *) -1 ||
-        map_base_a15_lower == (void *) -1 || map_base_a15_upper == (void *) -1 ||
-        map_base_a16_lower == (void *) -1 || map_base_a16_upper == (void *) -1 ||
-        map_base_a17_lower == (void *) -1 || map_base_a17_upper == (void *) -1 ||
-        map_base_a18_lower == (void *) -1 || map_base_a18_upper == (void *) -1 ||
-        map_base_a19_lower == (void *) -1 || map_base_a19_upper == (void *) -1 ||
-        map_base_a20_lower == (void *) -1 || map_base_a20_upper == (void *) -1 ||
-        map_base_oacontrol == (void *) -1
-    ) { 
-		printf(KRED "Error getting map address\n" KNRM);
-		return;
-	}
-	
-	virt_addr_oacontrol = map_base_oacontrol + (oacontrol & MAP_MASK);
-	virt_addr_free_a4_lower = map_base_free_a4_lower + (oaperf_free_a4_lower & MAP_MASK);
-	virt_addr_free_a4_upper = map_base_free_a4_upper + (oaperf_free_a4_upper & MAP_MASK);
-	virt_addr_eu_ctr0 = map_base_eu_ctr0 + (eu_control0 & MAP_MASK);
-	virt_addr_a7_lower = map_base_a7_lower + (oaperf_a7_lower & MAP_MASK);
-	virt_addr_a7_upper = map_base_a7_upper + (oaperf_a7_upper & MAP_MASK);
-	virt_addr_a8_lower = map_base_a8_lower + (oaperf_a8_lower & MAP_MASK);
-	virt_addr_a8_upper = map_base_a8_upper + (oaperf_a8_upper & MAP_MASK);
-	virt_addr_a9_lower = map_base_a9_lower + (oaperf_a9_lower & MAP_MASK);
-	virt_addr_a9_upper = map_base_a9_upper + (oaperf_a9_upper & MAP_MASK);
-	virt_addr_a10_lower = map_base_a10_lower + (oaperf_a10_lower & MAP_MASK);
-	virt_addr_a10_upper = map_base_a10_upper + (oaperf_a10_upper & MAP_MASK);
-	virt_addr_a11_lower = map_base_a11_lower + (oaperf_a11_lower & MAP_MASK);
-	virt_addr_a11_upper = map_base_a11_upper + (oaperf_a11_upper & MAP_MASK);
-	virt_addr_a12_lower = map_base_a12_lower + (oaperf_a12_lower & MAP_MASK);
-	virt_addr_a12_upper = map_base_a12_upper + (oaperf_a12_upper & MAP_MASK);
-	virt_addr_a13_lower = map_base_a13_lower + (oaperf_a13_lower & MAP_MASK);
-	virt_addr_a13_upper = map_base_a13_upper + (oaperf_a13_upper & MAP_MASK);
-	virt_addr_a14_lower = map_base_a14_lower + (oaperf_a14_lower & MAP_MASK);
-	virt_addr_a14_upper = map_base_a14_upper + (oaperf_a14_upper & MAP_MASK);
-	virt_addr_a15_lower = map_base_a15_lower + (oaperf_a15_lower & MAP_MASK);
-	virt_addr_a15_upper = map_base_a15_upper + (oaperf_a15_upper & MAP_MASK);
-	virt_addr_a16_lower = map_base_a16_lower + (oaperf_a16_lower & MAP_MASK);
-	virt_addr_a16_upper = map_base_a16_upper + (oaperf_a16_upper & MAP_MASK);
-	virt_addr_a17_lower = map_base_a17_lower + (oaperf_a17_lower & MAP_MASK);
-	virt_addr_a17_upper = map_base_a17_upper + (oaperf_a17_upper & MAP_MASK);
-	virt_addr_a18_lower = map_base_a18_lower + (oaperf_a18_lower & MAP_MASK);
-	virt_addr_a18_upper = map_base_a18_upper + (oaperf_a18_upper & MAP_MASK);
-	virt_addr_a19_lower = map_base_a19_lower + (oaperf_a19_lower & MAP_MASK);
-	virt_addr_a19_upper = map_base_a19_upper + (oaperf_a19_upper & MAP_MASK);
-	virt_addr_a20_lower = map_base_a20_lower + (oaperf_a20_lower & MAP_MASK);
-	virt_addr_a20_upper = map_base_a20_upper + (oaperf_a20_upper & MAP_MASK);
-    
-    
-    read_oacontrol = *((unsigned long *) virt_addr_oacontrol);
-    *((unsigned long *) virt_addr_oacontrol) = read_oacontrol | (1<<0);
-    
-    read_free_a4_lower_start = *((unsigned long *) virt_addr_free_a4_lower);
-    read_free_a4_upper_start = *((unsigned long *) virt_addr_free_a4_upper);
-    read_eu_ctr0 = *((unsigned long *) virt_addr_eu_ctr0);
-    read_a7_lower_start = *((unsigned long *) virt_addr_a7_lower);
-    read_a7_upper_start = *((unsigned long *) virt_addr_a7_upper);
-    read_a8_lower_start = *((unsigned long *) virt_addr_a8_lower);
-    read_a8_upper_start = *((unsigned long *) virt_addr_a8_upper);
-    read_a9_lower_start = *((unsigned long *) virt_addr_a9_lower);
-    read_a9_upper_start = *((unsigned long *) virt_addr_a9_upper);
-    read_a10_lower_start = *((unsigned long *) virt_addr_a10_lower);
-    read_a10_upper_start = *((unsigned long *) virt_addr_a10_upper);
-    read_a11_lower_start = *((unsigned long *) virt_addr_a11_lower);
-    read_a11_upper_start = *((unsigned long *) virt_addr_a11_upper);
-    read_a12_lower_start = *((unsigned long *) virt_addr_a12_lower);
-    read_a12_upper_start = *((unsigned long *) virt_addr_a12_upper);
-    read_a13_lower_start = *((unsigned long *) virt_addr_a13_lower);
-    read_a13_upper_start = *((unsigned long *) virt_addr_a13_upper);
-    read_a14_lower_start = *((unsigned long *) virt_addr_a14_lower);
-    read_a14_upper_start = *((unsigned long *) virt_addr_a14_upper);
-    read_a15_lower_start = *((unsigned long *) virt_addr_a15_lower);
-    read_a15_upper_start = *((unsigned long *) virt_addr_a15_upper);
-    read_a16_lower_start = *((unsigned long *) virt_addr_a16_lower);
-    read_a16_upper_start = *((unsigned long *) virt_addr_a16_upper);
-    read_a17_lower_start = *((unsigned long *) virt_addr_a17_lower);
-    read_a17_upper_start = *((unsigned long *) virt_addr_a17_upper);
-    read_a18_lower_start = *((unsigned long *) virt_addr_a18_lower);
-    read_a18_upper_start = *((unsigned long *) virt_addr_a18_upper);
-    read_a19_lower_start = *((unsigned long *) virt_addr_a19_lower);
-    read_a19_upper_start = *((unsigned long *) virt_addr_a19_upper);
-    read_a20_lower_start = *((unsigned long *) virt_addr_a20_lower);
-    read_a20_upper_start = *((unsigned long *) virt_addr_a20_upper);
-    read_free_a4_start = (((uint64_t) virt_addr_free_a4_upper) << 32) | (uint64_t) virt_addr_free_a4_lower;
-    read_a7_start = (((uint64_t) virt_addr_a7_upper) << 32) | (uint64_t) virt_addr_a7_lower;
-    read_a8_start = (((uint64_t) virt_addr_a8_upper) << 32) | (uint64_t) virt_addr_a8_lower;
-    read_a9_start = (((uint64_t) virt_addr_a9_upper) << 32) | (uint64_t) virt_addr_a9_lower;
-    read_a10_start = (((uint64_t) virt_addr_a10_upper) << 32) | (uint64_t) virt_addr_a10_lower;
-    read_a11_start = (((uint64_t) virt_addr_a11_upper) << 32) | (uint64_t) virt_addr_a11_lower;
-    read_a12_start = (((uint64_t) virt_addr_a12_upper) << 32) | (uint64_t) virt_addr_a12_lower;
-    read_a13_start = (((uint64_t) virt_addr_a13_upper) << 32) | (uint64_t) virt_addr_a13_lower;
-    read_a14_start = (((uint64_t) virt_addr_a14_upper) << 32) | (uint64_t) virt_addr_a14_lower;
-    read_a15_start = (((uint64_t) virt_addr_a15_upper) << 32) | (uint64_t) virt_addr_a15_lower;
-    read_a16_start = (((uint64_t) virt_addr_a16_upper) << 32) | (uint64_t) virt_addr_a16_lower;
-    read_a17_start = (((uint64_t) virt_addr_a17_upper) << 32) | (uint64_t) virt_addr_a17_lower;
-    read_a18_start = (((uint64_t) virt_addr_a18_upper) << 32) | (uint64_t) virt_addr_a18_lower;
-    read_a19_start = (((uint64_t) virt_addr_a19_upper) << 32) | (uint64_t) virt_addr_a19_lower;
-    read_a20_start = (((uint64_t) virt_addr_a20_upper) << 32) | (uint64_t) virt_addr_a20_lower;
-    
-	printf("Value of free-running A4: %lu\n", read_free_a4_start);
-	printf("Value of EU_CTR0: %u <-- should be zero\n" KNRM, read_eu_ctr0);
-    printf("Value of A7:  %lu\n", read_a7_start);
-    printf("Value of A8:  %lu\n", read_a8_start);
-    printf("Value of A9:  %lu\n", read_a9_start);
-    printf("Value of A10: %lu\n", read_a10_start);
-    printf("Value of A11: %lu\n", read_a11_start);
-    printf("Value of A12: %lu\n", read_a12_start);
-    printf("Value of A13: %lu\n", read_a13_start);
-    printf("Value of A14: %lu\n", read_a14_start);
-    printf("Value of A15: %lu\n", read_a15_start);
-    printf("Value of A16: %lu\n", read_a16_start);
-    printf("Value of A17: %lu\n", read_a17_start);
-    printf("Value of A18: %lu\n", read_a18_start);
-    printf("Value of A19: %lu\n", read_a19_start);
-    printf("Value of A20: %lu\n", read_a20_start);
-    
-    *((unsigned long *) virt_addr_eu_ctr0) = 3;
-    
-    fflush(stdout);
-    fflush(stdout);
-    
-    sleep(1);
-    
-    // do work
-    ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL);
-    clFlush(command_queue);
-    clFinish(command_queue);
-    
-    
-    read_free_a4_lower_end = *((unsigned long *) virt_addr_free_a4_lower);
-    read_free_a4_upper_end = *((unsigned long *) virt_addr_free_a4_upper);
-    read_eu_ctr0 = *((unsigned long *) virt_addr_eu_ctr0);
-    read_a7_lower_end = *((unsigned long *) virt_addr_a7_lower);
-    read_a7_upper_end = *((unsigned long *) virt_addr_a7_upper);
-    read_a8_lower_end = *((unsigned long *) virt_addr_a8_lower);
-    read_a8_upper_end = *((unsigned long *) virt_addr_a8_upper);
-    read_a9_lower_end = *((unsigned long *) virt_addr_a9_lower);
-    read_a9_upper_end = *((unsigned long *) virt_addr_a9_upper);
-    read_a10_lower_end = *((unsigned long *) virt_addr_a10_lower);
-    read_a10_upper_end = *((unsigned long *) virt_addr_a10_upper);
-    read_a11_lower_end = *((unsigned long *) virt_addr_a11_lower);
-    read_a11_upper_end = *((unsigned long *) virt_addr_a11_upper);
-    read_a12_lower_end = *((unsigned long *) virt_addr_a12_lower);
-    read_a12_upper_end = *((unsigned long *) virt_addr_a12_upper);
-    read_a13_lower_end = *((unsigned long *) virt_addr_a13_lower);
-    read_a13_upper_end = *((unsigned long *) virt_addr_a13_upper);
-    read_a14_lower_end = *((unsigned long *) virt_addr_a14_lower);
-    read_a14_upper_end = *((unsigned long *) virt_addr_a14_upper);
-    read_a15_lower_end = *((unsigned long *) virt_addr_a15_lower);
-    read_a15_upper_end = *((unsigned long *) virt_addr_a15_upper);
-    read_a16_lower_end = *((unsigned long *) virt_addr_a16_lower);
-    read_a16_upper_end = *((unsigned long *) virt_addr_a16_upper);
-    read_a17_lower_end = *((unsigned long *) virt_addr_a17_lower);
-    read_a17_upper_end = *((unsigned long *) virt_addr_a17_upper);
-    read_a18_lower_end = *((unsigned long *) virt_addr_a18_lower);
-    read_a18_upper_end = *((unsigned long *) virt_addr_a18_upper);
-    read_a19_lower_end = *((unsigned long *) virt_addr_a19_lower);
-    read_a19_upper_end = *((unsigned long *) virt_addr_a19_upper);
-    read_a20_lower_end = *((unsigned long *) virt_addr_a20_lower);
-    read_a20_upper_end = *((unsigned long *) virt_addr_a20_upper);
-    read_free_a4_end = (((uint64_t) virt_addr_free_a4_upper) << 32) | (uint64_t) virt_addr_free_a4_lower;
-    read_a7_end = (((uint64_t) virt_addr_a7_upper) << 32) | (uint64_t) virt_addr_a7_lower;
-    read_a8_end = (((uint64_t) virt_addr_a8_upper) << 32) | (uint64_t) virt_addr_a8_lower;
-    read_a9_end = (((uint64_t) virt_addr_a9_upper) << 32) | (uint64_t) virt_addr_a9_lower;
-    read_a10_end = (((uint64_t) virt_addr_a10_upper) << 32) | (uint64_t) virt_addr_a10_lower;
-    read_a11_end = (((uint64_t) virt_addr_a11_upper) << 32) | (uint64_t) virt_addr_a11_lower;
-    read_a12_end = (((uint64_t) virt_addr_a12_upper) << 32) | (uint64_t) virt_addr_a12_lower;
-    read_a13_end = (((uint64_t) virt_addr_a13_upper) << 32) | (uint64_t) virt_addr_a13_lower;
-    read_a14_end = (((uint64_t) virt_addr_a14_upper) << 32) | (uint64_t) virt_addr_a14_lower;
-    read_a15_end = (((uint64_t) virt_addr_a15_upper) << 32) | (uint64_t) virt_addr_a15_lower;
-    read_a16_end = (((uint64_t) virt_addr_a16_upper) << 32) | (uint64_t) virt_addr_a16_lower;
-    read_a17_end = (((uint64_t) virt_addr_a17_upper) << 32) | (uint64_t) virt_addr_a17_lower;
-    read_a18_end = (((uint64_t) virt_addr_a18_upper) << 32) | (uint64_t) virt_addr_a18_lower;
-    read_a19_end = (((uint64_t) virt_addr_a19_upper) << 32) | (uint64_t) virt_addr_a19_lower;
-    read_a20_end = (((uint64_t) virt_addr_a20_upper) << 32) | (uint64_t) virt_addr_a20_lower;
-    
-    
-    printf("\n");
-	printf("Value of free-running A4: %lu\n", read_free_a4_end);
-	printf("Value of EU_CTR0: %u <-- should be three\n" KNRM, read_eu_ctr0);
-    printf("Value of A7:  %lu\n", read_a7_end);
-    printf("Value of A8:  %lu\n", read_a8_end);
-    printf("Value of A9:  %lu\n", read_a9_end);
-    printf("Value of A10: %lu\n", read_a10_end);
-    printf("Value of A11: %lu\n", read_a11_end);
-    printf("Value of A12: %lu\n", read_a12_end);
-    printf("Value of A13: %lu\n", read_a13_end);
-    printf("Value of A14: %lu\n", read_a14_end);
-    printf("Value of A15: %lu\n", read_a15_end);
-    printf("Value of A16: %lu\n", read_a16_end);
-    printf("Value of A17: %lu\n", read_a17_end);
-    printf("Value of A18: %lu\n", read_a18_end);
-    printf("Value of A19: %lu\n", read_a19_end);
-    printf("Value of A20: %lu\n", read_a20_end);
-    
-    printf("\n");
-	printf("Delta of free-running A4: %lu\n", read_free_a4_end - read_free_a4_start);
-    printf("Delta of A7:  %lu\n", read_a7_end - read_a7_start);
-    printf("Delta of A8:  %lu\n", read_a8_end - read_a8_start);
-    printf("Delta of A9:  %lu\n", read_a9_end - read_a9_start);
-    printf("Delta of A10: %lu\n", read_a10_end - read_a10_start);
-    printf("Delta of A11: %lu\n", read_a11_end - read_a11_start);
-    printf("Delta of A12: %lu\n", read_a12_end - read_a12_start);
-    printf("Delta of A13: %lu\n", read_a13_end - read_a13_start);
-    printf("Delta of A14: %lu\n", read_a14_end - read_a14_start);
-    printf("Delta of A15: %lu\n", read_a15_end - read_a15_start);
-    printf("Delta of A16: %lu\n", read_a16_end - read_a16_start);
-    printf("Delta of A17: %lu\n", read_a17_end - read_a17_start);
-    printf("Delta of A18: %lu\n", read_a18_end - read_a18_start);
-    printf("Delta of A19: %lu\n", read_a19_end - read_a19_start);
-    printf("Delta of A20: %lu\n", read_a20_end - read_a20_start);
-    
-    
-    read_oacontrol = *((unsigned long *) virt_addr_oacontrol);
-    *((unsigned long *) virt_addr_oacontrol) = read_oacontrol & ~(1<<0);
-    
-	
-	if(munmap(map_base_oacontrol, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_free_a4_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_free_a4_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_eu_ctr0, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a7_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a7_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a8_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a8_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a9_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a9_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a10_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a10_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a11_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a11_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a12_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a12_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a13_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a13_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a14_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a14_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a15_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a15_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a16_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a16_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a17_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a17_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a18_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a18_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a19_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a19_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a20_lower, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-	if(munmap(map_base_a20_upper, MAP_SIZE) == -1) printf(KRED "ERROR DOING MUNMAP\n" KNRM);
-    
-    close(fd);
-    
-    
-    
-    
-    
-    for (int i = 0; i < ARRAY_SIZE(src); i++) {
-		drm_intel_bo_unreference(src[i].bo);
-		drm_intel_bo_unreference(dst[i].bo);
-	}
-
-	drm_intel_bo_unmap(bo);
-	drm_intel_bo_unreference(bo);
-	intel_batchbuffer_free(batch);
-	drm_intel_gem_context_destroy(context0);
-	drm_intel_gem_context_destroy(context1);
-	drm_intel_bufmgr_destroy(bufmgr);
-	__perf_close(stream_fd);
-    
-    
-    
-}
-
-
-void test_counters_with_lib() {
-    
-    
-    
-    
-    
-    
-    
-    uint64_t properties[] = {
-
-		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
-
-		/* no samples, but we have to specify at least one sample property */
-		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
-
-		/* OA unit configuration */
-		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
-		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
-
-		/* Note: no OA exponent specified in this case */
-	};
-
-	struct drm_i915_perf_open_param param = {
-		.flags = I915_PERF_FLAG_FD_CLOEXEC,
-		.num_properties = sizeof(properties) / 16,
-		.properties_ptr = (uintptr_t) properties
-	};
-
-	drm_intel_bufmgr *bufmgr;
-	drm_intel_context *context0, *context1;
-	struct intel_batchbuffer *batch;
-	struct igt_buf src[3], dst[3];
-	drm_intel_bo *bo;
-	uint32_t *report0_32, *report1_32;
-	int width = 800;
-	int height = 600;
-	uint32_t ctx_id = 0xffffffff;	// invalid id
-	int ret;
-	long long int cpu_ticks0, cpu_ticks1;
-
-	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
-	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
-
-	for(int i = 0; i < ARRAY_SIZE(src); i++) {
-		scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
-		scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
-	}
-
-	batch = intel_batchbuffer_alloc(bufmgr, devid);
-
-	context0 = drm_intel_gem_context_create(bufmgr);
-	context1 = drm_intel_gem_context_create(bufmgr);
-
-	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
-
-	properties[1] = ctx_id;
-
-	intel_batchbuffer_flush_with_context(batch, context0);
-
-	scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
-	scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
-
-	stream_fd = __perf_open(drm_fd, &param, false);
-
-	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
-
-	ret = drm_intel_bo_map(bo, true /* write enable */);
-    
-    
-    
-    
-    
-    
-    
-    
-    struct pci_device *pci_dev = intel_get_pci_device();
-    uint32_t devid, gen;
-	int mmio_bar, mmio_size;
-	int err;
-
-	devid = pci_dev->device_id;
-	if (IS_GEN2(devid))
-		mmio_bar = 1;
+	if(length%2 == 0)
+		// if even number of elements, return mean of the two elements in the middle
+		return ((vector[length/2] + vector[length/2 - 1]) / 2.0);
 	else
-		mmio_bar = 0;
+		// if odd number of elements, return element in the middle
+		return vector[length/2];
+}
 
-	gen = intel_gen(devid);
-	if (gen < 3)       mmio_size = 512*1024;
-	else if (gen < 5)  mmio_size = 512*1024;
-	else               mmio_size = 2*1024*1024;
+
+uint64_t umedian(int length, uint64_t *vector) {
 	
+	uint64_t temp;
+	int i, j;
 	
+	// sort in ascending order
+	for(i = 0; i < length-1; i++) {
+		for(j = 1; j < length; j++) {
+			if(vector[i] > vector[j]) {
+				// swap elements
+				temp = vector[j];
+				vector[j] = vector[i];
+				vector[i] = temp;
+			}
+		}
+	}
 	
-	printf("before intel_register_access_init(), igt_global_mmio = %x\n", igt_global_mmio);
+	if(length%2 == 0)
+		// if even number of elements, return mean of the two elements in the middle
+		return ((vector[length/2] + vector[length/2 - 1]) / 2.0);
+	else
+		// if odd number of elements, return element in the middle
+		return vector[length/2];
+}
+
+float fmedian(int length, float *vector) {
 	
-	err = intel_register_access_init(pci_dev, 0, drm_fd);
-	if (err==-1) printf(KRED "error at intel_register_access_init()\n", KNRM);
+	float temp;
+	int i, j;
 	
+	// sort in ascending order
+	for(i = 0; i < length-1; i++) {
+		for(j = 1; j < length; j++) {
+			if(vector[i] > vector[j]) {
+				// swap elements
+				temp = vector[j];
+				vector[j] = vector[i];
+				vector[i] = temp;
+			}
+		}
+	}
 	
-    
-    printf("mmio_bar = %d\n", mmio_bar);
-	printf("mmio_size = %d\n", mmio_size);
-	printf("gen = %u\n", gen);
-	printf("pci_dev->regions[mmio_bar].base_addr = %x\n", pci_dev->regions[mmio_bar].base_addr);
-	printf("igt_global_mmio = %x\n", igt_global_mmio);
+	if(length%2 == 0)
+		// if even number of elements, return mean of the two elements in the middle
+		return ((vector[length/2] + vector[length/2 - 1]) / 2.0);
+	else
+		// if odd number of elements, return element in the middle
+		return vector[length/2];
+}
+
+
+uint64_t average(int length, uint64_t *vector) {
 	
-	//err = pci_device_map_range (pci_dev, pci_dev->regions[mmio_bar].base_addr, mmio_size, PCI_DEV_MAP_FLAG_WRITABLE, &igt_global_mmio);
-    
-	//if (err==-1) printf(KRED "error at pci_device_map_range()\n", KNRM);
+	int sum = 0;
+	int i;
 	
+	for(i = 0; i < length; i++) {
+		sum += vector[i];
+	}
 	
-	uint32_t bar = pci_dev->regions[mmio_bar].base_addr;
+	return sum/length;
+}
+
+
+
+#define LENGTH_OVERHEAD 1000
+
+void measure_overheads() {
 	
-	uint32_t oaperf_a4_lower_free_addr = 0x2960;
-	uint32_t oaperf_a4_upper_free_addr = 0x2964;
+	int err;
+	int i;
+	uint64_t cpu_ticks0;
+	uint64_t cpu_ticks1;
+	uint64_t cpu_ticks_delta[LENGTH_OVERHEAD];
+	uint64_t cpu_ticks_max;
+	uint64_t cpu_ticks_min;
+	uint64_t cpu_ticks_median;
+	uint64_t cpu_ticks_avg;
+	
+	uint32_t oacontrol = 0x2B00;
 	uint32_t eu_perf_cnt_ctl_0_addr = 0xE458;
 	uint32_t eu_perf_cnt_ctl_1_addr = 0xE558;
 	uint32_t eu_perf_cnt_ctl_2_addr = 0xE658;
+	uint32_t eu_perf_cnt_ctl_3_addr = 0xE758;
+	uint32_t eu_perf_cnt_ctl_4_addr = 0xE45C;
+	uint32_t eu_perf_cnt_ctl_5_addr = 0xE55C;
+	uint32_t eu_perf_cnt_ctl_6_addr = 0xE65C;
+	
+	uint32_t counter_format = 5;	// 0b101
+	uint32_t dword_for_counting_flops = 3;			//    3 = 0b 0000 0000 0011
+	uint32_t dword_for_counting_movs = 1026;		// 1026 = 0b 0100 0000 0010
+	uint32_t dword_for_counting_ternary_ins = 516;	//  516 = 0b 0010 0000 0100
+	uint32_t dword_for_counting_fpu0 = 0;			//    0 = 0b 0000 0000 0000
+	uint32_t dword_for_counting_fpu1 = 1;			//    1 = 0b 0000 0000 0001
+	
+	
+	
+	struct pci_device *pci_dev = intel_get_pci_device();
+	
+	
+	
+	err = intel_register_access_init(pci_dev, 0, drm_fd);
+	if (err==-1) {
+		fprintf(stderr, KRED "error at intel_register_access_init()\n", KNRM);
+		exit(1);
+	}
+	
+	OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
+	
+	
+	
+	// measure overhead
+	for(i = 0; i < LENGTH_OVERHEAD; i++) {	
+		cpu_ticks0 = read_tsc_start();
+			OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
+			OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
+			OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
+			OUTREG(eu_perf_cnt_ctl_3_addr, dword_for_counting_fpu0 << 12 || dword_for_counting_fpu1);	
+		cpu_ticks1 = read_tsc_end();
+		cpu_ticks_delta[i] = cpu_ticks1 - cpu_ticks0;		
+	}
+	
+	cpu_ticks_max = umax(LENGTH_OVERHEAD, cpu_ticks_delta);
+	cpu_ticks_min = umin(LENGTH_OVERHEAD, cpu_ticks_delta);
+	cpu_ticks_avg = average(LENGTH_OVERHEAD, cpu_ticks_delta);
+	cpu_ticks_median = median(LENGTH_OVERHEAD, cpu_ticks_delta);
+	
+	
+	
+	printf("\n");
+	printf("=======================================\n");
+	printf("overhead of writing to EU_PERF_CNT_CTL:\n");
+	printf("Min: %lu\n", cpu_ticks_min);
+	printf("Max: %lu\n", cpu_ticks_max);
+	printf("Avg: %lu\n", cpu_ticks_avg);
+	printf("Median: %lu\n", cpu_ticks_median);
+	printf("=======================================\n\n");
+	
+	
+	
+
+	OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | 0);	
+	
+	intel_register_access_fini();
+	
+	FILE *f = fopen("overheads.txt", "w");
+	for(i=0; i<LENGTH_OVERHEAD; i++) {
+		fprintf(f, "%lu\n", cpu_ticks_delta[i]);
+	}
+	fclose(f);
+	
+}
+
+
+
+
+/*
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpu0_in_eu0_row_0 | dword_for_counting_flops_in_fpu1_in_eu0_row_0 << 12);			// A7, A8	\
+						OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_flops_in_fpu0_in_eu1_row_0 | dword_for_counting_flops_in_fpu1_in_eu1_row_0 << 12);			// A9, A10	\
+						OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_flops_in_fpu0_in_eu2_row_0 | dword_for_counting_flops_in_fpu1_in_eu2_row_0 << 12);			// A11, A12	\
+						OUTREG(eu_perf_cnt_ctl_3_addr, dword_for_counting_flops_in_fpu0_in_eu3_row_0 | dword_for_counting_flops_in_fpu1_in_eu3_row_0 << 12);			// A13, A14	
+*/
+
+
+
+/*
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpu0_in_eu0_row_0 | dword_for_counting_flops_in_fpu1_in_eu0_row_0 << 12);			// A7, A8	
+*/
+
+/*
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpus_in_eu0_row_0 | dword_for_counting_flops_in_fpus_in_eu0_row_0 << 12);			// A7, A8
+*/
+
+
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_5_addr, dword_for_counting_sends_in_row0_in_send_pipeline | dword_for_counting_sends_in_row1_in_send_pipeline << 12);	// A17, A18	
+
+
+/*
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_movs_in_row0_in_fpu0_pipeline | dword_for_counting_movs_in_row0_in_fpu1_pipeline << 12);	// A7, A8
+*/
+
+
+
+/**************************************************************
+ * ******************** READ COUNTERS RPC  ********************
+ * ************************************************************
+ */
+
+
+
+/** read_counters_rpc
+ * read counters by sending MI_RPC command
+ */
+void read_counters_rpc(int dump, int power_smoothing) {
+	
+	// registers
 	uint32_t oacontrol = 0x2B00;
+	uint32_t eu_perf_cnt_ctl_0_addr = 0xE458;
+	uint32_t eu_perf_cnt_ctl_1_addr = 0xE558;
+	uint32_t eu_perf_cnt_ctl_2_addr = 0xE658;
+	uint32_t eu_perf_cnt_ctl_3_addr = 0xE758;
+	uint32_t eu_perf_cnt_ctl_4_addr = 0xE45C;
+	uint32_t eu_perf_cnt_ctl_5_addr = 0xE55C;
+	uint32_t eu_perf_cnt_ctl_6_addr = 0xE65C;
+	uint32_t oaperf_a4_lower_free_addr = 0x2960;
+	uint32_t oaperf_a4_upper_free_addr = 0x2964;
+	uint32_t oaperf_a6_lower_free_addr = 0x2968;
+	uint32_t oaperf_a6_upper_free_addr = 0x296C;
+	uint32_t oaperf_a19_lower_free_addr = 0x2970;
+	uint32_t oaperf_a19_upper_free_addr = 0x2974;
+	uint32_t oaperf_a20_lower_free_addr = 0x2978;
+	uint32_t oaperf_a20_upper_free_addr = 0x297C;
 	uint32_t oaperf_a7_lower_addr = 0x2838;
 	uint32_t oaperf_a7_upper_addr = 0x283C;
     uint32_t oaperf_a8_lower_addr = 0x2840;
@@ -2891,12 +1404,890 @@ void test_counters_with_lib() {
     uint32_t oaperf_a20_lower_addr = 0x28A0;
     uint32_t oaperf_a20_upper_addr = 0x28A4;
 	
-	uint32_t oacontrol_value_start=0, oacontrol_value_end=0;
-	uint32_t eu_perf_cnt_ctl_0_value_start=0, eu_perf_cnt_ctl_0_value_end=0;
-	uint32_t eu_perf_cnt_ctl_1_value_start=0, eu_perf_cnt_ctl_1_value_end=0;
-	uint32_t eu_perf_cnt_ctl_2_value_start=0, eu_perf_cnt_ctl_2_value_end=0;
-	uint32_t oaperf_a4_lower_free_value_start=0, oaperf_a4_lower_free_value_end=0;
-	uint32_t oaperf_a4_upper_free_value_start=0, oaperf_a4_upper_free_value_end=0;
+	
+	uint32_t counter_format = 5;	// 0b101
+	
+	// choose aggregate counters
+	uint32_t dword_for_counting_flops = 3;			//    3 = 0b 0000 0000 0011
+	uint32_t dword_for_counting_movs = 1026;		// 1026 = 0b 0100 0000 0010
+	uint32_t dword_for_counting_ternary_ins = 516;	//  516 = 0b 0010 0000 0100
+	uint32_t dword_for_counting_fpu0 = 0;			//    0 = 0b 0000 0000 0000
+	uint32_t dword_for_counting_fpu1 = 1;			//    1 = 0b 0000 0000 0001
+	
+	// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
+	// EU SEND Pipeline Active (Increment Event 0b0010) doesn't support Fine Event filter 0b0100 (movs)
+	uint32_t dword_for_counting_movs_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_movs_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
+	
+	uint32_t dword_for_counting_movs_in_row0_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_movs_in_row1_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_movs_in_row0_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_movs_in_row1_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	
+	uint32_t dword_for_counting_sends_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_sends_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+	
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+	
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+	
+	
+	
+	// ======================== prelminaries ======================== //
+	
+	uint64_t properties[] = {
+		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
+		/* no samples, but we have to specify at least one sample property */
+		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
+		/* OA unit configuration */
+		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
+		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
+		/* Note: no OA exponent specified in this case */
+	};
+
+	struct drm_i915_perf_open_param param = {
+		.flags = I915_PERF_FLAG_FD_CLOEXEC,
+		.num_properties = sizeof(properties) / 16,
+		.properties_ptr = (uintptr_t) properties
+	};
+
+	drm_intel_bufmgr *bufmgr;
+	drm_intel_context *context0, *context1;
+	struct intel_batchbuffer *batch;
+	struct igt_buf src[3], dst[3];
+	drm_intel_bo *bo;
+	uint32_t *report0_32, *report1_32;
+	int width = 800;
+	int height = 600;
+	uint32_t ctx_id = 0xffffffff;	// invalid id
+	int ret;
+	long long int cpu_ticks0, cpu_ticks1;
+
+	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
+	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
+
+	for(int i = 0; i < ARRAY_SIZE(src); i++) {
+		scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
+		scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
+	}
+
+	batch = intel_batchbuffer_alloc(bufmgr, devid);
+
+	context0 = drm_intel_gem_context_create(bufmgr);
+	context1 = drm_intel_gem_context_create(bufmgr);
+
+	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
+
+	properties[1] = ctx_id;
+
+	intel_batchbuffer_flush_with_context(batch, context0);
+
+	scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
+	scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
+
+	stream_fd = __perf_open(drm_fd, &param, false);
+
+	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
+
+	ret = drm_intel_bo_map(bo, true /* write enable */);
+	
+	// end preliminaries
+	
+	
+	
+	cl_event event;
+	cl_ulong time_start;
+	cl_ulong time_end;
+	
+	
+	
+	
+	struct pci_device *pci_dev = intel_get_pci_device();
+    uint32_t devid, gen;
+	int mmio_bar, mmio_size;
+	int err;
+	
+	// read cpu frequency
+	uint64_t cpu_cur_freq;
+	int cur_cpu = 0;
+	char buf[512];
+	snprintf(buf, sizeof(buf), "/sys/devices/system/cpu/cpu%u/cpufreq/scaling_cur_freq", cur_cpu);
+	ret = read_u64_file(buf, &cpu_cur_freq);
+
+	// read gpu frequency
+	uint64_t gpu_cur_freq;
+	snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_cur_freq_mhz", card);
+	ret = read_u64_file(buf, &gpu_cur_freq);
+	
+	
+	
+	// ========================== PAPI setup ========================== //
+	
+	// PAPI vars
+	int retval;
+	int native;
+	int numEvents = 4;
+	char *EventNames[] = {"rapl:::PSYS_ENERGY:PACKAGE0", "rapl:::PACKAGE_ENERGY:PACKAGE0", "rapl:::PP0_ENERGY:PACKAGE0", "rapl:::DRAM_ENERGY:PACKAGE0"}; //, "rapl::RAPL_ENERGY_GPU"};
+	papi_values = (long long int *) malloc(numEvents * sizeof(long long int));
+	
+	// PAPI init
+	retval = PAPI_library_init(PAPI_VER_CURRENT);
+	if (retval != PAPI_VER_CURRENT) {
+		fprintf(stderr, KRED "PAPI library init error at line %d\nError: %s\n" KNRM, __LINE__, PAPI_strerror(retval));
+		exit(1);
+	}
+	
+	// create event set
+	EventSet = PAPI_NULL;
+	retval = PAPI_create_eventset(&EventSet);
+	if (retval != PAPI_OK) {
+		fprintf(stderr, KRED "PAPI create eventset error at line %d\nError: %s\n" KNRM, __LINE__, PAPI_strerror(retval));
+		exit(1);
+	}
+	
+	// iterate events
+	for (int i = 0; i < numEvents; i++) {
+		
+		retval = PAPI_event_name_to_code(EventNames[i], &native);
+		if (retval != PAPI_OK) {
+			fprintf(stderr, KRED "PAPI retrieve event code error at line %d\nError: %s\n" KNRM, __LINE__, PAPI_strerror(retval));
+			exit(1);
+		}
+		
+		retval = PAPI_add_event(EventSet, native);
+		if (retval != PAPI_OK) {
+			fprintf(stderr, KRED "PAPI add event error at line %d\nError: %s\n" KNRM, __LINE__, PAPI_strerror(retval));
+			exit(1);
+		}
+	}
+	// PAPI setup end
+	
+	
+	
+	
+	
+	printf("Configuring counters, starting PAPI and running the kernel ...\n");
+	fflush(stdout);
+	
+	
+	
+	
+	// vars for handling medians
+	long long int ocl_nanoseconds;
+	uint64_t cpu_ticks_delta;
+	int power_reps = 10;
+	uint64_t *cpu_ticks0_for_median = (uint64_t *) calloc(power_reps, sizeof(uint64_t));
+	uint64_t *cpu_ticks1_for_median = (uint64_t *) calloc(power_reps, sizeof(uint64_t));
+	uint64_t *cpu_ticks_delta_for_median = (uint64_t *) calloc(power_reps, sizeof(uint64_t));
+	long long int *ocl_nanoseconds_for_median = (long long int *) calloc(power_reps, sizeof(long long int));
+	long long int **papi_values_for_median = (long long int **) malloc(power_reps * sizeof(long long int*));
+	for(int k=0; k<power_reps; k++) {
+		papi_values_for_median[k] = (long long int *) calloc(numEvents, sizeof(long long int));
+	}
+	uint64_t cpu_ticks0_median = 0;
+	uint64_t cpu_ticks1_median = 0;
+	uint64_t cpu_ticks_delta_median = 0;
+	long long int ocl_nanoseconds_median = 0;
+	long long int *papi_values_median = (long long int *) calloc(numEvents, sizeof(long long int));
+	
+	
+	
+	
+	
+	
+	if (!power_smoothing) {
+	
+		err = intel_register_access_init(pci_dev, 0, drm_fd);
+		if (err==-1) {
+			fprintf(stderr, KRED "error at intel_register_access_init()\n", KNRM);
+			exit(1);
+		}
+		
+		// config
+		uint32_t oacontrol_default = INREG(oacontrol);
+		OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
+			
+		// configure aggregated counters
+		CONFIG_COUNTERS
+		
+		intel_register_access_fini();
+		
+		emit_report_perf_count(batch,
+								bo,
+								0,  		 /* report dst offset */
+								0xdeadbeef); /* report id */
+		
+		intel_batchbuffer_flush_with_context(batch, context0);
+		
+		retval = PAPI_start(EventSet);
+		if (retval != PAPI_OK) {
+			fprintf(stderr, KRED "PAPI start error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+			exit(1);
+		}
+		
+		cpu_ticks0 = read_tsc_start();
+
+		// do work
+		ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, &event); clCheckError(ret, __LINE__);
+		clFinish(command_queue); clCheckError(ret, __LINE__);
+
+		cpu_ticks1 = read_tsc_end();
+		
+		retval = PAPI_stop(EventSet, papi_values);
+		if (retval != PAPI_OK) {
+			fprintf(stderr, KRED "PAPI stop error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+			exit(1);
+		}
+		
+		//intel_batchbuffer_flush_with_context(batch, context0);
+
+		emit_report_perf_count(batch,
+								bo,
+								256,   		 /* report dst offset */
+								0xbeefbeef); /* report id */
+
+		intel_batchbuffer_flush_with_context(batch, context1);
+
+		ret = drm_intel_bo_map(bo, false /* write enable */);
+
+		report0_32 = bo->virtual;
+
+		report1_32 = report0_32 + 64;
+		
+		err = intel_register_access_init(pci_dev, 0, drm_fd);
+		if (err==-1) {
+			fprintf(stderr, KRED "error at intel_register_access_init()\n", KNRM);
+			exit(1);
+		}
+		
+		OUTREG(oacontrol, oacontrol_default);
+		
+		intel_register_access_fini();
+		
+		clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_START, sizeof(time_start), &time_start, NULL);
+		clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(time_end), &time_end, NULL);
+		ocl_nanoseconds = time_end-time_start;
+	
+		cpu_ticks_delta = (cpu_ticks1-cpu_ticks0);
+		
+		printf("Kernel finished.\n");
+		fflush(stdout);
+		
+		uint32_t gpu_ticks0 = report0_32[3];
+		uint32_t gpu_ticks1 = report1_32[3];
+		uint32_t gpu_ticks_delta = gpu_ticks1 - gpu_ticks0;
+		
+		
+		// print
+		//char *filename_rpc = (char *) malloc(255);
+		//sprintf(filename_rpc, "results/results_rpc_%s_%d_blocks_%d_tpb.csv", kernel_choice, global/local, local);
+		//report_card_t rep_card = print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, ocl_nanoseconds, papi_values, dump, 0, filename_rpc);
+		//free(filename_rpc);
+	
+	}
+	
+	
+	
+	else {
+		
+		//report_card_t *report_cards = (report_card_t*) malloc(power_reps * sizeof(report_card_t));
+		
+		
+		for(int power_it = 0; power_it < power_reps; power_it++) {
+			
+			
+		
+			//================================= CONFIGURE COUNTERS =================================//
+			err = intel_register_access_init(pci_dev, 0, drm_fd);
+			if (err==-1) {
+				fprintf(stderr, KRED "error at intel_register_access_init()\n", KNRM);
+				exit(1);
+			}
+			// config
+			uint32_t oacontrol_default = INREG(oacontrol);
+			OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
+			// configure aggregated counters
+			CONFIG_COUNTERS
+			intel_register_access_fini();
+			emit_report_perf_count(batch,
+									bo,
+									0,  		 /* report dst offset */
+									0xdeadbeef); /* report id */
+			intel_batchbuffer_flush_with_context(batch, context0);
+			
+			//================================= START PAPI =================================//
+			retval = PAPI_start(EventSet);
+			if (retval != PAPI_OK) {
+				fprintf(stderr, KRED "PAPI start error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+				exit(1);
+			}
+			
+			//================================= RUN KERNEL =================================//
+			cpu_ticks0 = read_tsc_start();
+			ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, &event); clCheckError(ret, __LINE__);
+			clFinish(command_queue); clCheckError(ret, __LINE__);
+			cpu_ticks1 = read_tsc_end();
+			
+			//================================= STOP PAPI =================================//
+			retval = PAPI_stop(EventSet, papi_values);
+			if (retval != PAPI_OK) {
+				fprintf(stderr, KRED "PAPI stop error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+				exit(1);
+			}
+			
+			//================================= GET COUNTERS =================================//
+			emit_report_perf_count(batch,
+									bo,
+									256,   		 /* report dst offset */
+									0xbeefbeef); /* report id */
+
+			intel_batchbuffer_flush_with_context(batch, context1);
+			ret = drm_intel_bo_map(bo, false /* write enable */);
+			report0_32 = bo->virtual;
+			report1_32 = report0_32 + 64;
+			
+			
+			//================================= RETURN COUNTERS TO DEFAULT SETTING =================================//
+			err = intel_register_access_init(pci_dev, 0, drm_fd);
+			if (err==-1) {
+				fprintf(stderr, KRED "error at intel_register_access_init()\n", KNRM);
+				exit(1);
+			}
+			OUTREG(oacontrol, oacontrol_default);
+			intel_register_access_fini();
+			
+			//================================= GET OCL TICKS =================================//
+			clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_START, sizeof(time_start), &time_start, NULL);
+			clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(time_end), &time_end, NULL);
+			ocl_nanoseconds = time_end-time_start;
+			
+			//================================= SAVE FOR MEDIAN =================================//
+			for(int l=0; l<numEvents; l++) {
+				papi_values_for_median[power_it][l] += papi_values[l];
+			}
+			cpu_ticks0_for_median[power_it] += cpu_ticks0;
+			cpu_ticks1_for_median[power_it] += cpu_ticks1;
+			ocl_nanoseconds_for_median[power_it] += ocl_nanoseconds;
+			cpu_ticks_delta_for_median[power_it] = (cpu_ticks1_for_median-cpu_ticks0_for_median);
+			
+			
+			//report_cards[power_it] = print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, ocl_nanoseconds, papi_values, 0, 1, NULL);
+			
+		}
+		
+		//================================= CALC MEDIANS =================================//
+		long long int *temp =  (long long int *) calloc(power_reps, sizeof(long long int));
+		for(int l=0; l<numEvents; l++) {
+			for(int k=0; k<power_reps; k++) temp[k] = papi_values_for_median[k][l];
+			for(int k=0; k<power_reps; k++) {
+				papi_values_median[l] = median(power_reps, (int64_t*)temp);
+			}
+		}
+		free(temp);
+		cpu_ticks_delta_median = umedian(power_reps, cpu_ticks_delta_for_median);
+		ocl_nanoseconds_median = median(power_reps, (int64_t*)ocl_nanoseconds_for_median);
+		
+		
+		
+		
+		
+		/*
+		
+		// convert report_card_t *report_cards from aos to soa
+		uint32_t *timestamp_delta = (uint32_t*) malloc(power_reps * sizeof(uint32_t));
+		uint64_t *ocl_nanoseconds = (uint64_t*) malloc(power_reps * sizeof(uint64_t));
+		uint64_t *cpu_ticks_delta = (uint64_t*) malloc(power_reps * sizeof(uint64_t));
+		uint32_t *gpu_ticks_delta = (uint32_t*) malloc(power_reps * sizeof(uint32_t));
+		uint64_t **a_counters_delta = (uint64_t**) malloc(36 * sizeof(uint64_t*));
+		uint32_t **b_counters_delta = (uint32_t**) malloc(8 * sizeof(uint32_t*));
+		uint32_t **c_counters_delta = (uint32_t**) malloc(8 * sizeof(uint32_t*));
+		for(int p = 0; p < 36; p++) a_counters_delta[p] = (uint64_t*) malloc(power_reps * sizeof(uint64_t));
+		for(int p = 0; p < 8; p++)  b_counters_delta[p] = (uint32_t*) malloc(power_reps * sizeof(uint32_t));
+		for(int p = 0; p < 8; p++)  c_counters_delta[p] = (uint32_t*) malloc(power_reps * sizeof(uint32_t));
+		long long int *papi_psys_energy = (long long int*) malloc(power_reps * sizeof(long long int));
+		long long int *papi_pkg_energy = (long long int*) malloc(power_reps * sizeof(long long int));
+		long long int *papi_pp0_energy = (long long int*) malloc(power_reps * sizeof(long long int));
+		long long int *papi_dram_energy = (long long int*) malloc(power_reps * sizeof(long long int));
+		float *psys_energy = (float*) malloc(power_reps * sizeof(float));
+		float *pkg_energy  = (float*) malloc(power_reps * sizeof(float));
+		float *pp0_energy  = (float*) malloc(power_reps * sizeof(float));
+		float *dram_energy = (float*) malloc(power_reps * sizeof(float));
+		float *gpu_energy  = (float*) malloc(power_reps * sizeof(float));
+		float *psys_power_ocl = (float*) malloc(power_reps * sizeof(float));
+		float *pkg_power_ocl = (float*) malloc(power_reps * sizeof(float));
+		float *pp0_power_ocl = (float*) malloc(power_reps * sizeof(float));
+		float *dram_power_ocl = (float*) malloc(power_reps * sizeof(float));
+		float *gpu_power_ocl = (float*) malloc(power_reps * sizeof(float));
+		float *psys_power_gput = (float*) malloc(power_reps * sizeof(float));
+		float *pkg_power_gput  = (float*) malloc(power_reps * sizeof(float));
+		float *pp0_power_gput  = (float*) malloc(power_reps * sizeof(float));
+		float *dram_power_gput = (float*) malloc(power_reps * sizeof(float));
+		float *gpu_power_gput  = (float*) malloc(power_reps * sizeof(float));
+		
+		for(int k = 0; k < power_reps; k++) {
+			timestamp_delta[k] = report_cards[k].timestamp_delta;
+			ocl_nanoseconds[k] = report_cards[k].ocl_nanoseconds;
+			cpu_ticks_delta[k] = report_cards[k].cpu_ticks_delta;
+			gpu_ticks_delta[k] = report_cards[k].gpu_ticks_delta;
+			for(int p = 0; p < 36; p++) a_counters_delta[p][k] = report_cards[k].a_counters_delta[p];
+			for(int p = 0; p < 8; p++)  b_counters_delta[p][k] = report_cards[k].b_counters_delta[p];
+			for(int p = 0; p < 8; p++)  c_counters_delta[p][k] = report_cards[k].c_counters_delta[p];
+			papi_psys_energy[k] = report_cards[k].papi_psys_energy;
+			papi_pkg_energy[k]  = report_cards[k].papi_pkg_energy;
+			papi_pp0_energy[k]  = report_cards[k].papi_pp0_energy;
+			papi_dram_energy[k] = report_cards[k].papi_dram_energy;
+			gpu_energy[k] = report_cards[k].gpu_energy;
+			psys_power_ocl[k] = report_cards[k].psys_power_ocl;
+			pkg_power_ocl[k]  = report_cards[k].pkg_power_ocl;
+			pp0_power_ocl[k]  = report_cards[k].pp0_power_ocl;
+			dram_power_ocl[k] = report_cards[k].dram_power_ocl;
+			gpu_power_ocl[k]  = report_cards[k].gpu_power_ocl;
+			psys_power_gput[k] = report_cards[k].psys_power_gput;
+			pkg_power_gput[k]  = report_cards[k].pkg_power_gput;
+			pp0_power_gput[k]  = report_cards[k].pp0_power_gput;
+			dram_power_gput[k] = report_cards[k].dram_power_gput;
+			gpu_power_gput[k]  = report_cards[k].gpu_power_gput;
+		}
+		
+		uint32_t timestamp_delta_median = umedian(power_reps, (uint64_t*)timestamp_delta);
+		uint64_t ocl_nanoseconds_median = umedian(power_reps, ocl_nanoseconds);
+		uint64_t cpu_ticks_delta_median = umedian(power_reps, cpu_ticks_delta);
+		uint32_t gpu_ticks_delta_median = umedian(power_reps, (uint64_t*)gpu_ticks_delta);
+		uint64_t *a_counters_delta_median = (uint64_t*) malloc(36 * sizeof(uint64_t));
+		uint32_t *b_counters_delta_median = (uint32_t*) malloc(8 * sizeof(uint32_t));
+		uint32_t *c_counters_delta_median = (uint32_t*) malloc(8 * sizeof(uint32_t));
+		for(int p = 0; p < 36; p++) a_counters_delta_median[p] = umedian(power_reps, a_counters_delta[p]);
+		for(int p = 0; p < 8; p++)  b_counters_delta_median[p] = umedian(power_reps, (uint64_t*)b_counters_delta[p]);
+		for(int p = 0; p < 8; p++)  c_counters_delta_median[p] = umedian(power_reps, (uint64_t*)c_counters_delta[p]);
+		long long int papi_psys_energy_median = umedian(power_reps, (int64_t*)papi_psys_energy);
+		long long int papi_pkg_energy_median = umedian(power_reps, (int64_t*)papi_pkg_energy);
+		long long int papi_pp0_energy_median = umedian(power_reps, (int64_t*)papi_pp0_energy);
+		long long int papi_dram_energy_median = umedian(power_reps, (int64_t*)papi_dram_energy);
+		float psys_energy_median = fmedian(power_reps, psys_energy);
+		float pkg_energy_median  = fmedian(power_reps, pkg_energy);
+		float pp0_energy_median  = fmedian(power_reps, pp0_energy);
+		float dram_energy_median = fmedian(power_reps, dram_energy);
+		float gpu_energy_median  = fmedian(power_reps, gpu_energy);
+		float psys_power_ocl_median = fmedian(power_reps, psys_power_ocl);
+		float pkg_power_ocl_median = fmedian(power_reps, pkg_power_ocl);
+		float pp0_power_ocl_median = fmedian(power_reps, pp0_power_ocl);
+		float dram_power_ocl_median = fmedian(power_reps, dram_power_ocl);
+		float gpu_power_ocl_median = fmedian(power_reps, gpu_power_ocl);
+		float psys_power_gput_median  = fmedian(power_reps, psys_power_gput); 
+		float pkg_power_gput_median  = fmedian(power_reps, pkg_power_gput);
+		float pp0_power_gput_median  = fmedian(power_reps, pp0_power_gput);
+		float dram_power_gput_median = fmedian(power_reps, dram_power_gput);
+		float gpu_power_gput_median  = fmedian(power_reps, gpu_power_gput);
+		
+		report_card_t rep_card_median;
+		rep_card_median.timestamp_delta = timestamp_delta_median;
+		rep_card_median.ocl_nanoseconds = ocl_nanoseconds_median;
+		rep_card_median.cpu_ticks_delta = cpu_ticks_delta_median;
+		rep_card_median.gpu_ticks_delta = gpu_ticks_delta_median;
+		for(int p = 0; p < 36; p++) rep_card_median.a_counters_delta[p] = a_counters_delta_median[p];
+		for(int p = 0; p < 8; p++)  rep_card_median.b_counters_delta[p] = b_counters_delta_median[p];
+		for(int p = 0; p < 8; p++)  rep_card_median.c_counters_delta[p] = c_counters_delta_median[p];
+		rep_card_median.papi_psys_energy = papi_psys_energy_median;
+		rep_card_median.papi_pkg_energy = papi_psys_energy_median;
+		rep_card_median.papi_pp0_energy = papi_psys_energy_median;
+		rep_card_median.papi_dram_energy = papi_psys_energy_median;
+		rep_card_median.papi_dram_energy = papi_psys_energy_median;
+		rep_card_median.psys_energy = psys_energy_median;
+		rep_card_median.pkg_energy = pkg_energy_median;
+		rep_card_median.pp0_energy = pp0_energy_median;
+		rep_card_median.dram_energy = dram_energy_median;
+		rep_card_median.psys_power_ocl = psys_power_ocl_median;
+		rep_card_median.pkg_power_ocl  = pkg_power_ocl_median;
+		rep_card_median.pp0_power_ocl  = pp0_power_ocl_median;
+		rep_card_median.dram_power_ocl = dram_power_ocl_median;
+		rep_card_median.gpu_power_ocl  = gpu_power_ocl_median;
+		rep_card_median.psys_power_gput = psys_power_gput_median;
+		rep_card_median.pkg_power_gput  = pkg_power_gput_median;
+		rep_card_median.pp0_power_gput  = pp0_power_gput_median;
+		rep_card_median.dram_power_gput = dram_power_gput_median;
+		rep_card_median.gpu_power_gput  = gpu_power_gput_median;
+		
+		
+		// print
+		char *filename_rpc = (char *) malloc(255);
+		sprintf(filename_rpc, "results/results_rpc_%s_%d_blocks_%d_tpb.csv", kernel_choice, global/local, local);
+		print_report_card(rep_card_median, filename_rpc); 
+		free(filename_rpc);
+		
+		
+		// frees
+		free(timestamp_delta);
+		free(ocl_nanoseconds);
+		free(cpu_ticks_delta);
+		free(gpu_ticks_delta);
+		//for(int p = 0; p < 36; p++) free(a_counters_delta[p]);
+		//for(int p = 0; p < 8; p++) free(b_counters_delta[p]);
+		//for(int p = 0; p < 8; p++) free(c_counters_delta[p]);
+		//free(a_counters_delta);
+		//free(b_counters_delta);
+		//free(c_counters_delta);
+		free(papi_psys_energy);
+		free(papi_pkg_energy);
+		free(papi_pp0_energy);
+		free(papi_dram_energy);
+		free(psys_energy);
+		free(pkg_energy);
+		free(pp0_energy);
+		free(dram_energy);
+		free(gpu_energy);
+		free(psys_power_ocl);
+		free(pkg_power_ocl);
+		free(pp0_power_ocl);
+		free(dram_power_ocl);
+		free(gpu_power_ocl);
+		free(psys_power_gput);
+		free(pkg_power_gput);
+		free(pp0_power_gput);
+		free(dram_power_gput);
+		free(gpu_power_gput);
+		free(a_counters_delta_median);
+		free(b_counters_delta_median);
+		free(c_counters_delta_median);
+		
+		*/
+		
+	}
+	
+	
+	uint32_t gpu_ticks0 = report0_32[3];
+	uint32_t gpu_ticks1 = report1_32[3];
+	uint32_t gpu_ticks_delta = gpu_ticks1 - gpu_ticks0;
+	// overflow check for clock counters
+	int overflow_rdtsc = 0;
+	int overflow_gputicks = 0;
+	if (cpu_ticks_delta > cpu_ticks0) overflow_rdtsc = 1;
+	if (gpu_ticks_delta > gpu_ticks0) overflow_gputicks = 1;
+	
+	
+	// print
+	char *filename_rpc = (char *) malloc(255);
+	sprintf(filename_rpc, "results/results_rpc_%s_%d_blocks_%d_tpb.csv", kernel_choice, global/local, local);
+	printf("\n\nDumping counters to file %s\n", filename_rpc);
+	print_reports(report0_32, report1_32, test_oa_format, cpu_ticks0, cpu_ticks1, cpu_cur_freq, gpu_cur_freq, ocl_nanoseconds, papi_values, dump, 0, filename_rpc);
+	free(filename_rpc);
+	
+	
+	
+	if (!power_smoothing) {
+		
+		printf("\n");
+		printf("CPU_ticks:        %llu\n", cpu_ticks_delta);
+		printf("GPU_ticks:        %llu\n", gpu_ticks_delta);
+		printf("OCL_ticks:        %llu\n", ocl_nanoseconds);
+		printf("CPU_freq:         %llu\n", cpu_cur_freq);
+		
+		printf("\n");
+		printf("CPU time:         %f [s]\n", cpu_ticks_delta/((float)cpu_cur_freq*1.0e3));
+		printf("OCL time:         %f [s]\n", ocl_nanoseconds/1.0e9);
+		printf("PAPI psys energy: %f [J]\n", papi_values[0]/1.0e9);
+		printf("PAPI pkg  energy: %f [J]\n", papi_values[1]/1.0e9);
+		printf("PAPI pp0  energy: %f [J]\n", papi_values[2]/1.0e9);
+		printf("PAPI dram energy: %f [J]\n", papi_values[3]/1.0e9);
+		//printf("PAPI gpu  energy: %f [J]\n", papi_values[4]*(2.3283064365386963e-10));
+		
+		printf("\n\n");
+		printf("Power using CPU_TICKS\n");
+		printf("PAPI psys power:  %f [W]\n", (papi_values[0]/1.0e9) / (cpu_ticks_delta/((float)cpu_cur_freq*1.0e3)));
+		printf("PAPI pkg  power:  %f [W]\n", (papi_values[1]/1.0e9) / (cpu_ticks_delta/((float)cpu_cur_freq*1.0e3)));
+		printf("PAPI pp0  power:  %f [W]\n", (papi_values[2]/1.0e9) / (cpu_ticks_delta/((float)cpu_cur_freq*1.0e3)));
+		printf("PAPI dram power:  %f [W]\n", (papi_values[3]/1.0e9) / (cpu_ticks_delta/((float)cpu_cur_freq*1.0e3)));
+		//printf("PAPI gpu  power:  %f [W]\n", (papi_values[4]*(2.3283064365386963e-10)) / (cpu_ticks_delta/(cpu_cur_freq*1.0e6)));
+		
+		printf("\n\n");
+		printf("Power using OCL_TIMER\n");
+		printf("PAPI psys power:  %f [W]\n", (papi_values[0]/1.0e9) / (ocl_nanoseconds/1.0e9));
+		printf("PAPI pkg  power:  %f [W]\n", (papi_values[1]/1.0e9) / (ocl_nanoseconds/1.0e9));
+		printf("PAPI pp0  power:  %f [W]\n", (papi_values[2]/1.0e9) / (ocl_nanoseconds/1.0e9));
+		printf("PAPI dram power:  %f [W]\n", (papi_values[3]/1.0e9) / (ocl_nanoseconds/1.0e9));
+		
+		if (overflow_rdtsc) printf("Possible RDTSC overflow\n");
+		if (overflow_gputicks) printf("Possible GPU_TICKS overflow\n");
+	}
+	
+	else {
+		
+		printf("\n");
+		printf("CPU_ticks:        %llu\n", cpu_ticks_delta);
+		printf("GPU_ticks:        %llu\n", gpu_ticks_delta);
+		printf("OCL_ticks:        %llu\n", ocl_nanoseconds);
+		printf("CPU_freq:         %llu\n", cpu_cur_freq);
+		
+		printf("\n");
+		printf("CPU time:         %f [s]\n", cpu_ticks_delta_median/((float)cpu_cur_freq*1.0e3));
+		printf("OCL time:         %f [s]\n", ocl_nanoseconds_median/1.0e9);
+		printf("PAPI psys energy: %f [J]\n", papi_values_median[0]/1.0e9);
+		printf("PAPI pkg  energy: %f [J]\n", papi_values_median[1]/1.0e9);
+		printf("PAPI pp0  energy: %f [J]\n", papi_values_median[2]/1.0e9);
+		printf("PAPI dram energy: %f [J]\n", papi_values_median[3]/1.0e9);
+		//printf("PAPI gpu  energy: %f [J]\n", papi_values[4]*(2.3283064365386963e-10));
+		
+		printf("\n\n");
+		printf("Power using CPU_TICKS\n");
+		printf("PAPI psys power:  %f [W]\n", (papi_values_median[0]/1.0e9) / (cpu_ticks_delta_median/((float)cpu_cur_freq*1.0e3)));
+		printf("PAPI pkg  power:  %f [W]\n", (papi_values_median[1]/1.0e9) / (cpu_ticks_delta_median/((float)cpu_cur_freq*1.0e3)));
+		printf("PAPI pp0  power:  %f [W]\n", (papi_values_median[2]/1.0e9) / (cpu_ticks_delta_median/((float)cpu_cur_freq*1.0e3)));
+		printf("PAPI dram power:  %f [W]\n", (papi_values_median[3]/1.0e9) / (cpu_ticks_delta_median/((float)cpu_cur_freq*1.0e3)));
+		//printf("PAPI gpu  power:  %f [W]\n", (papi_values[4]*(2.3283064365386963e-10)) / (cpu_ticks_delta/(cpu_cur_freq*1.0e6)));
+		
+		printf("\n\n");
+		printf("Power using OCL_TIMER\n");
+		printf("PAPI psys power:  %f [W]\n", (papi_values_median[0]/1.0e9) / (ocl_nanoseconds_median/1.0e9));
+		printf("PAPI pkg  power:  %f [W]\n", (papi_values_median[1]/1.0e9) / (ocl_nanoseconds_median/1.0e9));
+		printf("PAPI pp0  power:  %f [W]\n", (papi_values_median[2]/1.0e9) / (ocl_nanoseconds_median/1.0e9));
+		printf("PAPI dram power:  %f [W]\n", (papi_values_median[3]/1.0e9) / (ocl_nanoseconds_median/1.0e9));
+		
+	}
+	
+	/*
+	FILE *f_power = fopen("results/power_report.txt", "a");
+	
+	fprintf(f_power, "%s", kernel_choice);
+	fprintf(f_power, "PAPI_values:      %llu\n", papi_values);
+	fprintf(f_power, "CPU time:         %f [s]\n", cpu_ticks_delta/(cpu_cur_freq*1.0e6));
+	fprintf(f_power, "Delta ocl timer: %lu\n", time_end-time_start);
+	fprintf(f_power, "Time: %f [s]\n", ocl_nanoseconds/1.0e9);
+	fprintf(f_power, "PAPI psys energy: %f [J]\n", papi_values[0]/1.0e9);
+	fprintf(f_power, "PAPI pkg  energy: %f [J]\n", papi_values[1]/1.0e9);
+	fprintf(f_power, "PAPI pp0  energy: %f [J]\n", papi_values[2]/1.0e9);
+	fprintf(f_power, "PAPI dram energy: %f [J]\n", papi_values[3]/1.0e9);
+	fprintf(f_power, "PAPI gpu  energy: %f [J]\n", papi_values[4]*(2.3283064365386963e-10));
+	fprintf(f_power, "PAPI psys power:  %f [W]\n", (papi_values[0]/1.0e9) / (cpu_ticks_delta/(cpu_cur_freq*1.0e6)));
+	fprintf(f_power, "PAPI pkg  power:  %f [W]\n", (papi_values[1]/1.0e9) / (cpu_ticks_delta/(cpu_cur_freq*1.0e6)));
+	fprintf(f_power, "PAPI pp0  power:  %f [W]\n", (papi_values[2]/1.0e9) / (cpu_ticks_delta/(cpu_cur_freq*1.0e6)));
+	fprintf(f_power, "PAPI dram power:  %f [W]\n", (papi_values[3]/1.0e9) / (cpu_ticks_delta/(cpu_cur_freq*1.0e6)));
+	fprintf(f_power, "PAPI gpu  power:  %f [W]\n", (papi_values[4]*(2.3283064365386963e-10)) / (cpu_ticks_delta/(cpu_cur_freq*1.0e6)));
+	fprintf(f_power, "\n");
+	
+	fclose(f_power);
+	*/
+	
+	// cleanup
+	
+	PAPI_cleanup_eventset(EventSet);
+	PAPI_destroy_eventset(&EventSet);
+	free(papi_values);
+	for(int k=0; k<power_reps; k++) {
+		free(papi_values_for_median[k]);
+	}
+	free(papi_values_for_median);
+	free(papi_values_median);
+	free(cpu_ticks0_for_median);
+	free(cpu_ticks1_for_median);
+	free(cpu_ticks_delta_for_median);
+	free(ocl_nanoseconds_for_median);
+	
+	
+	for (int i = 0; i < ARRAY_SIZE(src); i++) {
+		drm_intel_bo_unreference(src[i].bo);
+		drm_intel_bo_unreference(dst[i].bo);
+	}
+
+	drm_intel_bo_unmap(bo);
+	drm_intel_bo_unreference(bo);
+	intel_batchbuffer_free(batch);
+	drm_intel_gem_context_destroy(context0);
+	drm_intel_gem_context_destroy(context1);
+	drm_intel_bufmgr_destroy(bufmgr);
+	__perf_close(stream_fd);
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**************************************************************
+ * ******************** READ COUNTERS MMIO ********************
+ * ************************************************************
+ */
+
+
+/** read_counters_mmio
+ * read counters through mmio access to registers
+ */
+void read_counters_mmio() {
+	
+	// registers
+	uint32_t oacontrol = 0x2B00;
+	uint32_t eu_perf_cnt_ctl_0_addr = 0xE458;
+	uint32_t eu_perf_cnt_ctl_1_addr = 0xE558;
+	uint32_t eu_perf_cnt_ctl_2_addr = 0xE658;
+	uint32_t eu_perf_cnt_ctl_3_addr = 0xE758;
+	uint32_t eu_perf_cnt_ctl_4_addr = 0xE45C;
+	uint32_t eu_perf_cnt_ctl_5_addr = 0xE55C;
+	uint32_t eu_perf_cnt_ctl_6_addr = 0xE65C;
+	uint32_t oaperf_a4_lower_free_addr = 0x2960;
+	uint32_t oaperf_a4_upper_free_addr = 0x2964;
+	uint32_t oaperf_a6_lower_free_addr = 0x2968;
+	uint32_t oaperf_a6_upper_free_addr = 0x296C;
+	uint32_t oaperf_a19_lower_free_addr = 0x2970;
+	uint32_t oaperf_a19_upper_free_addr = 0x2974;
+	uint32_t oaperf_a20_lower_free_addr = 0x2978;
+	uint32_t oaperf_a20_upper_free_addr = 0x297C;
+	uint32_t oaperf_a7_lower_addr = 0x2838;
+	uint32_t oaperf_a7_upper_addr = 0x283C;
+    uint32_t oaperf_a8_lower_addr = 0x2840;
+    uint32_t oaperf_a8_upper_addr = 0x2844;
+    uint32_t oaperf_a9_lower_addr = 0x2848;
+    uint32_t oaperf_a9_upper_addr = 0x284C;
+    uint32_t oaperf_a10_lower_addr = 0x2850;
+    uint32_t oaperf_a10_upper_addr = 0x2854;
+    uint32_t oaperf_a11_lower_addr = 0x2858;
+    uint32_t oaperf_a11_upper_addr = 0x285C;
+    uint32_t oaperf_a12_lower_addr = 0x2860;
+    uint32_t oaperf_a12_upper_addr = 0x2864;
+    uint32_t oaperf_a13_lower_addr = 0x2868;
+    uint32_t oaperf_a13_upper_addr = 0x286C;
+    uint32_t oaperf_a14_lower_addr = 0x2870;
+    uint32_t oaperf_a14_upper_addr = 0x2874;
+    uint32_t oaperf_a15_lower_addr = 0x2878;
+    uint32_t oaperf_a15_upper_addr = 0x287C;
+    uint32_t oaperf_a16_lower_addr = 0x2880;
+    uint32_t oaperf_a16_upper_addr = 0x2884;
+    uint32_t oaperf_a17_lower_addr = 0x2888;
+    uint32_t oaperf_a17_upper_addr = 0x288C;
+    uint32_t oaperf_a18_lower_addr = 0x2890;
+    uint32_t oaperf_a18_upper_addr = 0x2894;
+    uint32_t oaperf_a19_lower_addr = 0x2898;
+    uint32_t oaperf_a19_upper_addr = 0x289C;
+    uint32_t oaperf_a20_lower_addr = 0x28A0;
+    uint32_t oaperf_a20_upper_addr = 0x28A4;
+	
 	uint32_t oaperf_a7_lower_value_start=0, oaperf_a7_lower_value_end=0;
 	uint32_t oaperf_a7_upper_value_start=0, oaperf_a7_upper_value_end=0;
     uint32_t oaperf_a8_lower_value_start=0, oaperf_a8_lower_value_end=0;
@@ -2926,42 +2317,296 @@ void test_counters_with_lib() {
     uint32_t oaperf_a20_lower_value_start=0, oaperf_a20_lower_value_end=0;
     uint32_t oaperf_a20_upper_value_start=0, oaperf_a20_upper_value_end=0;
 	
-	#define OACONTROL_COUNTER_SELECT_SHIFT 2
-	#define PERFORMANCE_COUNTER_ENABLE     (1 << 0)
+	
 	uint32_t counter_format = 5;	// 0b101
 	
+	// choose aggregate counters
 	uint32_t dword_for_counting_flops = 3;			//    3 = 0b 0000 0000 0011
 	uint32_t dword_for_counting_movs = 1026;		// 1026 = 0b 0100 0000 0010
 	uint32_t dword_for_counting_ternary_ins = 516;	//  516 = 0b 0010 0000 0100
+	uint32_t dword_for_counting_fpu0 = 0;			//    0 = 0b 0000 0000 0000
+	uint32_t dword_for_counting_fpu1 = 1;			//    1 = 0b 0000 0000 0001
 	
-	//intel_register_write(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
-	//oaperf_a4_lower_free_value = intel_register_read(oaperf_a4_lower_free_addr);
-	//oaperf_a4_upper_free_value = intel_register_read(oaperf_a4_upper_free_addr);
-	//intel_register_write(eu_perf_cnt_ctl_0_addr, 3);
+	// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
+	// EU SEND Pipeline Active (Increment Event 0b0010) doesn't support Fine Event filter 0b0100 (movs)
+	uint32_t dword_for_counting_movs_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_movs_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
 	
+	uint32_t dword_for_counting_movs_in_row0_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_movs_in_row1_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_movs_in_row0_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_movs_in_row1_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	
+	uint32_t dword_for_counting_sends_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_sends_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+	
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+	
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+	
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+																
+	uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+	uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+	
+	
+	
+	// prelminaries
+	
+	uint64_t properties[] = {
+		DRM_I915_PERF_PROP_CTX_HANDLE, UINT64_MAX,
+		/* no samples, but we have to specify at least one sample property */
+		DRM_I915_PERF_PROP_SAMPLE_OA,  true,
+		/* OA unit configuration */
+		DRM_I915_PERF_PROP_OA_METRICS_SET, test_metric_set_id,
+		DRM_I915_PERF_PROP_OA_FORMAT, test_oa_format
+		/* Note: no OA exponent specified in this case */
+	};
+
+	struct drm_i915_perf_open_param param = {
+		.flags = I915_PERF_FLAG_FD_CLOEXEC,
+		.num_properties = sizeof(properties) / 16,
+		.properties_ptr = (uintptr_t) properties
+	};
+
+	drm_intel_bufmgr *bufmgr;
+	drm_intel_context *context0, *context1;
+	struct intel_batchbuffer *batch;
+	struct igt_buf src[3], dst[3];
+	drm_intel_bo *bo;
+	uint32_t *report0_32, *report1_32;
+	int width = 800;
+	int height = 600;
+	uint32_t ctx_id = 0xffffffff;	// invalid id
+	int ret;
+	long long int cpu_ticks0, cpu_ticks1;
+
+	bufmgr = drm_intel_bufmgr_gem_init(drm_fd, 4096);
+	drm_intel_bufmgr_gem_enable_reuse(bufmgr);
+
+	for(int i = 0; i < ARRAY_SIZE(src); i++) {
+		scratch_buf_init(bufmgr, &src[i], width, height, 0xff0000ff);
+		scratch_buf_init(bufmgr, &dst[i], width, height, 0x00ff00ff);
+	}
+
+	batch = intel_batchbuffer_alloc(bufmgr, devid);
+
+	context0 = drm_intel_gem_context_create(bufmgr);
+	context1 = drm_intel_gem_context_create(bufmgr);
+
+	ret = drm_intel_gem_context_get_id(context0, &ctx_id);
+
+	properties[1] = ctx_id;
+
+	intel_batchbuffer_flush_with_context(batch, context0);
+
+	scratch_buf_memset(src[0].bo, width, height, 0xff0000ff);
+	scratch_buf_memset(dst[0].bo, width, height, 0x00ff00ff);
+
+	stream_fd = __perf_open(drm_fd, &param, false);
+
+	bo = drm_intel_bo_alloc(bufmgr, "mi_rpc dest bo", 4096, 64);
+
+	ret = drm_intel_bo_map(bo, true /* write enable */);
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	struct pci_device *pci_dev = intel_get_pci_device();
+    uint32_t devid, gen;
+	int mmio_bar, mmio_size;
+	int err;
+	
+	// read cpu frequency
+	uint64_t cpu_cur_freq;
+	int cur_cpu = 0;
+	char buf[512];
+	snprintf(buf, sizeof(buf), "/sys/devices/system/cpu/cpu%u/cpufreq/scaling_cur_freq", cur_cpu);
+	ret = read_u64_file(buf, &cpu_cur_freq);
+
+	// read gpu frequency
+	uint64_t gpu_cur_freq;
+	snprintf(buf, sizeof(buf), "/sys/class/drm/card%d/gt_cur_freq_mhz", card);
+	ret = read_u64_file(buf, &gpu_cur_freq);
+	
+	
+	
+	
+	
+	// PAPI vars
+	int retval;
+	int native;
+	int numEvents = 1;
+	char *EventNames[] = {"PAPI_L1_DCM"};
+	//char *EventNames[] = {"PP0_ENERGY:PACKAGE0"};
+	
+	// PAPI init
+	retval = PAPI_library_init(PAPI_VER_CURRENT);
+	if (retval != PAPI_VER_CURRENT) {
+		fprintf(stderr, KRED "PAPI library init error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+		exit(1);
+	}
+	
+	// create event set
+	EventSet = PAPI_NULL;
+	retval = PAPI_create_eventset(&EventSet);
+	if (retval != PAPI_OK) {
+		fprintf(stderr, KRED "PAPI create eventset error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+		exit(1);
+	}
+	
+	// iterate events
+	for (int i = 0; i < numEvents; i++) {
+		
+		retval = PAPI_event_name_to_code(EventNames[i], &native);
+		if (retval != PAPI_OK) {
+			fprintf(stderr, KRED "PAPI retrieve event code error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+			exit(1);
+		}
+		
+		retval = PAPI_add_event(EventSet, native);
+		if (retval != PAPI_OK) {
+			fprintf(stderr, KRED "PAPI add event error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+			exit(1);
+		}
+	}
+	
+	
+	
+	err = intel_register_access_init(pci_dev, 0, drm_fd);
+	if (err==-1) {
+		fprintf(stderr, KRED "error at intel_register_access_init()\n", KNRM);
+		exit(1);
+	}
+	
+	
+	// config
 	uint32_t oacontrol_default = INREG(oacontrol);
-	printf("oacontrol: "); print_binary(oacontrol_default, 32);
-	printf("value ot write to oacontrol: "); print_binary(counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE, 32);
-	
-	
 	OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
-	oacontrol_value_start = INREG(oacontrol);
+		
+	// configure aggregated counters
+	CONFIG_COUNTERS
 	
 	
 	
 	
-	
-	
-	//OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
-	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
-	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
-	
-	
-	eu_perf_cnt_ctl_0_value_start = INREG(eu_perf_cnt_ctl_0_addr);
-	eu_perf_cnt_ctl_1_value_start = INREG(eu_perf_cnt_ctl_1_addr);
-	eu_perf_cnt_ctl_2_value_start = INREG(eu_perf_cnt_ctl_2_addr);
-	oaperf_a4_lower_free_value_start = INREG(oaperf_a4_lower_free_addr);
-	oaperf_a4_upper_free_value_start = INREG(oaperf_a4_upper_free_addr);
 	oaperf_a7_lower_value_start = INREG(oaperf_a7_lower_addr);
 	oaperf_a7_upper_value_start = INREG(oaperf_a7_upper_addr);
 	oaperf_a8_lower_value_start = INREG(oaperf_a8_lower_addr);
@@ -2991,39 +2636,41 @@ void test_counters_with_lib() {
 	oaperf_a20_lower_value_start = INREG(oaperf_a20_lower_addr);
 	oaperf_a20_upper_value_start = INREG(oaperf_a20_upper_addr);
 	
-	//OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
-	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
-	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
-	
-	
+	/*
+	retval = PAPI_start(EventSet);
+	if (retval != PAPI_OK) {
+		fprintf(srderr, KRED "PAPI start error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+		exit(1);
+	}
+	*/
+
+	cpu_ticks0 = read_tsc_start();
+
 	// do work
     ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL); clCheckError(ret, __LINE__);
-    
-	//OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
-	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
-	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
-    
-    clFlush(command_queue);		clCheckError(ret, __LINE__);
-    
-	//OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
-	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
-	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
-    
-    clFinish(command_queue);	clCheckError(ret, __LINE__);
 	
-	//sleep(2);
-    //OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops);
-	//OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_movs);
-	//OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_ternary_ins);
+	CONFIG_COUNTERS
 	
+    clFlush(command_queue); clCheckError(ret, __LINE__);
 	
-	oacontrol_value_end = INREG(oacontrol);
+	CONFIG_COUNTERS
 	
-	eu_perf_cnt_ctl_0_value_end = INREG(eu_perf_cnt_ctl_0_addr);
-	eu_perf_cnt_ctl_1_value_end = INREG(eu_perf_cnt_ctl_1_addr);
-	eu_perf_cnt_ctl_2_value_end = INREG(eu_perf_cnt_ctl_2_addr);
-	oaperf_a4_lower_free_value_end = INREG(oaperf_a4_lower_free_addr);
-	oaperf_a4_upper_free_value_end = INREG(oaperf_a4_upper_free_addr);
+    clFinish(command_queue); clCheckError(ret, __LINE__);
+	
+	CONFIG_COUNTERS
+
+    cpu_ticks1 = read_tsc_end();
+	
+	/*
+	retval = PAPI_stop(EventSet, &papi_values);
+	if (retval != PAPI_OK) {
+		fprintf(stderr, KRED "PAPI stop error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+		exit(1);
+	}
+	*/
+	
+	CONFIG_COUNTERS
+
 	oaperf_a7_lower_value_end = INREG(oaperf_a7_lower_addr);
 	oaperf_a7_upper_value_end = INREG(oaperf_a7_upper_addr);
 	oaperf_a8_lower_value_end = INREG(oaperf_a8_lower_addr);
@@ -3053,8 +2700,11 @@ void test_counters_with_lib() {
 	oaperf_a20_lower_value_end = INREG(oaperf_a20_lower_addr);
 	oaperf_a20_upper_value_end = INREG(oaperf_a20_upper_addr);
 	
+	OUTREG(oacontrol, oacontrol_default);
 	
-	uint64_t oaperf_a4_free_start = (((uint64_t) oaperf_a4_upper_free_value_start) << 32) | (uint64_t) oaperf_a4_lower_free_value_start;
+	intel_register_access_fini();
+	
+	
 	uint64_t oaperf_a7_start = (((uint64_t) oaperf_a7_upper_value_start) << 32) | (uint64_t) oaperf_a7_lower_value_start;
 	uint64_t oaperf_a8_start = (((uint64_t) oaperf_a8_upper_value_start) << 32) | (uint64_t) oaperf_a8_lower_value_start;
 	uint64_t oaperf_a9_start = (((uint64_t) oaperf_a9_upper_value_start) << 32) | (uint64_t) oaperf_a9_lower_value_start;
@@ -3070,7 +2720,6 @@ void test_counters_with_lib() {
 	uint64_t oaperf_a19_start = (((uint64_t) oaperf_a19_upper_value_start) << 32) | (uint64_t) oaperf_a19_lower_value_start;
 	uint64_t oaperf_a20_start = (((uint64_t) oaperf_a20_upper_value_start) << 32) | (uint64_t) oaperf_a20_lower_value_start;
 	
-	uint64_t oaperf_a4_free_end = (((uint64_t) oaperf_a4_upper_free_value_end) << 32) | (uint64_t) oaperf_a4_lower_free_value_end;
 	uint64_t oaperf_a7_end = (((uint64_t) oaperf_a7_upper_value_end) << 32) | (uint64_t) oaperf_a7_lower_value_end;
 	uint64_t oaperf_a8_end = (((uint64_t) oaperf_a8_upper_value_end) << 32) | (uint64_t) oaperf_a8_lower_value_end;
 	uint64_t oaperf_a9_end = (((uint64_t) oaperf_a9_upper_value_end) << 32) | (uint64_t) oaperf_a9_lower_value_end;
@@ -3086,7 +2735,6 @@ void test_counters_with_lib() {
 	uint64_t oaperf_a19_end = (((uint64_t) oaperf_a19_upper_value_end) << 32) | (uint64_t) oaperf_a19_lower_value_end;
 	uint64_t oaperf_a20_end = (((uint64_t) oaperf_a20_upper_value_end) << 32) | (uint64_t) oaperf_a20_lower_value_end;
 	
-	uint64_t oaperf_a4_free_delta = oaperf_a4_free_end - oaperf_a4_free_start;
 	uint64_t oaperf_a7_delta = oaperf_a7_end - oaperf_a7_start;
 	uint64_t oaperf_a8_delta = oaperf_a8_end - oaperf_a8_start;
 	uint64_t oaperf_a9_delta = oaperf_a9_end - oaperf_a9_start;
@@ -3103,50 +2751,8 @@ void test_counters_with_lib() {
 	uint64_t oaperf_a20_delta = oaperf_a20_end - oaperf_a20_start;
 	
 	
+	// print
 	printf("\n");
-	printf("oacontrol_start = %u ", oacontrol_value_start); print_binary(oacontrol_value_start, 32);
-	printf("eu_perf_cnt_ctl_0_start = %u ", eu_perf_cnt_ctl_0_value_start); print_binary(eu_perf_cnt_ctl_0_value_start, 32);
-	printf("eu_perf_cnt_ctl_1_start = %u ", eu_perf_cnt_ctl_1_value_start); print_binary(eu_perf_cnt_ctl_1_value_start, 32);
-	printf("eu_perf_cnt_ctl_2_start = %u ", eu_perf_cnt_ctl_2_value_start); print_binary(eu_perf_cnt_ctl_2_value_start, 32);
-	printf("oaperf_a4_free_start = %lu\n", oaperf_a4_free_start);
-	printf("oaperf_a7_start  = %lu\n", oaperf_a7_start);
-	printf("oaperf_a8_start  = %lu\n", oaperf_a8_start);
-	printf("oaperf_a9_start  = %lu\n", oaperf_a9_start);
-	printf("oaperf_a10_start = %lu\n", oaperf_a10_start);
-	printf("oaperf_a11_start = %lu\n", oaperf_a11_start);
-	printf("oaperf_a12_start = %lu\n", oaperf_a12_start);
-	printf("oaperf_a13_start = %lu\n", oaperf_a13_start);
-	printf("oaperf_a14_start = %lu\n", oaperf_a14_start);
-	printf("oaperf_a15_start = %lu\n", oaperf_a15_start);
-	printf("oaperf_a16_start = %lu\n", oaperf_a16_start);
-	printf("oaperf_a17_start = %lu\n", oaperf_a17_start);
-	printf("oaperf_a18_start = %lu\n", oaperf_a18_start);
-	printf("oaperf_a19_start = %lu\n", oaperf_a19_start);
-	printf("oaperf_a20_start = %lu\n", oaperf_a20_start);
-	
-	printf("\n");
-	printf("oacontrol_end = %u ", oacontrol_value_end); print_binary(oacontrol_value_end, 32);
-	printf("eu_perf_cnt_ctl_0_end = %u ", eu_perf_cnt_ctl_0_value_end); print_binary(eu_perf_cnt_ctl_0_value_end, 32);
-	printf("eu_perf_cnt_ctl_1_end = %u ", eu_perf_cnt_ctl_1_value_end); print_binary(eu_perf_cnt_ctl_1_value_end, 32);
-	printf("eu_perf_cnt_ctl_2_end = %u ", eu_perf_cnt_ctl_2_value_end); print_binary(eu_perf_cnt_ctl_2_value_end, 32);
-	printf("oaperf_a4_free_end = %lu\n", oaperf_a4_free_end);
-	printf("oaperf_a7_end  = %lu\n", oaperf_a7_end);
-	printf("oaperf_a8_end  = %lu\n", oaperf_a8_end);
-	printf("oaperf_a9_end  = %lu\n", oaperf_a9_end);
-	printf("oaperf_a10_end = %lu\n", oaperf_a10_end);
-	printf("oaperf_a11_end = %lu\n", oaperf_a11_end);
-	printf("oaperf_a12_end = %lu\n", oaperf_a12_end);
-	printf("oaperf_a13_end = %lu\n", oaperf_a13_end);
-	printf("oaperf_a14_end = %lu\n", oaperf_a14_end);
-	printf("oaperf_a15_end = %lu\n", oaperf_a15_end);
-	printf("oaperf_a16_end = %lu\n", oaperf_a16_end);
-	printf("oaperf_a17_end = %lu\n", oaperf_a17_end);
-	printf("oaperf_a18_end = %lu\n", oaperf_a18_end);
-	printf("oaperf_a19_end = %lu\n", oaperf_a19_end);
-	printf("oaperf_a20_end = %lu\n", oaperf_a20_end);
-	
-	printf("\n");
-	printf("oaperf_a4_free_delta = %lu\n", oaperf_a4_free_delta);
 	printf("oaperf_a7_delta  = %lu\n", oaperf_a7_delta);
 	printf("oaperf_a8_delta  = %lu\n", oaperf_a8_delta);
 	printf("oaperf_a9_delta  = %lu\n", oaperf_a9_delta);
@@ -3163,35 +2769,15 @@ void test_counters_with_lib() {
 	printf("oaperf_a20_delta = %lu\n", oaperf_a20_delta);
 	
 	
-    
-    
-    OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | 0);
-	
-    
-	intel_register_access_fini();
+	//printf("PAPI_values: %llu\n", papi_values);
 	
 	
 	
 	
+	// cleanup
 	
-	FILE *f = fopen("results_lib.csv","a");
-	if(f==NULL) { 
-		printf(KRED "Error opening file at %d\n", __LINE__);
-		exit(-1);
-	}
-	if ( (size_t) ftell(f) == 0)
-		fprintf(f, "A4_free\tA7\tA8\tA9\tA10\tA11\tA12\tA13\tA14\tA15\tA16\tA17\tA18\tA19\tA20\n");
-	
-	fprintf(f, "%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\t%lu\n", 
-			oaperf_a4_free_delta, oaperf_a7_delta, oaperf_a8_delta, oaperf_a9_delta,
-			oaperf_a10_delta, oaperf_a11_delta, oaperf_a12_delta, oaperf_a13_delta,
-			oaperf_a14_delta, oaperf_a15_delta, oaperf_a16_delta, oaperf_a17_delta,
-			oaperf_a18_delta, oaperf_a19_delta, oaperf_a20_delta
-   		);
-    
-	fclose(f);
-	
-	
+	PAPI_cleanup_eventset(EventSet);
+	PAPI_destroy_eventset(&EventSet);
 	
 	for (int i = 0; i < ARRAY_SIZE(src); i++) {
 		drm_intel_bo_unreference(src[i].bo);
@@ -3207,5 +2793,42 @@ void test_counters_with_lib() {
 	__perf_close(stream_fd);
 	
 }
-    
 
+
+
+
+
+
+
+/**************************************************************
+ * ****************** PROFILE THROUGH OPENCL ******************
+ * ************************************************************
+ */
+
+
+/** profile_through_opencl
+ * get timing information through
+ * OpenCL profiling
+ */
+void profile_through_opencl() {
+	
+	cl_event event;
+	cl_ulong time_start;
+	cl_ulong time_end;
+	int ret;
+	
+	// do work
+    ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, &event); clCheckError(ret, __LINE__);
+	ret = clWaitForEvents(1, &event); clCheckError(ret, __LINE__);
+    clFlush(command_queue); clCheckError(ret, __LINE__);
+    clFinish(command_queue); clCheckError(ret, __LINE__);
+	
+	clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_START, sizeof(time_start), &time_start, NULL);
+	clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(time_end), &time_end, NULL);
+	
+	double nanoseconds = time_end-time_start;
+	
+	printf("Delta ocl timer: %lu\n", time_end-time_start);
+	printf("Time: %f [s]\n", nanoseconds/1.0e9);
+	
+}

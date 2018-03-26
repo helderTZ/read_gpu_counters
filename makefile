@@ -1,12 +1,16 @@
 CC = gcc
-CFLAGS = -static `pkg-config --cflags libdrm cairo`  
-LDFLAGS = -static `pkg-config --libs libdrm cairo` 
+CFLAGS = -static `pkg-config --cflags libdrm cairo papi`
+LDFLAGS = -static `pkg-config --libs libdrm cairo papi`
 
 CFLAGS += -g -O0	# optimization and debugging flags
 CFLAGS += -fdump-rtl-expand	# necessary to create callgraph
 
 # OpenCL linker flags
 LDFLAGS += -static -I/opt/intel/opencl-sdk/include /opt/intel/opencl-sdk/lib64/libOpenCL.so
+
+#CFLAGS += /home/helder/papi-5.5.1/src/libpapi.lo
+#LDFLAGS += -I/home/helder/papi-5.5.1/src/  -lpapi
+
 
 SOURCES = main.c read_gpu_counters.c errors.c
 DEPENDENCIES = lib/libintel_tools.la

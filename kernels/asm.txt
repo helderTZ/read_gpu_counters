@@ -1,0 +1,80 @@
+### gtpin symbol file ###
+
+.kernelNames 1
+
+
+.instructions 31
+0  LABEL0 None 
+1  mov None (1|M0)         null<1>:ud    0x42123D9E:ud                   
+2 (W) mov None (8|M0)         r3.0<1>:ud    r0.0<1;1,0>:ud                  
+3 (W) or None (1|M0)         cr0.0<1>:ud   cr0.0<0;1,0>:ud   0x4C0:uw         {Switch}
+4 (W) mul None (1|M0)         r4.0<1>:d     r8.4<0;1,0>:d     r3.1<0;1,0>:d   
+5 (W) mov None (8|M0)         r127.0<1>:d   r3.0<8;8,1>:d                    {Compacted}
+6  add None (16|M0)        r5.0<1>:d     r1.0<8;8,1>:uw    r4.0<0;1,0>:d   
+7  add None (16|M16)       r9.0<1>:d     r2.0<8;8,1>:uw    r4.0<0;1,0>:d   
+8  add None (16|M0)        r5.0<1>:d     r5.0<8;8,1>:d     r7.0<0;1,0>:d    {Compacted}
+9  add None (16|M16)       r9.0<1>:d     r9.0<8;8,1>:d     r7.0<0;1,0>:d   
+10  shl None (8|M0)         r35.0<1>:q    r5.0<8;8,1>:d     2:w             
+11  shl None (8|M8)         r37.0<1>:q    r6.0<8;8,1>:d     2:w             
+12  shl None (8|M16)        r39.0<1>:q    r9.0<8;8,1>:d     2:w             
+13  shl None (8|M24)        r41.0<1>:q    r10.0<8;8,1>:d    2:w             
+14  add None (8|M0)         r11.0<1>:q    r8.0<0;1,0>:q     r35.0<4;4,1>:q  
+15  add None (8|M0)         r23.0<1>:q    r8.1<0;1,0>:q     r35.0<4;4,1>:q  
+16  add None (8|M8)         r13.0<1>:q    r8.0<0;1,0>:q     r37.0<4;4,1>:q  
+17  add None (8|M8)         r25.0<1>:q    r8.1<0;1,0>:q     r37.0<4;4,1>:q  
+18  add None (8|M16)        r15.0<1>:q    r8.0<0;1,0>:q     r39.0<4;4,1>:q  
+19  add None (8|M16)        r27.0<1>:q    r8.1<0;1,0>:q     r39.0<4;4,1>:q  
+20  add None (8|M24)        r17.0<1>:q    r8.0<0;1,0>:q     r41.0<4;4,1>:q  
+21  add None (8|M24)        r29.0<1>:q    r8.1<0;1,0>:q     r41.0<4;4,1>:q  
+22  send None (16|M0)        r19:w         r11:uq            0xC       0x82411FF //  hdc.dc1  wr:4, rd:2, fc: 0x411ff
+23  send None (16|M0)        r31:w         r23:uq            0xC       0x82411FF //  hdc.dc1  wr:4, rd:2, fc: 0x411ff
+24  send None (16|M16)       r21:w         r15:uq            0xC       0x82411FF //  hdc.dc1  wr:4, rd:2, fc: 0x411ff
+25  send None (16|M16)       r33:w         r27:uq            0xC       0x82411FF //  hdc.dc1  wr:4, rd:2, fc: 0x411ff
+26  add None (16|M0)        r19.0<1>:f    r19.0<8;8,1>:f    r31.0<8;8,1>:f   {Compacted}
+27  add None (16|M16)       r21.0<1>:f    r21.0<8;8,1>:f    r33.0<8;8,1>:f  
+28  sends None (16|M0)        null:w        r11               r19               0x8C      0x80691FF //  hdc.dc1  wr:4+2, rd:0, fc: 0x691ff
+29  sends None (16|M16)       null:w        r15               r21               0x8C      0x80691FF //  hdc.dc1  wr:4+2, rd:0, fc: 0x691ff
+30  send None (8|M0)         null:ud       r127:ud           0x4D00027  0x2000010 {EOT} //  spawner  wr:1, rd:0, fc: 0x10
+
+.functions 1
+GTPinMadeupFun
+0
+
+.bbls 0
+
+.sourceFiles 0
+
+.sourceLines 31
+0 -1 -1 -1
+1 -1 -1 -1
+2 -1 -1 -1
+3 -1 -1 -1
+4 -1 -1 -1
+5 -1 -1 -1
+6 -1 -1 -1
+7 -1 -1 -1
+8 -1 -1 -1
+9 -1 -1 -1
+10 -1 -1 -1
+11 -1 -1 -1
+12 -1 -1 -1
+13 -1 -1 -1
+14 -1 -1 -1
+15 -1 -1 -1
+16 -1 -1 -1
+17 -1 -1 -1
+18 -1 -1 -1
+19 -1 -1 -1
+20 -1 -1 -1
+21 -1 -1 -1
+22 -1 -1 -1
+23 -1 -1 -1
+24 -1 -1 -1
+25 -1 -1 -1
+26 -1 -1 -1
+27 -1 -1 -1
+28 -1 -1 -1
+29 -1 -1 -1
+30 -1 -1 -1
+
+.end
