@@ -33,5 +33,10 @@ Difference between version 8 and 7
 		support for the regulars counters still to come
 
 Difference between version 9 and 8
-	Added '--power-smoothing' suppport for counters, i.e., medians (not fully tested yet, use with caution)
+	Added '--power-smoothing' support for counters, i.e., medians (not fully tested yet, use with caution)
 		Code is commented for now, bug with free, and not strictly necessary to implement because the counters actually don't deviate too much (like power)
+
+Difference between version 10 and 9
+	Added '--external-app' option: will use system() to launch an application instead of a predefined kernel
+		Only implemented for RPC as of yet, and a bit buggy
+	Now lets users input their own counters, without the need to change the macro COUNTERS_CONFING and recompile

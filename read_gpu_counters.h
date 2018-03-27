@@ -472,10 +472,12 @@ uint64_t average(int length, uint64_t *vector);
 
 void measure_overheads();
 
-void read_counters_rpc(int dump, int power_smoothing);
+void read_counters_rpc(int dump, int power_smoothing, int external_app, char *app_name_args, char **envp, uint32_t custom_counter_dword);
 
-void read_counters_mmio();
+void read_counters_mmio(uint32_t custom_counter_dword);
 
 void profile_through_opencl();
+
+
 
 #endif

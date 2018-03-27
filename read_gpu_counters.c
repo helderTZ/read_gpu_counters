@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 #include <CL/cl.h>
 #include "errors.h"
 
@@ -16,6 +19,223 @@
 
 extern char kernel_choice[50];
 extern long long int *papi_values;
+
+
+// registers
+uint32_t oacontrol = 0x2B00;
+uint32_t eu_perf_cnt_ctl_0_addr = 0xE458;
+uint32_t eu_perf_cnt_ctl_1_addr = 0xE558;
+uint32_t eu_perf_cnt_ctl_2_addr = 0xE658;
+uint32_t eu_perf_cnt_ctl_3_addr = 0xE758;
+uint32_t eu_perf_cnt_ctl_4_addr = 0xE45C;
+uint32_t eu_perf_cnt_ctl_5_addr = 0xE55C;
+uint32_t eu_perf_cnt_ctl_6_addr = 0xE65C;
+uint32_t oaperf_a4_lower_free_addr = 0x2960;
+uint32_t oaperf_a4_upper_free_addr = 0x2964;
+uint32_t oaperf_a6_lower_free_addr = 0x2968;
+uint32_t oaperf_a6_upper_free_addr = 0x296C;
+uint32_t oaperf_a19_lower_free_addr = 0x2970;
+uint32_t oaperf_a19_upper_free_addr = 0x2974;
+uint32_t oaperf_a20_lower_free_addr = 0x2978;
+uint32_t oaperf_a20_upper_free_addr = 0x297C;
+uint32_t oaperf_a7_lower_addr = 0x2838;
+uint32_t oaperf_a7_upper_addr = 0x283C;
+uint32_t oaperf_a8_lower_addr = 0x2840;
+uint32_t oaperf_a8_upper_addr = 0x2844;
+uint32_t oaperf_a9_lower_addr = 0x2848;
+uint32_t oaperf_a9_upper_addr = 0x284C;
+uint32_t oaperf_a10_lower_addr = 0x2850;
+uint32_t oaperf_a10_upper_addr = 0x2854;
+uint32_t oaperf_a11_lower_addr = 0x2858;
+uint32_t oaperf_a11_upper_addr = 0x285C;
+uint32_t oaperf_a12_lower_addr = 0x2860;
+uint32_t oaperf_a12_upper_addr = 0x2864;
+uint32_t oaperf_a13_lower_addr = 0x2868;
+uint32_t oaperf_a13_upper_addr = 0x286C;
+uint32_t oaperf_a14_lower_addr = 0x2870;
+uint32_t oaperf_a14_upper_addr = 0x2874;
+uint32_t oaperf_a15_lower_addr = 0x2878;
+uint32_t oaperf_a15_upper_addr = 0x287C;
+uint32_t oaperf_a16_lower_addr = 0x2880;
+uint32_t oaperf_a16_upper_addr = 0x2884;
+uint32_t oaperf_a17_lower_addr = 0x2888;
+uint32_t oaperf_a17_upper_addr = 0x288C;
+uint32_t oaperf_a18_lower_addr = 0x2890;
+uint32_t oaperf_a18_upper_addr = 0x2894;
+uint32_t oaperf_a19_lower_addr = 0x2898;
+uint32_t oaperf_a19_upper_addr = 0x289C;
+uint32_t oaperf_a20_lower_addr = 0x28A0;
+uint32_t oaperf_a20_upper_addr = 0x28A4;
+
+// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
+// EU SEND Pipeline Active (Increment Event 0b0010) doesn't support Fine Event filter 0b0100 (movs)
+uint32_t dword_for_counting_movs_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+															(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_movs_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+															(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
+
+
+// ======================================================================================================================== //
+// ================================================== AVAILABLE COUNTERS ================================================== //
+// ======================================================================================================================== //
+uint32_t dword_for_counting_movs_in_row0_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+															(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_movs_in_row1_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+															(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_movs_in_row0_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+															(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_movs_in_row1_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
+															(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+
+uint32_t dword_for_counting_sends_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+															(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_sends_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
+															(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
+
+uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+															
+uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+															
+uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+															
+uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+
+uint32_t dword_for_counting_flops_in_fpu0_in_eu0_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+															(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu1_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+															(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu2_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+															(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu0_in_eu3_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
+															(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+															(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+
+uint32_t dword_for_counting_flops_in_fpu1_in_eu0_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+															(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu1_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+															(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu2_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+															(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpu1_in_eu3_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
+															(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
+															(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+															
+uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+															(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
+															(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+															
+uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
+uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
+															(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
+															(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
+// ======================================================================================================================== //
+// ================================================== AVAILABLE COUNTERS ================================================== //
+// ======================================================================================================================== //
+
+uint32_t counter_format = 5;	// 0b101
+
+// ======================================================================================================================== //
+// ================================================ COUNTER CONFIGURATION ================================================= //
+// ====================================================== deprecated ====================================================== //
+// ======================================================================================================================== //
+
+/*
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpu0_in_eu0_row_0 | dword_for_counting_flops_in_fpu1_in_eu0_row_0 << 12);			// A7, A8	\
+						OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_flops_in_fpu0_in_eu1_row_0 | dword_for_counting_flops_in_fpu1_in_eu1_row_0 << 12);			// A9, A10	\
+						OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_flops_in_fpu0_in_eu2_row_0 | dword_for_counting_flops_in_fpu1_in_eu2_row_0 << 12);			// A11, A12	\
+						OUTREG(eu_perf_cnt_ctl_3_addr, dword_for_counting_flops_in_fpu0_in_eu3_row_0 | dword_for_counting_flops_in_fpu1_in_eu3_row_0 << 12);			// A13, A14	
+*/
+/*
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpu0_in_eu0_row_0 | dword_for_counting_flops_in_fpu1_in_eu0_row_0 << 12);			// A7, A8	
+*/
+/*
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpus_in_eu0_row_0 | dword_for_counting_flops_in_fpus_in_eu0_row_0 << 12);			// A7, A8
+*/
+/*
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_sends_in_row0_in_send_pipeline | dword_for_counting_sends_in_row1_in_send_pipeline << 12);	// A17, A18	
+*/
+
+#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_movs_in_row0_in_fpu0_pipeline | dword_for_counting_movs_in_row0_in_fpu1_pipeline << 12);		// A7, A8
+
+
+
+
 
 
 
@@ -1319,31 +1539,6 @@ void measure_overheads() {
 
 
 
-/*
-#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpu0_in_eu0_row_0 | dword_for_counting_flops_in_fpu1_in_eu0_row_0 << 12);			// A7, A8	\
-						OUTREG(eu_perf_cnt_ctl_1_addr, dword_for_counting_flops_in_fpu0_in_eu1_row_0 | dword_for_counting_flops_in_fpu1_in_eu1_row_0 << 12);			// A9, A10	\
-						OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_flops_in_fpu0_in_eu2_row_0 | dword_for_counting_flops_in_fpu1_in_eu2_row_0 << 12);			// A11, A12	\
-						OUTREG(eu_perf_cnt_ctl_3_addr, dword_for_counting_flops_in_fpu0_in_eu3_row_0 | dword_for_counting_flops_in_fpu1_in_eu3_row_0 << 12);			// A13, A14	
-*/
-
-
-
-/*
-#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpu0_in_eu0_row_0 | dword_for_counting_flops_in_fpu1_in_eu0_row_0 << 12);			// A7, A8	
-*/
-
-/*
-#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpus_in_eu0_row_0 | dword_for_counting_flops_in_fpus_in_eu0_row_0 << 12);			// A7, A8
-*/
-
-
-#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_5_addr, dword_for_counting_sends_in_row0_in_send_pipeline | dword_for_counting_sends_in_row1_in_send_pipeline << 12);	// A17, A18	
-
-
-/*
-#define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_movs_in_row0_in_fpu0_pipeline | dword_for_counting_movs_in_row0_in_fpu1_pipeline << 12);	// A7, A8
-*/
-
 
 
 /**************************************************************
@@ -1356,199 +1551,7 @@ void measure_overheads() {
 /** read_counters_rpc
  * read counters by sending MI_RPC command
  */
-void read_counters_rpc(int dump, int power_smoothing) {
-	
-	// registers
-	uint32_t oacontrol = 0x2B00;
-	uint32_t eu_perf_cnt_ctl_0_addr = 0xE458;
-	uint32_t eu_perf_cnt_ctl_1_addr = 0xE558;
-	uint32_t eu_perf_cnt_ctl_2_addr = 0xE658;
-	uint32_t eu_perf_cnt_ctl_3_addr = 0xE758;
-	uint32_t eu_perf_cnt_ctl_4_addr = 0xE45C;
-	uint32_t eu_perf_cnt_ctl_5_addr = 0xE55C;
-	uint32_t eu_perf_cnt_ctl_6_addr = 0xE65C;
-	uint32_t oaperf_a4_lower_free_addr = 0x2960;
-	uint32_t oaperf_a4_upper_free_addr = 0x2964;
-	uint32_t oaperf_a6_lower_free_addr = 0x2968;
-	uint32_t oaperf_a6_upper_free_addr = 0x296C;
-	uint32_t oaperf_a19_lower_free_addr = 0x2970;
-	uint32_t oaperf_a19_upper_free_addr = 0x2974;
-	uint32_t oaperf_a20_lower_free_addr = 0x2978;
-	uint32_t oaperf_a20_upper_free_addr = 0x297C;
-	uint32_t oaperf_a7_lower_addr = 0x2838;
-	uint32_t oaperf_a7_upper_addr = 0x283C;
-    uint32_t oaperf_a8_lower_addr = 0x2840;
-    uint32_t oaperf_a8_upper_addr = 0x2844;
-    uint32_t oaperf_a9_lower_addr = 0x2848;
-    uint32_t oaperf_a9_upper_addr = 0x284C;
-    uint32_t oaperf_a10_lower_addr = 0x2850;
-    uint32_t oaperf_a10_upper_addr = 0x2854;
-    uint32_t oaperf_a11_lower_addr = 0x2858;
-    uint32_t oaperf_a11_upper_addr = 0x285C;
-    uint32_t oaperf_a12_lower_addr = 0x2860;
-    uint32_t oaperf_a12_upper_addr = 0x2864;
-    uint32_t oaperf_a13_lower_addr = 0x2868;
-    uint32_t oaperf_a13_upper_addr = 0x286C;
-    uint32_t oaperf_a14_lower_addr = 0x2870;
-    uint32_t oaperf_a14_upper_addr = 0x2874;
-    uint32_t oaperf_a15_lower_addr = 0x2878;
-    uint32_t oaperf_a15_upper_addr = 0x287C;
-    uint32_t oaperf_a16_lower_addr = 0x2880;
-    uint32_t oaperf_a16_upper_addr = 0x2884;
-    uint32_t oaperf_a17_lower_addr = 0x2888;
-    uint32_t oaperf_a17_upper_addr = 0x288C;
-    uint32_t oaperf_a18_lower_addr = 0x2890;
-    uint32_t oaperf_a18_upper_addr = 0x2894;
-    uint32_t oaperf_a19_lower_addr = 0x2898;
-    uint32_t oaperf_a19_upper_addr = 0x289C;
-    uint32_t oaperf_a20_lower_addr = 0x28A0;
-    uint32_t oaperf_a20_upper_addr = 0x28A4;
-	
-	
-	uint32_t counter_format = 5;	// 0b101
-	
-	// choose aggregate counters
-	uint32_t dword_for_counting_flops = 3;			//    3 = 0b 0000 0000 0011
-	uint32_t dword_for_counting_movs = 1026;		// 1026 = 0b 0100 0000 0010
-	uint32_t dword_for_counting_ternary_ins = 516;	//  516 = 0b 0010 0000 0100
-	uint32_t dword_for_counting_fpu0 = 0;			//    0 = 0b 0000 0000 0000
-	uint32_t dword_for_counting_fpu1 = 1;			//    1 = 0b 0000 0000 0001
-	
-	// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
-	// EU SEND Pipeline Active (Increment Event 0b0010) doesn't support Fine Event filter 0b0100 (movs)
-	uint32_t dword_for_counting_movs_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
-																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_movs_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
-																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
-	
-	uint32_t dword_for_counting_movs_in_row0_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
-																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_movs_in_row1_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
-																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_movs_in_row0_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
-																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_movs_in_row1_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
-																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	
-	uint32_t dword_for_counting_sends_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
-																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_sends_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
-																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-	
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-	
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-	
-	
+void read_counters_rpc(int dump, int power_smoothing, int external_app, char *app_name_args, char **envp, uint32_t custom_counter_dword) {
 	
 	// ======================== prelminaries ======================== //
 	
@@ -1651,6 +1654,7 @@ void read_counters_rpc(int dump, int power_smoothing) {
 	retval = PAPI_library_init(PAPI_VER_CURRENT);
 	if (retval != PAPI_VER_CURRENT) {
 		fprintf(stderr, KRED "PAPI library init error at line %d\nError: %s\n" KNRM, __LINE__, PAPI_strerror(retval));
+		goto CLEANUP_AFTER_GPU_STUFF;
 		exit(1);
 	}
 	
@@ -1659,6 +1663,7 @@ void read_counters_rpc(int dump, int power_smoothing) {
 	retval = PAPI_create_eventset(&EventSet);
 	if (retval != PAPI_OK) {
 		fprintf(stderr, KRED "PAPI create eventset error at line %d\nError: %s\n" KNRM, __LINE__, PAPI_strerror(retval));
+		goto CLEANUP_AFTER_GPU_STUFF;
 		exit(1);
 	}
 	
@@ -1668,12 +1673,14 @@ void read_counters_rpc(int dump, int power_smoothing) {
 		retval = PAPI_event_name_to_code(EventNames[i], &native);
 		if (retval != PAPI_OK) {
 			fprintf(stderr, KRED "PAPI retrieve event code error at line %d\nError: %s\n" KNRM, __LINE__, PAPI_strerror(retval));
+			goto CLEANUP_AFTER_GPU_STUFF;
 			exit(1);
 		}
 		
 		retval = PAPI_add_event(EventSet, native);
 		if (retval != PAPI_OK) {
 			fprintf(stderr, KRED "PAPI add event error at line %d\nError: %s\n" KNRM, __LINE__, PAPI_strerror(retval));
+			goto CLEANUP_AFTER_GPU_STUFF;
 			exit(1);
 		}
 	}
@@ -1707,9 +1714,7 @@ void read_counters_rpc(int dump, int power_smoothing) {
 	long long int ocl_nanoseconds_median = 0;
 	long long int *papi_values_median = (long long int *) calloc(numEvents, sizeof(long long int));
 	
-	
-	
-	
+
 	
 	
 	if (!power_smoothing) {
@@ -1717,6 +1722,7 @@ void read_counters_rpc(int dump, int power_smoothing) {
 		err = intel_register_access_init(pci_dev, 0, drm_fd);
 		if (err==-1) {
 			fprintf(stderr, KRED "error at intel_register_access_init()\n", KNRM);
+			goto CLEANUP_AFTER_GPU_STUFF;
 			exit(1);
 		}
 		
@@ -1725,7 +1731,8 @@ void read_counters_rpc(int dump, int power_smoothing) {
 		OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
 			
 		// configure aggregated counters
-		CONFIG_COUNTERS
+		if (custom_counter_dword != 0) OUTREG(eu_perf_cnt_ctl_0_addr, custom_counter_dword);
+		else CONFIG_COUNTERS
 		
 		intel_register_access_fini();
 		
@@ -1739,14 +1746,58 @@ void read_counters_rpc(int dump, int power_smoothing) {
 		retval = PAPI_start(EventSet);
 		if (retval != PAPI_OK) {
 			fprintf(stderr, KRED "PAPI start error at line %d\nError: %s" KNRM, __LINE__, PAPI_strerror(retval));
+			goto CLEANUP_AFTER_GPU_STUFF;
 			exit(1);
 		}
 		
 		cpu_ticks0 = read_tsc_start();
 
 		// do work
-		ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, &event); clCheckError(ret, __LINE__);
-		clFinish(command_queue); clCheckError(ret, __LINE__);
+		if (!external_app) {
+			ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, &event); clCheckError(ret, __LINE__);
+			clFinish(command_queue); clCheckError(ret, __LINE__);
+		}
+		else {
+			/** Don't know why this code doesn't work but system() does */
+			/*
+			printf(">>>>>>>>>>> going to fork >>>\n");
+			pid_t parent = getpid();
+			pid_t pid = fork();
+			if (pid < 0) {
+				printf(KRED "Failed to fork() at line %d\n" KNRM, __LINE__);
+				goto CLEANUP_AFTER_GPU_STUFF;
+				exit(0);
+			}
+			else if (pid == 0) {	// we are the parent, therefore wait for child
+				int status;
+				printf(">>>>>>>>>>> forked, waiting >>>\n");
+				waitpid(pid, &status, 0);
+				printf(">>>>>>>>>>> done >>>\n");
+			} else {	// we are the child, therefore execve
+				printf(">>>>>>>>>>> forked, I am child >>>\n");
+				// get name and args separately
+				char *next_token = strtok(app_name_args, " ");
+				char *name = (char*) malloc(strlen(app_name_args) * sizeof(char));
+				char **args = (char**) malloc(100 * sizeof(char*));	// hardcode 100 max args
+				strcpy(name, next_token);
+				int l = 0;
+				while (next_token != NULL) {
+					args[l] = (char*) malloc(100 * sizeof(char));
+					next_token = strtok(next_token, " ");
+					strcpy(args[l], next_token);
+					strcat(args[l], " ");
+					l++;
+				}
+				printf("name: %s\n", name);
+				printf("args:\n");
+				for(int o; o < l; o++) printf("\t%s\n", args[o]);
+				execve(name, args, envp);
+				exit(0);
+			}
+			*/
+			system(app_name_args);
+		}
+			
 
 		cpu_ticks1 = read_tsc_end();
 		
@@ -1824,7 +1875,8 @@ void read_counters_rpc(int dump, int power_smoothing) {
 			uint32_t oacontrol_default = INREG(oacontrol);
 			OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
 			// configure aggregated counters
-			CONFIG_COUNTERS
+			if (custom_counter_dword != 0) OUTREG(eu_perf_cnt_ctl_0_addr, custom_counter_dword);
+			else CONFIG_COUNTERS
 			intel_register_access_fini();
 			emit_report_perf_count(batch,
 									bo,
@@ -2199,6 +2251,8 @@ void read_counters_rpc(int dump, int power_smoothing) {
 	free(ocl_nanoseconds_for_median);
 	
 	
+	CLEANUP_AFTER_GPU_STUFF:
+	
 	for (int i = 0; i < ARRAY_SIZE(src); i++) {
 		drm_intel_bo_unreference(src[i].bo);
 		drm_intel_bo_unreference(dst[i].bo);
@@ -2240,53 +2294,7 @@ void read_counters_rpc(int dump, int power_smoothing) {
 /** read_counters_mmio
  * read counters through mmio access to registers
  */
-void read_counters_mmio() {
-	
-	// registers
-	uint32_t oacontrol = 0x2B00;
-	uint32_t eu_perf_cnt_ctl_0_addr = 0xE458;
-	uint32_t eu_perf_cnt_ctl_1_addr = 0xE558;
-	uint32_t eu_perf_cnt_ctl_2_addr = 0xE658;
-	uint32_t eu_perf_cnt_ctl_3_addr = 0xE758;
-	uint32_t eu_perf_cnt_ctl_4_addr = 0xE45C;
-	uint32_t eu_perf_cnt_ctl_5_addr = 0xE55C;
-	uint32_t eu_perf_cnt_ctl_6_addr = 0xE65C;
-	uint32_t oaperf_a4_lower_free_addr = 0x2960;
-	uint32_t oaperf_a4_upper_free_addr = 0x2964;
-	uint32_t oaperf_a6_lower_free_addr = 0x2968;
-	uint32_t oaperf_a6_upper_free_addr = 0x296C;
-	uint32_t oaperf_a19_lower_free_addr = 0x2970;
-	uint32_t oaperf_a19_upper_free_addr = 0x2974;
-	uint32_t oaperf_a20_lower_free_addr = 0x2978;
-	uint32_t oaperf_a20_upper_free_addr = 0x297C;
-	uint32_t oaperf_a7_lower_addr = 0x2838;
-	uint32_t oaperf_a7_upper_addr = 0x283C;
-    uint32_t oaperf_a8_lower_addr = 0x2840;
-    uint32_t oaperf_a8_upper_addr = 0x2844;
-    uint32_t oaperf_a9_lower_addr = 0x2848;
-    uint32_t oaperf_a9_upper_addr = 0x284C;
-    uint32_t oaperf_a10_lower_addr = 0x2850;
-    uint32_t oaperf_a10_upper_addr = 0x2854;
-    uint32_t oaperf_a11_lower_addr = 0x2858;
-    uint32_t oaperf_a11_upper_addr = 0x285C;
-    uint32_t oaperf_a12_lower_addr = 0x2860;
-    uint32_t oaperf_a12_upper_addr = 0x2864;
-    uint32_t oaperf_a13_lower_addr = 0x2868;
-    uint32_t oaperf_a13_upper_addr = 0x286C;
-    uint32_t oaperf_a14_lower_addr = 0x2870;
-    uint32_t oaperf_a14_upper_addr = 0x2874;
-    uint32_t oaperf_a15_lower_addr = 0x2878;
-    uint32_t oaperf_a15_upper_addr = 0x287C;
-    uint32_t oaperf_a16_lower_addr = 0x2880;
-    uint32_t oaperf_a16_upper_addr = 0x2884;
-    uint32_t oaperf_a17_lower_addr = 0x2888;
-    uint32_t oaperf_a17_upper_addr = 0x288C;
-    uint32_t oaperf_a18_lower_addr = 0x2890;
-    uint32_t oaperf_a18_upper_addr = 0x2894;
-    uint32_t oaperf_a19_lower_addr = 0x2898;
-    uint32_t oaperf_a19_upper_addr = 0x289C;
-    uint32_t oaperf_a20_lower_addr = 0x28A0;
-    uint32_t oaperf_a20_upper_addr = 0x28A4;
+void read_counters_mmio(uint32_t custom_counter_dword) {
 	
 	uint32_t oaperf_a7_lower_value_start=0, oaperf_a7_lower_value_end=0;
 	uint32_t oaperf_a7_upper_value_start=0, oaperf_a7_upper_value_end=0;
@@ -2316,152 +2324,6 @@ void read_counters_mmio() {
     uint32_t oaperf_a19_upper_value_start=0, oaperf_a19_upper_value_end=0;
     uint32_t oaperf_a20_lower_value_start=0, oaperf_a20_lower_value_end=0;
     uint32_t oaperf_a20_upper_value_start=0, oaperf_a20_upper_value_end=0;
-	
-	
-	uint32_t counter_format = 5;	// 0b101
-	
-	// choose aggregate counters
-	uint32_t dword_for_counting_flops = 3;			//    3 = 0b 0000 0000 0011
-	uint32_t dword_for_counting_movs = 1026;		// 1026 = 0b 0100 0000 0010
-	uint32_t dword_for_counting_ternary_ins = 516;	//  516 = 0b 0010 0000 0100
-	uint32_t dword_for_counting_fpu0 = 0;			//    0 = 0b 0000 0000 0000
-	uint32_t dword_for_counting_fpu1 = 1;			//    1 = 0b 0000 0000 0001
-	
-	// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
-	// EU SEND Pipeline Active (Increment Event 0b0010) doesn't support Fine Event filter 0b0100 (movs)
-	uint32_t dword_for_counting_movs_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
-																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_movs_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
-																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(3<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	// ============================================= THESE ONES ARE NOT SUPPORTED =============================================
-	
-	uint32_t dword_for_counting_movs_in_row0_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
-																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_movs_in_row1_in_fpu0_pipeline = 0		/* 0b0000 */ |	//increment event filter 	bits[3:0]
-																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_movs_in_row0_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
-																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_movs_in_row1_in_fpu1_pipeline = 1		/* 0b0000 */ |	//increment event filter 	bits[3:0]
-																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	
-	uint32_t dword_for_counting_sends_in_row0_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
-																(7<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_sends_in_row1_in_send_pipeline = 2		/* 0b0010 */ | 	// increment event filter 	bits[3:0]
-																(8<<4)	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(4<<8)	/* 0b0100 */;	// fine event filter		bits[11:8]
-	
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_0 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_row_1 = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_0 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_row_1 = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-	
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu0_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu1_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu2_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu0_in_eu3_rows = 	0 		/* 0b0000 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-	
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu0_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu1_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu2_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpu1_in_eu3_rows = 	1 		/* 0b0001 */ | 	// increment event filter 	bits[3:0]
-																(0<<4) 	/* 0b0000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_0 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(7<<4) 	/* 0b0111 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-																
-	uint32_t dword_for_counting_flops_in_fpus_in_eu0_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(7<<8)	/* 0b0111 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu1_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(8<<8)	/* 0b1000 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu2_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(9<<8)	/* 0b1001 */;	// fine event filter		bits[11:8]
-	uint32_t dword_for_counting_flops_in_fpus_in_eu3_row_1 = 	3 		/* 0b0011 */ | 	// increment event filter 	bits[3:0]
-																(8<<4) 	/* 0b1000 */ |	// coarse event filter 		bits[7:4]
-																(10<<8)	/* 0b1010 */;	// fine event filter		bits[11:8]
-	
-	
 	
 	// prelminaries
 	
@@ -2602,7 +2464,8 @@ void read_counters_mmio() {
 	OUTREG(oacontrol, counter_format << OACONTROL_COUNTER_SELECT_SHIFT | PERFORMANCE_COUNTER_ENABLE);
 		
 	// configure aggregated counters
-	CONFIG_COUNTERS
+	if (custom_counter_dword != 0) OUTREG(eu_perf_cnt_ctl_0_addr, custom_counter_dword);
+	else CONFIG_COUNTERS
 	
 	
 	
@@ -2648,17 +2511,9 @@ void read_counters_mmio() {
 
 	// do work
     ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, NULL); clCheckError(ret, __LINE__);
-	
-	CONFIG_COUNTERS
-	
     clFlush(command_queue); clCheckError(ret, __LINE__);
-	
-	CONFIG_COUNTERS
-	
     clFinish(command_queue); clCheckError(ret, __LINE__);
 	
-	CONFIG_COUNTERS
-
     cpu_ticks1 = read_tsc_end();
 	
 	/*
@@ -2669,7 +2524,8 @@ void read_counters_mmio() {
 	}
 	*/
 	
-	CONFIG_COUNTERS
+	if (custom_counter_dword != 0) OUTREG(eu_perf_cnt_ctl_0_addr, custom_counter_dword);
+	else CONFIG_COUNTERS
 
 	oaperf_a7_lower_value_end = INREG(oaperf_a7_lower_addr);
 	oaperf_a7_upper_value_end = INREG(oaperf_a7_upper_addr);
@@ -2832,3 +2688,6 @@ void profile_through_opencl() {
 	printf("Time: %f [s]\n", nanoseconds/1.0e9);
 	
 }
+
+
+

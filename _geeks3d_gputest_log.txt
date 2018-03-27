@@ -1,0 +1,44 @@
+2018:03:26@17:04:31(0000000001) < > GpuTest (Linux x64) is starting up...
+2018:03:26@17:04:31(0000000002) < > GpuTest: Cross Platform Graphics Benchmark Utility
+2018:03:26@17:04:31(0000000003) < > (C)2012-2014 Geeks3D (www.geeks3d.com)
+2018:03:26@17:04:31(0000000004) < > Linux information:
+2018:03:26@17:04:31(0000000005) < > - sysname: Linux
+2018:03:26@17:04:31(0000000006) < > - release: 4.14.0-3-amd64
+2018:03:26@17:04:31(0000000007) < > - version: #1 SMP Debian 4.14.13-1 (2018-01-14)
+2018:03:26@17:04:31(0000000008) < > - machine: x86_64
+2018:03:26@17:04:31(0000000009) < > gxl3d codename: Zhald.
+2018:03:26@17:04:31(0000000010) < > gxl3d_plugin_opencl: OpenCL computing plugin (OpenCL 1.1, 1.2).. By JeGX / Geeks3D.com
+2018:03:26@17:04:31(0000000011) < > gxl3d OpenCL plugin - initializing OpenCL data...
+2018:03:26@17:04:31(0000000012) < > gxl3d OpenCL plugin - found 1 OpenCL platform(s)
+2018:03:26@17:04:31(0000000013) < > gxl3d OpenCL plugin - Platform 0
+2018:03:26@17:04:31(0000000014) < > gxl3d OpenCL plugin - - vendor: Intel(R) Corporation
+2018:03:26@17:04:31(0000000015) < > gxl3d OpenCL plugin - - name: Intel(R) OpenCL
+2018:03:26@17:04:31(0000000016) < > gxl3d OpenCL plugin - - profile: FULL_PROFILE
+2018:03:26@17:04:31(0000000017) < > gxl3d OpenCL plugin - - version: OpenCL 2.0 
+2018:03:26@17:04:31(0000000018) < > gxl3d OpenCL plugin - Platform 0 - devices count: 2
+2018:03:26@17:04:31(0000000019) < > gxl3d OpenCL plugin - - Device 0 - name: Intel(R) HD Graphics
+2018:03:26@17:04:31(0000000020) < > gxl3d OpenCL plugin - - Device 1 - name: Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz
+2018:03:26@17:04:31(0000000021) < > gxl3d OpenCL plugin - OpenCL data initialized ok.
+2018:03:26@17:04:31(0000000022) < > gxl3d_plugin_gpu_monitor_gml: GPU monitor plugin for gxl3d.. By JeGX / Geeks3D.com
+2018:03:26@17:04:31(0000000023) < > [GpuMonitor plugin] Linux - CPU name: Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz, CPU speed: 3038MHz, RAM: 7861MB
+2018:03:26@17:04:31(0000000024) < > [GpuMonitor plugin] Num GPUs found: 1
+2018:03:26@17:04:31(0000000025) < > [GpuMonitor plugin] GPU0 - Intel Corporation HD Graphics 620 (rev 02)
+
+2018:03:26@17:04:31(0000000026) < > [GpuMonitor plugin] GPU0 - PCI codes: 0x8086-0x5916
+2018:03:26@17:04:31(0000000027) < > GPU monitoring thread started.
+2018:03:26@17:04:31(0000000028) < > Display size: width=1920, height=1080
+2018:03:26@17:04:31(0000000029) < > Window size: width=800, height=600, left=0, top=0
+2018:03:26@17:04:31(0000000030) < > Triangle - OpenGL renderer init OK.
+2018:03:26@17:04:31(0000000031) < > Triangle - VSYNC disabled (xxx_SwapInterval_xxx available).
+2018:03:26@17:04:31(0000000032) < > Triangle - OpenGL version detected: 3.0
+2018:03:26@17:04:31(0000000033) < > Triangle - # OpenGL extensions: 272
+2018:03:26@17:04:31(0000000034) < > Triangle - OpenGL - Renderer model: Mesa DRI Intel(R) HD Graphics 620 (Kaby Lake GT2) 
+2018:03:26@17:04:31(0000000035) < > Triangle - OpenGL - Renderer vendor: Intel Open Source Technology Center
+2018:03:26@17:04:31(0000000036) < > Triangle - OpenGL - API version: 3.0 Mesa 17.3.3
+2018:03:26@17:04:31(0000000037) < > Triangle - OpenGL - Shading language version: 1.30
+2018:03:26@17:04:31(0000000038) <*> - Unable to load the OS logo file.
+2018:03:26@17:04:36(0000000039) < > Exit from render thread
+2018:03:26@17:04:36(0000000040) < > # frames rendered: 5696
+2018:03:26@17:04:37(0000000041) < > Stopping gxl3d engine...
+2018:03:26@17:04:37(0000000042) < > Exit from GpuTest.
+
