@@ -88,3 +88,5 @@ rsvg-convert -f pdf -o compare_kernels.pdf compare_kernels_scalar_sp_add.svg	\
 											compare_kernels_vect4_dp_mad.svg	\
 											compare_kernels_vect8_dp_mad.svg	\
 											compare_kernels_vect16_dp_mad.svg
+
+rsvg-convert -f pdf -o compare_timers.pdf compare_timers.svg
