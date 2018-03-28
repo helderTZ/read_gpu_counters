@@ -79,26 +79,26 @@ char *available_flop_kernels[] = {
 	"vect4_dp_add_priv_kernel",  "vect4_dp_sub_priv_kernel",  "vect4_dp_mul_priv_kernel",  "vect4_dp_div_priv_kernel",  "vect4_dp_mad_priv_kernel", 
 	"vect8_dp_add_priv_kernel",  "vect8_dp_sub_priv_kernel",  "vect8_dp_mul_priv_kernel",  "vect8_dp_div_priv_kernel",  "vect8_dp_mad_priv_kernel", 
 	"vect16_dp_add_priv_kernel", "vect16_dp_sub_priv_kernel", "vect16_dp_mul_priv_kernel", "vect16_dp_div_priv_kernel", "vect16_dp_mad_priv_kernel", 
-	"scalar_sp_add_priv_iter_8192_kernel", "scalar_sp_sub_priv_iter_8192_kernel", "scalar_sp_mul_priv_iter_8192_kernel", "scalar_sp_div_priv_iter_8192_kernel", "scalar_sp_mad_priv_iter_8192_kernel", 
-	"vect2_sp_add_priv_iter_8192_kernel",  "vect2_sp_sub_priv_iter_8192_kernel",  "vect2_sp_mul_priv_iter_8192_kernel",  "vect2_sp_div_priv_iter_8192_kernel",  "vect2_sp_mad_priv_iter_8192_kernel", 
-	"vect4_sp_add_priv_iter_8192_kernel",  "vect4_sp_sub_priv_iter_8192_kernel",  "vect4_sp_mul_priv_iter_8192_kernel",  "vect4_sp_div_priv_iter_8192_kernel",  "vect4_sp_mad_priv_iter_8192_kernel", 
-	"vect8_sp_add_priv_iter_8192_kernel",  "vect8_sp_sub_priv_iter_8192_kernel",  "vect8_sp_mul_priv_iter_8192_kernel",  "vect8_sp_div_priv_iter_8192_kernel",  "vect8_sp_mad_priv_iter_8192_kernel", 
-	"vect16_sp_add_priv_iter_8192_kernel", "vect16_sp_sub_priv_iter_8192_kernel", "vect16_sp_mul_priv_iter_8192_kernel", "vect16_sp_div_priv_iter_8192_kernel", "vect16_sp_mad_priv_iter_8192_kernel", 
-	"scalar_dp_add_priv_iter_8192_kernel", "scalar_dp_sub_priv_iter_8192_kernel", "scalar_dp_mul_priv_iter_8192_kernel", "scalar_dp_div_priv_iter_8192_kernel", "scalar_dp_mad_priv_iter_8192_kernel", 
-	"vect2_dp_add_priv_iter_8192_kernel",  "vect2_dp_sub_priv_iter_8192_kernel",  "vect2_dp_mul_priv_iter_8192_kernel",  "vect2_dp_div_priv_iter_8192_kernel",  "vect2_dp_mad_priv_iter_8192_kernel", 
-	"vect4_dp_add_priv_iter_8192_kernel",  "vect4_dp_sub_priv_iter_8192_kernel",  "vect4_dp_mul_priv_iter_8192_kernel",  "vect4_dp_div_priv_iter_8192_kernel",  "vect4_dp_mad_priv_iter_8192_kernel", 
-	"vect8_dp_add_priv_iter_8192_kernel",  "vect8_dp_sub_priv_iter_8192_kernel",  "vect8_dp_mul_priv_iter_8192_kernel",  "vect8_dp_div_priv_iter_8192_kernel",  "vect8_dp_mad_priv_iter_8192_kernel", 
-	"vect16_dp_add_priv_iter_8192_kernel", "vect16_dp_sub_priv_iter_8192_kernel", "vect16_dp_mul_priv_iter_8192_kernel", "vect16_dp_div_priv_iter_8192_kernel", "vect16_dp_mad_priv_iter_8192_kernel", 
-	"scalar_sp_add_priv_iter_8192_args_kernel", "scalar_sp_sub_priv_iter_8192_args_kernel", "scalar_sp_mul_priv_iter_8192_args_kernel", "scalar_sp_div_priv_iter_8192_args_kernel", "scalar_sp_mad_priv_iter_8192_args_kernel", 
-	"vect2_sp_add_priv_iter_8192_args_kernel",  "vect2_sp_sub_priv_iter_8192_args_kernel",  "vect2_sp_mul_priv_iter_8192_args_kernel",  "vect2_sp_div_priv_iter_8192_args_kernel",  "vect2_sp_mad_priv_iter_8192_args_kernel", 
-	"vect4_sp_add_priv_iter_8192_args_kernel",  "vect4_sp_sub_priv_iter_8192_args_kernel",  "vect4_sp_mul_priv_iter_8192_args_kernel",  "vect4_sp_div_priv_iter_8192_args_kernel",  "vect4_sp_mad_priv_iter_8192_args_kernel", 
-	"vect8_sp_add_priv_iter_8192_args_kernel",  "vect8_sp_sub_priv_iter_8192_args_kernel",  "vect8_sp_mul_priv_iter_8192_args_kernel",  "vect8_sp_div_priv_iter_8192_args_kernel",  "vect8_sp_mad_priv_iter_8192_args_kernel", 
-	"vect16_sp_add_priv_iter_8192_args_kernel", "vect16_sp_sub_priv_iter_8192_args_kernel", "vect16_sp_mul_priv_iter_8192_args_kernel", "vect16_sp_div_priv_iter_8192_args_kernel", "vect16_sp_mad_priv_iter_8192_args_kernel", 
-	"scalar_dp_add_priv_iter_8192_args_kernel", "scalar_dp_sub_priv_iter_8192_args_kernel", "scalar_dp_mul_priv_iter_8192_args_kernel", "scalar_dp_div_priv_iter_8192_args_kernel", "scalar_dp_mad_priv_iter_8192_args_kernel", 
-	"vect2_dp_add_priv_iter_8192_args_kernel",  "vect2_dp_sub_priv_iter_8192_args_kernel",  "vect2_dp_mul_priv_iter_8192_args_kernel",  "vect2_dp_div_priv_iter_8192_args_kernel",  "vect2_dp_mad_priv_iter_8192_args_kernel", 
-	"vect4_dp_add_priv_iter_8192_args_kernel",  "vect4_dp_sub_priv_iter_8192_args_kernel",  "vect4_dp_mul_priv_iter_8192_args_kernel",  "vect4_dp_div_priv_iter_8192_args_kernel",  "vect4_dp_mad_priv_iter_8192_args_kernel", 
-	"vect8_dp_add_priv_iter_8192_args_kernel",  "vect8_dp_sub_priv_iter_8192_args_kernel",  "vect8_dp_mul_priv_iter_8192_args_kernel",  "vect8_dp_div_priv_iter_8192_args_kernel",  "vect8_dp_mad_priv_iter_8192_args_kernel", 
-	"vect16_dp_add_priv_iter_8192_args_kernel", "vect16_dp_sub_priv_iter_8192_args_kernel", "vect16_dp_mul_priv_iter_8192_args_kernel", "vect16_dp_div_priv_iter_8192_args_kernel", "vect16_dp_mad_priv_iter_8192_args_kernel", 
+	"scalar_sp_add_priv_iter_1024_kernel", "scalar_sp_sub_priv_iter_1024_kernel", "scalar_sp_mul_priv_iter_1024_kernel", "scalar_sp_div_priv_iter_1024_kernel", "scalar_sp_mad_priv_iter_1024_kernel", 
+	"vect2_sp_add_priv_iter_1024_kernel",  "vect2_sp_sub_priv_iter_1024_kernel",  "vect2_sp_mul_priv_iter_1024_kernel",  "vect2_sp_div_priv_iter_1024_kernel",  "vect2_sp_mad_priv_iter_1024_kernel", 
+	"vect4_sp_add_priv_iter_1024_kernel",  "vect4_sp_sub_priv_iter_1024_kernel",  "vect4_sp_mul_priv_iter_1024_kernel",  "vect4_sp_div_priv_iter_1024_kernel",  "vect4_sp_mad_priv_iter_1024_kernel", 
+	"vect8_sp_add_priv_iter_1024_kernel",  "vect8_sp_sub_priv_iter_1024_kernel",  "vect8_sp_mul_priv_iter_1024_kernel",  "vect8_sp_div_priv_iter_1024_kernel",  "vect8_sp_mad_priv_iter_1024_kernel", 
+	"vect16_sp_add_priv_iter_1024_kernel", "vect16_sp_sub_priv_iter_1024_kernel", "vect16_sp_mul_priv_iter_1024_kernel", "vect16_sp_div_priv_iter_1024_kernel", "vect16_sp_mad_priv_iter_1024_kernel", 
+	"scalar_dp_add_priv_iter_1024_kernel", "scalar_dp_sub_priv_iter_1024_kernel", "scalar_dp_mul_priv_iter_1024_kernel", "scalar_dp_div_priv_iter_1024_kernel", "scalar_dp_mad_priv_iter_1024_kernel", 
+	"vect2_dp_add_priv_iter_1024_kernel",  "vect2_dp_sub_priv_iter_1024_kernel",  "vect2_dp_mul_priv_iter_1024_kernel",  "vect2_dp_div_priv_iter_1024_kernel",  "vect2_dp_mad_priv_iter_1024_kernel", 
+	"vect4_dp_add_priv_iter_1024_kernel",  "vect4_dp_sub_priv_iter_1024_kernel",  "vect4_dp_mul_priv_iter_1024_kernel",  "vect4_dp_div_priv_iter_1024_kernel",  "vect4_dp_mad_priv_iter_1024_kernel", 
+	"vect8_dp_add_priv_iter_1024_kernel",  "vect8_dp_sub_priv_iter_1024_kernel",  "vect8_dp_mul_priv_iter_1024_kernel",  "vect8_dp_div_priv_iter_1024_kernel",  "vect8_dp_mad_priv_iter_1024_kernel", 
+	"vect16_dp_add_priv_iter_1024_kernel", "vect16_dp_sub_priv_iter_1024_kernel", "vect16_dp_mul_priv_iter_1024_kernel", "vect16_dp_div_priv_iter_1024_kernel", "vect16_dp_mad_priv_iter_1024_kernel", 
+	"scalar_sp_add_priv_iter_1024_args_kernel", "scalar_sp_sub_priv_iter_1024_args_kernel", "scalar_sp_mul_priv_iter_1024_args_kernel", "scalar_sp_div_priv_iter_1024_args_kernel", "scalar_sp_mad_priv_iter_1024_args_kernel", 
+	"vect2_sp_add_priv_iter_1024_args_kernel",  "vect2_sp_sub_priv_iter_1024_args_kernel",  "vect2_sp_mul_priv_iter_1024_args_kernel",  "vect2_sp_div_priv_iter_1024_args_kernel",  "vect2_sp_mad_priv_iter_1024_args_kernel", 
+	"vect4_sp_add_priv_iter_1024_args_kernel",  "vect4_sp_sub_priv_iter_1024_args_kernel",  "vect4_sp_mul_priv_iter_1024_args_kernel",  "vect4_sp_div_priv_iter_1024_args_kernel",  "vect4_sp_mad_priv_iter_1024_args_kernel", 
+	"vect8_sp_add_priv_iter_1024_args_kernel",  "vect8_sp_sub_priv_iter_1024_args_kernel",  "vect8_sp_mul_priv_iter_1024_args_kernel",  "vect8_sp_div_priv_iter_1024_args_kernel",  "vect8_sp_mad_priv_iter_1024_args_kernel", 
+	"vect16_sp_add_priv_iter_1024_args_kernel", "vect16_sp_sub_priv_iter_1024_args_kernel", "vect16_sp_mul_priv_iter_1024_args_kernel", "vect16_sp_div_priv_iter_1024_args_kernel", "vect16_sp_mad_priv_iter_1024_args_kernel", 
+	"scalar_dp_add_priv_iter_1024_args_kernel", "scalar_dp_sub_priv_iter_1024_args_kernel", "scalar_dp_mul_priv_iter_1024_args_kernel", "scalar_dp_div_priv_iter_1024_args_kernel", "scalar_dp_mad_priv_iter_1024_args_kernel", 
+	"vect2_dp_add_priv_iter_1024_args_kernel",  "vect2_dp_sub_priv_iter_1024_args_kernel",  "vect2_dp_mul_priv_iter_1024_args_kernel",  "vect2_dp_div_priv_iter_1024_args_kernel",  "vect2_dp_mad_priv_iter_1024_args_kernel", 
+	"vect4_dp_add_priv_iter_1024_args_kernel",  "vect4_dp_sub_priv_iter_1024_args_kernel",  "vect4_dp_mul_priv_iter_1024_args_kernel",  "vect4_dp_div_priv_iter_1024_args_kernel",  "vect4_dp_mad_priv_iter_1024_args_kernel", 
+	"vect8_dp_add_priv_iter_1024_args_kernel",  "vect8_dp_sub_priv_iter_1024_args_kernel",  "vect8_dp_mul_priv_iter_1024_args_kernel",  "vect8_dp_div_priv_iter_1024_args_kernel",  "vect8_dp_mad_priv_iter_1024_args_kernel", 
+	"vect16_dp_add_priv_iter_1024_args_kernel", "vect16_dp_sub_priv_iter_1024_args_kernel", "vect16_dp_mul_priv_iter_1024_args_kernel", "vect16_dp_div_priv_iter_1024_args_kernel", "vect16_dp_mad_priv_iter_1024_args_kernel", 
 };
 char *available_mop_kernels[] = {
 	"scalar_sp_load_store_kernel", "vect2_sp_load_store_kernel", "vect4_sp_load_store_kernel", "vect8_sp_load_store_kernel", "vect16_sp_load_store_kernel",
@@ -208,6 +208,8 @@ int main(int argc, char** argv, char **envp) {
 	uint32_t custom_coarse = 0;
 	uint32_t custom_fine = 0;
 	uint32_t custom_counter_dword = 0;
+	int dump_kernel = 0;
+	int ocl_verbose = 0;
 	char *app_name_args;
 	uint64_t clock_start, clock_end, clock_delta;
 	uint64_t build_clock_start, build_clock_end, build_clock_delta;
@@ -293,6 +295,12 @@ int main(int argc, char** argv, char **envp) {
 				custom_fine = (uint32_t) atoi(argv[i+1]);
 			}
 			
+			if (strcmp(argv[i], "--dump-kernel")==0)
+				dump_kernel = 1;
+			
+			if (strcmp(argv[i], "--ocl-verbose")==0)
+				ocl_verbose = 1;
+			
 		}
 	}
 	
@@ -368,6 +376,14 @@ int main(int argc, char** argv, char **envp) {
 		clock_delta = clock_end-clock_start;
 		printf("[Kernel validation: %lf s]\n", clock_delta/(double)nominal_cpu_freq);
 	}
+	
+	// print kernel status
+	printf("\n\n=======================================\n");
+	printf("Kernel name: %s\n", kernel_choice);
+	printf("Kernel type: %c\n", kernel_type);
+	printf("Precision type: %c\n", precision_type);
+	printf("=======================================\n\n");
+	
 
 
 	// set affinity (to only run on one core)
@@ -431,72 +447,92 @@ int main(int argc, char** argv, char **envp) {
 		
 		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			scalar_sp_A = (float*) malloc(sizeof(float) * global);
+			if(ocl_verbose) printf("[OCL] Allocated scalar_sp_A\n");
 			if(scalar_sp_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') { 
 				scalar_sp_B = (float*) malloc(sizeof(float) * global);
+				if(ocl_verbose) printf("[OCL] Allocated scalar_sp_B\n");
 				if(scalar_sp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); } 
 			}
 		} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			vect2_sp_A = (cl_float2*) malloc(sizeof(cl_float2) * global);
+			if(ocl_verbose) printf("[OCL] Allocated vect2_sp_A\n");
 			if(vect2_sp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				vect2_sp_B = (cl_float2*) malloc(sizeof(cl_float2) * global);
+				if(ocl_verbose) printf("[OCL] Allocated vect2_sp_B\n");
 				if(vect2_sp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			vect4_sp_A = (cl_float4*) malloc(sizeof(cl_float4) * global);
+			if(ocl_verbose) printf("[OCL] Allocated vect4_sp_A\n");
 			if(vect4_sp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				vect4_sp_B = (cl_float4*) malloc(sizeof(cl_float4) * global);
+				if(ocl_verbose) printf("[OCL] Allocated vect4_sp_B\n");
 				if(vect4_sp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			vect8_sp_A = (cl_float8*) malloc(sizeof(cl_float8) * global);
+			if(ocl_verbose) printf("[OCL] Allocated vect8_sp_A\n");
 			if(vect8_sp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				vect8_sp_B = (cl_float8*) malloc(sizeof(cl_float8) * global);
+				if(ocl_verbose) printf("[OCL] Allocated vect8_sp_B\n");
 				if(vect8_sp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			vect16_sp_A = (cl_float16*) malloc(sizeof(cl_float16) * global);
+			if(ocl_verbose) printf("[OCL] Allocated vect16_sp_A\n");
 			if(vect16_sp_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				vect16_sp_B = (cl_float16*) malloc(sizeof(cl_float16) * global);
+				if(ocl_verbose) printf("[OCL] Allocated vect16_sp_B\n");
 				if(vect16_sp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "dp") != NULL) {
 			scalar_dp_A = (double*) malloc(sizeof(double) * global);
+			if(ocl_verbose) printf("[OCL] Allocated scalar_dp_A\n");
 			if(scalar_dp_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				scalar_dp_B = (double*) malloc(sizeof(double) * global);
+				if(ocl_verbose) printf("[OCL] Allocated scalar_dp_B\n");
 				if(scalar_dp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "dp") != NULL) {
 			vect2_dp_A = (cl_double2*) malloc(sizeof(cl_double2) * global);
+			if(ocl_verbose) printf("[OCL] Allocated vect2_dp_A\n");
 			if(vect2_dp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				vect2_dp_B = (cl_double2*) malloc(sizeof(cl_double2) * global);
+				if(ocl_verbose) printf("[OCL] Allocated vect2_dp_B\n");
 				if(vect2_dp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "dp") != NULL) {
 			vect4_dp_A = (cl_double4*) malloc(sizeof(cl_double4) * global);
+			if(ocl_verbose) printf("[OCL] Allocated vect4_dp_A\n");
 			if(vect4_dp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				vect4_dp_B = (cl_double4*) malloc(sizeof(cl_double4) * global);
+				if(ocl_verbose) printf("[OCL] Allocated vect4_dp_B\n");
 				if(vect4_dp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "dp") != NULL) {
 			vect8_dp_A = (cl_double8*) malloc(sizeof(cl_double8) * global);
+			if(ocl_verbose) printf("[OCL] Allocated vect8_dp_A\n");
 			if(vect8_dp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				vect8_dp_B = (cl_double8*) malloc(sizeof(cl_double8) * global);
+				if(ocl_verbose) printf("[OCL] Allocated vect8_dp_B\n");
 				if(vect8_dp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "dp") != NULL) {
 			vect16_dp_A = (cl_double16*) malloc(sizeof(cl_double16) * global);
+			if(ocl_verbose) printf("[OCL] Allocated vect16_dp_A\n");
 			if(vect16_dp_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
 				vect16_dp_B = (cl_double16*) malloc(sizeof(cl_double16) * global);
+				if(ocl_verbose) printf("[OCL] Allocated vect16_dp_B\n");
 				if(vect16_dp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		}
@@ -569,7 +605,7 @@ int main(int argc, char** argv, char **envp) {
 	printf("=================================================\n");
 	printf("================= OpenCL kernel =================\n");
 	printf("=================================================\n");
-	//printf("Kernel source (%d bytes):\n%s\n", source_size, source_str);
+	
 
 
 	if (profile) {
@@ -588,9 +624,8 @@ int main(int argc, char** argv, char **envp) {
 		}
 		//command_queue = clCreateCommandQueueWithProperties(context, device, NULL, &ret); clCheckError(ret, __LINE__);
 		
-		if (strstr(kernel_choice, "priv") != NULL) {
-			// no need to create buffer
-		} else if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
+
+		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(float), scalar_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
@@ -675,6 +710,23 @@ int main(int argc, char** argv, char **envp) {
 		else if (kernel_type == 'p' && precision_type == 'd') 	{ f_source = fopen("kernels/power_dp_kernels.cl", "r"); sprintf(source_file, "power_dp_kernels.cl"); 	}
 		else if (kernel_type == 'm') 						  	{ f_source = fopen("kernels/mop_kernels.cl", "r");		sprintf(source_file, "mop_kernels.cl"); 		}
 		else if (kernel_type == 's') 						  	{ f_source = fopen("kernels/shared_mem_kernels.cl", "r");	sprintf(source_file, "shared_mem_kernels.cl"); }
+		
+		if (dump_kernel) {
+			
+			// get kernel code from file
+			fseek(f_source, 0L, SEEK_END);
+			source_size = (size_t) ftell(f_source);
+			fseek(f_source, 0L, SEEK_SET);
+			source_str = (char*)malloc(sizeof(char)*source_size);
+			fread(source_str, sizeof(char), source_size, f_source);
+			fclose(f_source);
+			
+			printf("\n\n>>>>>>>>>>>>>>>> KERNEL DUMP >>>>>>>>>>>>>>>>\n");
+			printf("Kernel source (%d bytes):\n%s\n", source_size, source_str);
+			printf(">>>>>>>>>>>>>>>> KERNEL DUMP >>>>>>>>>>>>>>>>\n\n");
+			
+			free(source_str);
+		}
 		
 		if (build) {
 			
@@ -783,12 +835,11 @@ int main(int argc, char** argv, char **envp) {
 				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect16_dp_A[0]); 
 				clCheckError(ocl_ret, __LINE__);
 			}
-		} else if(strstr(kernel_choice, "priv") != NULL && strstr(kernel_choice, "args") == NULL) {
-			// no args
 		} else {
 			ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+				if (!(strstr(kernel_choice, "priv") != NULL))
+					ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
 			}
 		}
 		
@@ -865,6 +916,7 @@ int main(int argc, char** argv, char **envp) {
 
 
 	close(drm_fd);
+	
 
 	// OpenCL cleanup
 	clReleaseKernel(kernel);
