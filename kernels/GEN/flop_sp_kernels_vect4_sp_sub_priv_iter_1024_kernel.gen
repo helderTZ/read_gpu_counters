@@ -1,0 +1,52 @@
+LABEL0
+         mov      (1|M0)         null<1>:ud    0xA1C5C661:ud                   
+(W)      mov      (8|M0)         r2.0<1>:ud    r0.0<1;1,0>:ud                  
+(W)      or       (1|M0)         cr0.0<1>:ud   cr0.0<0;1,0>:ud   0x4C0:uw         {Switch}
+(W)      mov      (4|M0)         r6.2<1>:f     0x40000000:f                    
+(W)      mov      (1|M0)         r3.0<1>:d     0:w                             
+LABEL80
+(W)      add      (1|M0)         r7.4<1>:f     r6.5<0;1,0>:f     0xC0000000:f    
+(W)      add      (1|M0)         r7.5<1>:f     r6.4<0;1,0>:f     0xC0000000:f    
+(W)      add      (1|M0)         r7.6<1>:f     r6.3<0;1,0>:f     0xC0000000:f    
+(W)      add      (1|M0)         r7.7<1>:f     r6.2<0;1,0>:f     0xC0000000:f    
+(W)      add      (1|M0)         r3.1<1>:d     r3.0<0;1,0>:d     16:w            
+(W)      add      (4|M0)         r7.0<1>:f     r7.4<4;4,1>:f     0xC0000000:f    
+(W)      cmp      (16|M0)  [(lt)f0.0]  null<1>:d     r3.1<0;1,0>:d     1024:w          
+(W)      cmp      (16|M16) [(lt)f0.0]  null<1>:d     r3.1<0;1,0>:d     1024:w          
+(W)      add      (4|M0)         r8.2<1>:f     r7.0<4;4,1>:f     0xC0000000:f    
+(W)      add      (4|M0)         r11.0<1>:f    r8.2<4;4,1>:f     0xC0000000:f    
+(W)      add      (4|M0)         r11.4<1>:f    r11.0<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r12.0<1>:f    r11.4<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r12.4<1>:f    r12.0<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r13.0<1>:f    r12.4<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r13.4<1>:f    r13.0<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r14.0<1>:f    r13.4<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r14.4<1>:f    r14.0<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r15.0<1>:f    r14.4<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r15.4<1>:f    r15.0<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r16.0<1>:f    r15.4<4;4,1>:f    0xC0000000:f    
+(W)      add      (4|M0)         r16.4<1>:f    r16.0<4;4,1>:f    0xC0000000:f    
+(W)      add      (1|M0)         r6.5<1>:f     r16.4<0;1,0>:f    0xC0000000:f    
+(W)      add      (1|M0)         r6.4<1>:f     r16.5<0;1,0>:f    0xC0000000:f    
+(W)      add      (1|M0)         r6.3<1>:f     r16.6<0;1,0>:f    0xC0000000:f    
+(W)      add      (1|M0)         r6.2<1>:f     r16.7<0;1,0>:f    0xC0000000:f    
+(~f0.0)  break    (32|M0)                    LABEL504          LABEL504        
+LABEL496
+(W)      mov      (1|M0)         r3.0<1>:d     r3.1<0;1,0>:d                    {Compacted}
+LABEL504
+         while    (32|M0)                    LABEL80                         
+LABEL520
+(W)      shl      (1|M0)         r4.0<1>:q     r3.0<0;1,0>:d     4:w             
+(W)      mov      (1|M0)         r3.2<1>:f     r6.5<0;1,0>:f                   
+(W)      mov      (1|M0)         r3.3<1>:f     r6.4<0;1,0>:f                   
+(W)      mov      (1|M0)         r3.4<1>:f     r6.3<0;1,0>:f                   
+(W)      mov      (1|M0)         r3.5<1>:f     r6.2<0;1,0>:f                   
+(W)      mov      (8|M0)         r17.0<1>:w    0xC840:uv                       
+(W)      mov      (8|M0)         r127.0<1>:d   r2.0<8;8,1>:d                    {Compacted}
+(W)      add      (1|M0)         r4.2<1>:q     r8.0<0;1,0>:q     r4.0<0;1,0>:q   
+(W)      mov      (8|M0)         r5.0<1>:f     r3.2<0;1,0>:f                    {Compacted}
+(W)      mov      (4|M0)         r5.0<1>:f     r3.2<4;4,1>:f                    {Compacted}
+(W)      add      (1|M0)         r6.0<1>:q     r4.2<0;1,0>:q     256:w           
+(W)      add      (8|M0)         r9.0<1>:uq    r6.0<0;1,0>:uq    r17.0<4;4,1>:w  
+(W)      sends    (8|M0)         null:ud       r9                r5                0x4C      0x40681FF //  hdc.dc1  wr:2+1, rd:0, fc: 0x681ff
+         send     (8|M0)         null:ud       r127:ud           0x4D00027  0x2000010 {EOT} //  spawner  wr:1, rd:0, fc: 0x10

@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <malloc.h>
 #include <CL/cl.h>
 #include "errors.h"
 
@@ -21,6 +22,22 @@
 
 #define SIZE 168
 #define TOTAL_THREADS (256*128*256) 
+
+
+
+
+
+//#define USE_ZERO_COPY
+
+#if defined(USE_ZERO_COPY)
+	#define MALLOC(x) _mm_malloc(x, 4096)
+	#define FREE(x)   _mm_free(x)
+	#define MEM_ACCESS CL_MEM_READ_WRITE | CL_MEM_USE_HOST_PTR
+#else
+	#define MALLOC(x) malloc(x)
+	#define FREE(x)   free(x)
+	#define MEM_ACCESS CL_MEM_READ_WRITE
+#endif
 
 
 char kernel_choice[50] = "";
@@ -105,6 +122,7 @@ char *available_mop_kernels[] = {
 	"scalar_dp_load_store_kernel", "vect2_dp_load_store_kernel", "vect4_dp_load_store_kernel", "vect8_dp_load_store_kernel", "vect16_dp_load_store_kernel",
 	"scalar_sp_load_store_iter_1024_kernel", "vect2_sp_load_store_iter_1024_kernel", "vect4_sp_load_store_iter_1024_kernel", "vect8_sp_load_store_iter_1024_kernel", "vect16_sp_load_store_iter_1024_kernel",
 	"scalar_dp_load_store_iter_1024_kernel", "vect2_dp_load_store_iter_1024_kernel", "vect4_dp_load_store_iter_1024_kernel", "vect8_dp_load_store_iter_1024_kernel", "vect16_dp_load_store_iter_1024_kernel",
+	"scalar_sp_load_store_shm_iter_1024_kernel", "vect2_sp_load_store_shm_iter_1024_kernel", "vect4_sp_load_store_shm_iter_1024_kernel", "vect8_sp_load_store_shm_iter_1024_kernel", "vect16_sp_load_store_shm_iter_1024_kernel"
 	// experiments
 	"scalar_sp_load_kernel", "scalar_sp_load_iter_1024_kernel", "scalar_sp_load_iter_1024_global2priv_kernel",
 };
@@ -210,6 +228,7 @@ int main(int argc, char** argv, char **envp) {
 	uint32_t custom_counter_dword = 0;
 	int dump_kernel = 0;
 	int ocl_verbose = 0;
+	int validate = 0;
 	char *app_name_args;
 	uint64_t clock_start, clock_end, clock_delta;
 	uint64_t build_clock_start, build_clock_end, build_clock_delta;
@@ -300,6 +319,9 @@ int main(int argc, char** argv, char **envp) {
 			
 			if (strcmp(argv[i], "--ocl-verbose")==0)
 				ocl_verbose = 1;
+			
+			if (strcmp(argv[i], "--validate")==0 || strcmp(argv[i], "-v")==0)
+				validate = 1;
 			
 		}
 	}
@@ -446,92 +468,92 @@ int main(int argc, char** argv, char **envp) {
 	if (!external_app) {
 		
 		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			scalar_sp_A = (float*) malloc(sizeof(float) * global);
+			scalar_sp_A = (float*) MALLOC(sizeof(float) * global);
 			if(ocl_verbose) printf("[OCL] Allocated scalar_sp_A\n");
 			if(scalar_sp_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') { 
-				scalar_sp_B = (float*) malloc(sizeof(float) * global);
+				scalar_sp_B = (float*) MALLOC(sizeof(float) * global);
 				if(ocl_verbose) printf("[OCL] Allocated scalar_sp_B\n");
 				if(scalar_sp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); } 
 			}
 		} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			vect2_sp_A = (cl_float2*) malloc(sizeof(cl_float2) * global);
+			vect2_sp_A = (cl_float2*) MALLOC(sizeof(cl_float2) * global);
 			if(ocl_verbose) printf("[OCL] Allocated vect2_sp_A\n");
 			if(vect2_sp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				vect2_sp_B = (cl_float2*) malloc(sizeof(cl_float2) * global);
+				vect2_sp_B = (cl_float2*) MALLOC(sizeof(cl_float2) * global);
 				if(ocl_verbose) printf("[OCL] Allocated vect2_sp_B\n");
 				if(vect2_sp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			vect4_sp_A = (cl_float4*) malloc(sizeof(cl_float4) * global);
+			vect4_sp_A = (cl_float4*) MALLOC(sizeof(cl_float4) * global);
 			if(ocl_verbose) printf("[OCL] Allocated vect4_sp_A\n");
 			if(vect4_sp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				vect4_sp_B = (cl_float4*) malloc(sizeof(cl_float4) * global);
+				vect4_sp_B = (cl_float4*) MALLOC(sizeof(cl_float4) * global);
 				if(ocl_verbose) printf("[OCL] Allocated vect4_sp_B\n");
 				if(vect4_sp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			vect8_sp_A = (cl_float8*) malloc(sizeof(cl_float8) * global);
+			vect8_sp_A = (cl_float8*) MALLOC(sizeof(cl_float8) * global);
 			if(ocl_verbose) printf("[OCL] Allocated vect8_sp_A\n");
 			if(vect8_sp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				vect8_sp_B = (cl_float8*) malloc(sizeof(cl_float8) * global);
+				vect8_sp_B = (cl_float8*) MALLOC(sizeof(cl_float8) * global);
 				if(ocl_verbose) printf("[OCL] Allocated vect8_sp_B\n");
 				if(vect8_sp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			vect16_sp_A = (cl_float16*) malloc(sizeof(cl_float16) * global);
+			vect16_sp_A = (cl_float16*) MALLOC(sizeof(cl_float16) * global);
 			if(ocl_verbose) printf("[OCL] Allocated vect16_sp_A\n");
 			if(vect16_sp_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				vect16_sp_B = (cl_float16*) malloc(sizeof(cl_float16) * global);
+				vect16_sp_B = (cl_float16*) MALLOC(sizeof(cl_float16) * global);
 				if(ocl_verbose) printf("[OCL] Allocated vect16_sp_B\n");
 				if(vect16_sp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			scalar_dp_A = (double*) malloc(sizeof(double) * global);
+			scalar_dp_A = (double*) MALLOC(sizeof(double) * global);
 			if(ocl_verbose) printf("[OCL] Allocated scalar_dp_A\n");
 			if(scalar_dp_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				scalar_dp_B = (double*) malloc(sizeof(double) * global);
+				scalar_dp_B = (double*) MALLOC(sizeof(double) * global);
 				if(ocl_verbose) printf("[OCL] Allocated scalar_dp_B\n");
 				if(scalar_dp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			vect2_dp_A = (cl_double2*) malloc(sizeof(cl_double2) * global);
+			vect2_dp_A = (cl_double2*) MALLOC(sizeof(cl_double2) * global);
 			if(ocl_verbose) printf("[OCL] Allocated vect2_dp_A\n");
 			if(vect2_dp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				vect2_dp_B = (cl_double2*) malloc(sizeof(cl_double2) * global);
+				vect2_dp_B = (cl_double2*) MALLOC(sizeof(cl_double2) * global);
 				if(ocl_verbose) printf("[OCL] Allocated vect2_dp_B\n");
 				if(vect2_dp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			vect4_dp_A = (cl_double4*) malloc(sizeof(cl_double4) * global);
+			vect4_dp_A = (cl_double4*) MALLOC(sizeof(cl_double4) * global);
 			if(ocl_verbose) printf("[OCL] Allocated vect4_dp_A\n");
 			if(vect4_dp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				vect4_dp_B = (cl_double4*) malloc(sizeof(cl_double4) * global);
+				vect4_dp_B = (cl_double4*) MALLOC(sizeof(cl_double4) * global);
 				if(ocl_verbose) printf("[OCL] Allocated vect4_dp_B\n");
 				if(vect4_dp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			vect8_dp_A = (cl_double8*) malloc(sizeof(cl_double8) * global);
+			vect8_dp_A = (cl_double8*) MALLOC(sizeof(cl_double8) * global);
 			if(ocl_verbose) printf("[OCL] Allocated vect8_dp_A\n");
 			if(vect8_dp_A==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				vect8_dp_B = (cl_double8*) malloc(sizeof(cl_double8) * global);
+				vect8_dp_B = (cl_double8*) MALLOC(sizeof(cl_double8) * global);
 				if(ocl_verbose) printf("[OCL] Allocated vect8_dp_B\n");
 				if(vect8_dp_B==NULL)  { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
 		} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			vect16_dp_A = (cl_double16*) malloc(sizeof(cl_double16) * global);
+			vect16_dp_A = (cl_double16*) MALLOC(sizeof(cl_double16) * global);
 			if(ocl_verbose) printf("[OCL] Allocated vect16_dp_A\n");
 			if(vect16_dp_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				vect16_dp_B = (cl_double16*) malloc(sizeof(cl_double16) * global);
+				vect16_dp_B = (cl_double16*) MALLOC(sizeof(cl_double16) * global);
 				if(ocl_verbose) printf("[OCL] Allocated vect16_dp_B\n");
 				if(vect16_dp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
 			}
@@ -540,56 +562,56 @@ int main(int argc, char** argv, char **envp) {
 			if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				scalar_sp_A[i] = 2.0f;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					scalar_sp_B[i] = 2.0f;
+					scalar_sp_B[i] = 3.0f;
 				}
 			} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				vect2_sp_A[i].x = 2.0f;   vect2_sp_A[i].y = 2.0f;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					vect2_sp_B[i].x	= 2.0f;   vect2_sp_B[i].y = 2.0f;
+					vect2_sp_B[i].x	= 3.0f;   vect2_sp_B[i].y = 3.0f;
 				}
 			} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				vect4_sp_A[i].x	= 2.0f;   vect4_sp_A[i].y = 2.0f;   vect4_sp_A[i].w = 2.0f;   vect4_sp_A[i].z = 2.0f;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					vect4_sp_B[i].x	= 2.0f;   vect4_sp_B[i].y = 2.0f;   vect4_sp_B[i].w = 2.0f;   vect4_sp_B[i].z = 2.0f;
+					vect4_sp_B[i].x	= 3.0f;   vect4_sp_B[i].y = 3.0f;   vect4_sp_B[i].w = 3.0f;   vect4_sp_B[i].z = 3.0f;
 				}
 			} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				vect8_sp_A[i].s0 = 2.0f;  vect8_sp_A[i].s1 = 2.0f;  vect8_sp_A[i].s2 = 2.0f;  vect8_sp_A[i].s3 = 2.0f;  vect8_sp_A[i].s4 = 2.0f;  vect8_sp_A[i].s5 = 2.0f;  vect8_sp_A[i].s6 = 2.0f;  vect8_sp_A[i].s7 = 2.0f;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					vect8_sp_B[i].s0 = 2.0f;  vect8_sp_B[i].s1 = 2.0f;  vect8_sp_B[i].s2 = 2.0f;  vect8_sp_B[i].s3 = 2.0f;  vect8_sp_B[i].s4 = 2.0f;  vect8_sp_B[i].s5 = 2.0f;  vect8_sp_B[i].s6 = 2.0f;  vect8_sp_B[i].s7 = 2.0f;
+					vect8_sp_B[i].s0 = 3.0f;  vect8_sp_B[i].s1 = 3.0f;  vect8_sp_B[i].s2 = 3.0f;  vect8_sp_B[i].s3 = 3.0f;  vect8_sp_B[i].s4 = 3.0f;  vect8_sp_B[i].s5 = 3.0f;  vect8_sp_B[i].s6 = 3.0f;  vect8_sp_B[i].s7 = 3.0f;
 				}
 			} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				vect16_sp_A[i].s0 = 2.0f; vect16_sp_A[i].s1 = 2.0f; vect16_sp_A[i].s2 = 2.0f; vect16_sp_A[i].s3 = 2.0f; vect16_sp_A[i].s4 = 2.0f; vect16_sp_A[i].s5 = 2.0f; vect16_sp_A[i].s6 = 2.0f; vect16_sp_A[i].s7 = 2.0f;
 				vect16_sp_A[i].s8 = 2.0f; vect16_sp_A[i].s9 = 2.0f; vect16_sp_A[i].sa = 2.0f; vect16_sp_A[i].sb = 2.0f; vect16_sp_A[i].sc = 2.0f; vect16_sp_A[i].sd = 2.0f; vect16_sp_A[i].se = 2.0f; vect16_sp_A[i].sf = 2.0f;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					vect16_sp_B[i].s0 = 2.0f; vect16_sp_B[i].s1 = 2.0f; vect16_sp_B[i].s2 = 2.0f; vect16_sp_B[i].s3 = 2.0f; vect16_sp_B[i].s4 = 2.0f; vect16_sp_B[i].s5 = 2.0f; vect16_sp_B[i].s6 = 2.0f; vect16_sp_B[i].s7 = 2.0f;
-					vect16_sp_B[i].s8 = 2.0f; vect16_sp_B[i].s9 = 2.0f; vect16_sp_B[i].sa = 2.0f; vect16_sp_B[i].sb = 2.0f; vect16_sp_B[i].sc = 2.0f; vect16_sp_B[i].sd = 2.0f; vect16_sp_B[i].se = 2.0f; vect16_sp_B[i].sf = 2.0f;
+					vect16_sp_B[i].s0 = 3.0f; vect16_sp_B[i].s1 = 3.0f; vect16_sp_B[i].s2 = 3.0f; vect16_sp_B[i].s3 = 3.0f; vect16_sp_B[i].s4 = 3.0f; vect16_sp_B[i].s5 = 3.0f; vect16_sp_B[i].s6 = 3.0f; vect16_sp_B[i].s7 = 3.0f;
+					vect16_sp_B[i].s8 = 3.0f; vect16_sp_B[i].s9 = 3.0f; vect16_sp_B[i].sa = 3.0f; vect16_sp_B[i].sb = 3.0f; vect16_sp_B[i].sc = 3.0f; vect16_sp_B[i].sd = 3.0f; vect16_sp_B[i].se = 3.0f; vect16_sp_B[i].sf = 3.0f;
 				}
 			} else if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "dp") != NULL) {
 				scalar_dp_A[i] = 2.0;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					scalar_dp_B[i] = 2.0;
+					scalar_dp_B[i] = 3.0;
 				}
 			} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "dp") != NULL) {
 				vect2_dp_A[i].x = 2.0;   vect2_dp_A[i].y = 2.0;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					vect2_dp_B[i].x	= 2.0;   vect2_dp_B[i].y = 2.0;
+					vect2_dp_B[i].x	= 3.0;   vect2_dp_B[i].y = 3.0;
 				}
 			} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "dp") != NULL) {
 				vect4_dp_A[i].x	= 2.0;   vect4_dp_A[i].y = 2.0;   vect4_dp_A[i].w = 2.0;   vect4_dp_A[i].z = 2.0;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					vect4_dp_B[i].x	= 2.0;   vect4_dp_B[i].y = 2.0;   vect4_dp_B[i].w = 2.0;   vect4_dp_B[i].z = 2.0;
+					vect4_dp_B[i].x	= 3.0;   vect4_dp_B[i].y = 3.0;   vect4_dp_B[i].w = 3.0;   vect4_dp_B[i].z = 3.0;
 				}
 			} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "dp") != NULL) {
 				vect8_dp_A[i].s0 = 2.0;  vect8_dp_A[i].s1 = 2.0;  vect8_dp_A[i].s2 = 2.0;  vect8_dp_A[i].s3 = 2.0;  vect8_dp_A[i].s4 = 2.0;  vect8_dp_A[i].s5 = 2.0;  vect8_dp_A[i].s6 = 2.0;  vect8_dp_A[i].s7 = 2.0;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					vect8_dp_B[i].s0 = 2.0;  vect8_dp_B[i].s1 = 2.0;  vect8_dp_B[i].s2 = 2.0;  vect8_dp_B[i].s3 = 2.0;  vect8_dp_B[i].s4 = 2.0;  vect8_dp_B[i].s5 = 2.0;  vect8_dp_B[i].s6 = 2.0;  vect8_dp_B[i].s7 = 2.0;
+					vect8_dp_B[i].s0 = 3.0;  vect8_dp_B[i].s1 = 3.0;  vect8_dp_B[i].s2 = 3.0;  vect8_dp_B[i].s3 = 3.0;  vect8_dp_B[i].s4 = 3.0;  vect8_dp_B[i].s5 = 3.0;  vect8_dp_B[i].s6 = 3.0;  vect8_dp_B[i].s7 = 3.0;
 				}
 			} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "dp") != NULL) {
 				vect16_dp_A[i].s0 = 2.0; vect16_dp_A[i].s1 = 2.0; vect16_dp_A[i].s2 = 2.0; vect16_dp_A[i].s3 = 2.0; vect16_dp_A[i].s4 = 2.0; vect16_dp_A[i].s5 = 2.0; vect16_dp_A[i].s6 = 2.0; vect16_dp_A[i].s7 = 2.0;
 				vect16_dp_A[i].s8 = 2.0; vect16_dp_A[i].s9 = 2.0; vect16_dp_A[i].sa = 2.0; vect16_dp_A[i].sb = 2.0; vect16_dp_A[i].sc = 2.0; vect16_dp_A[i].sd = 2.0; vect16_dp_A[i].se = 2.0; vect16_dp_A[i].sf = 2.0;
 				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-					vect16_dp_B[i].s0 = 2.0; vect16_dp_B[i].s1 = 2.0; vect16_dp_B[i].s2 = 2.0; vect16_dp_B[i].s3 = 2.0; vect16_dp_B[i].s4 = 2.0; vect16_dp_B[i].s5 = 2.0; vect16_dp_B[i].s6 = 2.0; vect16_dp_B[i].s7 = 2.0;
-					vect16_dp_B[i].s8 = 2.0; vect16_dp_B[i].s9 = 2.0; vect16_dp_B[i].sa = 2.0; vect16_dp_B[i].sb = 2.0; vect16_dp_B[i].sc = 2.0; vect16_dp_B[i].sd = 2.0; vect16_dp_B[i].se = 2.0; vect16_dp_B[i].sf = 2.0;
+					vect16_dp_B[i].s0 = 3.0; vect16_dp_B[i].s1 = 3.0; vect16_dp_B[i].s2 = 3.0; vect16_dp_B[i].s3 = 3.0; vect16_dp_B[i].s4 = 3.0; vect16_dp_B[i].s5 = 3.0; vect16_dp_B[i].s6 = 3.0; vect16_dp_B[i].s7 = 3.0;
+					vect16_dp_B[i].s8 = 3.0; vect16_dp_B[i].s9 = 3.0; vect16_dp_B[i].sa = 3.0; vect16_dp_B[i].sb = 3.0; vect16_dp_B[i].sc = 3.0; vect16_dp_B[i].sd = 3.0; vect16_dp_B[i].se = 3.0; vect16_dp_B[i].sf = 3.0;
 				}
 			}
 		}
@@ -626,73 +648,73 @@ int main(int argc, char** argv, char **envp) {
 		
 
 		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(float), scalar_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__); 
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__); 
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(float), scalar_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_float2), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_float2), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_float2), vect2_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_float2), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_float2), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_float2), vect2_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_float4), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_float4), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_float4), vect4_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_float4), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_float4), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_float4), vect4_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_float8), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_float8), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_float8), vect8_sp_A, 0, NULL, NULL); 		clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_float8), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_float8), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_float8), vect8_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_float16), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_float16), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_float16), vect16_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_float16), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_float16), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_float16), vect16_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(double), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(double), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(double), scalar_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(double), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(double), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(double), scalar_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_double2), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_double2), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_double2), vect2_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_double2), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_double2), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_double2), vect2_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_double4), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_double4), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_double4), vect4_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_double4), NULL, &ocl_ret); 	clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_double4), NULL, &ocl_ret); 	clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_double4), vect4_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_double8), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_double8), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_double8), vect8_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_double8), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_double8), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_double8), vect8_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "dp") != NULL) {
-			a = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_double16), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_double16), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_double16), vect16_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
-				b = clCreateBuffer(context, CL_MEM_READ_WRITE, global*sizeof(cl_double16), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+				b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(cl_double16), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 				ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_double16), vect16_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
 			}
 		}
@@ -910,11 +932,118 @@ int main(int argc, char** argv, char **envp) {
 		else														printf(KRED "Option not supported.\n" KNRM);
 	}
 
-
-
-
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	if (validate) {
+		
+		// if not zero-copy, read results to host side
+	
+		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(float), scalar_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(float), scalar_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_float2), vect2_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_float2), vect2_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_float4), vect4_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_float4), vect4_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_float8), vect8_sp_A, 0, NULL, NULL); 		clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_float8), vect8_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_float16), vect16_sp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_float16), vect16_sp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "dp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(double), scalar_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(double), scalar_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "dp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_double2), vect2_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_double2), vect2_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "dp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_double4), vect4_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_double4), vect4_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "dp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_double8), vect8_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_double8), vect8_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "dp") != NULL) {
+			ocl_ret = clEnqueueReadBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(cl_double16), vect16_dp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+				ocl_ret = clEnqueueReadBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(cl_double16), vect16_dp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			}
+		}
+		
+		
+		
+		
+		
+		FILE *f_validate_A = fopen("validate_results_A.txt", "w");
+		FILE *f_validate_B = fopen("validate_results_B.txt", "w");
+		
+		for (int i=0; i<global; i++) {
+			
+			if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
+				fprintf(f_validate_A, "%f\n", scalar_sp_A[i]);
+				fprintf(f_validate_B, "%f\n", scalar_sp_B[i]);
+			} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
+				fprintf(f_validate_A, "%f\t%f\n", vect2_sp_A[i].x, vect2_sp_A[i].y);
+				fprintf(f_validate_B, "%f\t%f\n", vect2_sp_B[i].x, vect2_sp_B[i].y);
+			} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
+				fprintf(f_validate_A, "%f\t%f\t%f\t%f\n", vect4_sp_A[i].x, vect4_sp_A[i].y, vect4_sp_A[i].w, vect4_sp_A[i].z);
+				fprintf(f_validate_B, "%f\t%f\t%f\t%f\n", vect4_sp_B[i].x, vect4_sp_B[i].y, vect4_sp_B[i].w, vect4_sp_B[i].z);
+			} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
+				fprintf(f_validate_A, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect8_sp_A[i].s0, vect8_sp_A[i].s1, vect8_sp_A[i].s2, vect8_sp_A[i].s3,
+																			vect8_sp_A[i].s4, vect8_sp_A[i].s5, vect8_sp_A[i].s6, vect8_sp_A[i].s7);
+				fprintf(f_validate_B, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect8_sp_B[i].s0, vect8_sp_B[i].s1, vect8_sp_B[i].s2, vect8_sp_B[i].s3,
+																			vect8_sp_B[i].s4, vect8_sp_B[i].s5, vect8_sp_B[i].s6, vect8_sp_B[i].s7);
+			} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
+				fprintf(f_validate_A, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect16_sp_A[i].s0, vect16_sp_A[i].s1, vect16_sp_A[i].s2, vect16_sp_A[i].s3,
+																											vect16_sp_A[i].s4, vect16_sp_A[i].s5, vect16_sp_A[i].s6, vect16_sp_A[i].s7,
+																											vect16_sp_A[i].s8, vect16_sp_A[i].s9, vect16_sp_A[i].sa, vect16_sp_A[i].sb, 
+																											vect16_sp_A[i].sc, vect16_sp_A[i].sd, vect16_sp_A[i].se, vect16_sp_A[i].sf);
+				fprintf(f_validate_B, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect16_sp_B[i].s0, vect16_sp_B[i].s1, vect16_sp_B[i].s2, vect16_sp_B[i].s3,
+																											vect16_sp_B[i].s4, vect16_sp_B[i].s5, vect16_sp_B[i].s6, vect16_sp_B[i].s7,
+																											vect16_sp_B[i].s8, vect16_sp_B[i].s9, vect16_sp_B[i].sa, vect16_sp_B[i].sb, 
+																											vect16_sp_B[i].sc, vect16_sp_B[i].sd, vect16_sp_B[i].se, vect16_sp_B[i].sf);
+			}
+			
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	close(drm_fd);
 	
 
@@ -926,35 +1055,35 @@ int main(int argc, char** argv, char **envp) {
 	clReleaseMemObject(a);
 	clReleaseMemObject(b);
 	if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
-		free(scalar_sp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(scalar_sp_B);
+		FREE(scalar_sp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(scalar_sp_B);
 	} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
-		free(vect2_sp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(vect2_sp_B);
+		FREE(vect2_sp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect2_sp_B);
 	} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
-		free(vect4_sp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(vect4_sp_B);
+		FREE(vect4_sp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect4_sp_B);
 	} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
-		free(vect8_sp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(vect8_sp_B);
+		FREE(vect8_sp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect8_sp_B);
 	} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
-		free(vect16_sp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(vect16_sp_B);
+		FREE(vect16_sp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect16_sp_B);
 	} else if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "dp") != NULL) {
-		free(scalar_dp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(scalar_dp_B);
+		FREE(scalar_dp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(scalar_dp_B);
 	} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "dp") != NULL) {
-		free(vect2_dp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(vect2_dp_B);
+		FREE(vect2_dp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect2_dp_B);
 	} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "dp") != NULL) {
-		free(vect4_dp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(vect4_dp_B);
+		FREE(vect4_dp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect4_dp_B);
 	} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "dp") != NULL) {
-		free(vect8_dp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(vect8_dp_B);
+		FREE(vect8_dp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect8_dp_B);
 	} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "dp") != NULL) {
-		free(vect16_dp_A);
-		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') free(vect16_dp_B);
+		FREE(vect16_dp_A);
+		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect16_dp_B);
 	}
 	
 	//if (app_name_args != NULL) free(app_name_args);

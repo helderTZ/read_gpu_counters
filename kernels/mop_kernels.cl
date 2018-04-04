@@ -155,6 +155,71 @@
 }
 
 
+
+ /******************************************************
+  * Scalar single-precision with loop with shm kernels
+  * ***************************************************/
+ 
+ __kernel void scalar_sp_load_store_shm_iter_1024_kernel(__global float *src, __global float *dst) {
+	int i = get_global_id(0);
+	int j = get_local_id(0);
+	//int k = get_group_id(0);
+	int l;
+	__local float temp[10];
+	temp[j] = src[i];
+	for(l = 0; l < 1024; l++)
+		dst[i] = temp[i];
+}
+
+ /******************************************************
+  * Vector single-precision with loop with shm kernels
+  * ***************************************************/
+ 
+ __kernel void vect2_sp_load_store_iter_1024_kernel(__global float2 *src, __global float2 *dst) {
+	int i = get_global_id(0);
+	int j = get_local_id(0);
+	//int k = get_group_id(0);
+	int l;
+	__local float2 temp[10];
+	temp[j] = src[i];
+	for(l = 0; l < 1024; l++)
+		dst[i] = temp[i];
+}
+
+ __kernel void vect4_sp_load_store_iter_1024_kernel(__global float4 *src, __global float4 *dst) {
+	int i = get_global_id(0);
+	int j = get_local_id(0);
+	//int k = get_group_id(0);
+	int l;
+	__local float4 temp[10];
+	temp[j] = src[i];
+	for(l = 0; l < 1024; l++)
+		dst[i] = temp[i];
+}
+
+ __kernel void vect8_sp_load_store_iter_1024_kernel(__global float8 *src, __global float8 *dst) {
+	int i = get_global_id(0);
+	int j = get_local_id(0);
+	//int k = get_group_id(0);
+	int l;
+	__local float8 temp[10];
+	temp[j] = src[i];
+	for(l = 0; l < 1024; l++)
+		dst[i] = temp[i];
+}
+
+ __kernel void vect16_sp_load_store_iter_1024_kernel(__global float16 *src, __global float16 *dst) {
+	int i = get_global_id(0);
+	int j = get_local_id(0);
+	//int k = get_group_id(0);
+	int l;
+	__local float16 temp[10];
+	temp[j] = src[i];
+	for(l = 0; l < 1024; l++)
+		dst[i] = temp[i];
+}
+
+
  /******************************************************
   * Scalar double-precision with loop kernels
   * ***************************************************/

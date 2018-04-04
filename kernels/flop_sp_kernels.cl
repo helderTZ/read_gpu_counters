@@ -2434,7 +2434,7 @@ __kernel void scalar_sp_add_priv_iter_1024_kernel(__global float *a) {
 	a[i] = temp;
 }
 
-__kernel void scalar_sp_sub_priv_iter_8192_kernel(__global float *a) {
+__kernel void scalar_sp_sub_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = 2.0f;
@@ -2443,7 +2443,7 @@ __kernel void scalar_sp_sub_priv_iter_8192_kernel(__global float *a) {
 	a[i] = temp;
 }
 
-__kernel void scalar_sp_mul_priv_iter_8192_kernel(__global float *a) {
+__kernel void scalar_sp_mul_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = 2.0f;
@@ -2452,7 +2452,7 @@ __kernel void scalar_sp_mul_priv_iter_8192_kernel(__global float *a) {
 	a[i] = temp;
 }
 
-__kernel void scalar_sp_div_priv_iter_8192_kernel(__global float *a) {
+__kernel void scalar_sp_div_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = 2.0f;
@@ -2461,7 +2461,7 @@ __kernel void scalar_sp_div_priv_iter_8192_kernel(__global float *a) {
 	a[i] = temp;
 }
 
-__kernel void scalar_sp_mad_priv_iter_8192_kernel(__global float *a) {
+__kernel void scalar_sp_mad_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = 2.0f;
