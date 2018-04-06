@@ -90,7 +90,7 @@ if [[ $2 == "mop" ]]
 then
 	
 	reps=$1
-	for kernel in "scalar_sp_load_store_iter_1024_kernel" "vect2_sp_load_store_iter_1024_kernel" "vect4_sp_load_store_iter_1024_kernel" "vect8_sp_load_store_iter_1024_kernel" "vect16_sp_load_store_iter_1024_kernel"
+	for kernel in "scalar_sp_load_store_shm_iter_1024_kernel_exp" "vect2_sp_load_store_shm_iter_1024_kernel_exp" "vect4_sp_load_store_shm_iter_1024_kernel_exp" "vect8_sp_load_store_shm_iter_1024_kernel_exp" "vect16_sp_load_store_shm_iter_1024_kernel_exp"
 	#"scalar_sp_load_store_kernel" "vect2_sp_load_store_kernel" "vect4_sp_load_store_kernel" "vect8_sp_load_store_kernel" "vect16_sp_load_store_kernel"
 	#"scalar_dp_load_store_kernel" "vect2_dp_load_store_kernel" "vect4_dp_load_store_kernel" "vect8_dp_load_store_kernel" "vect16_dp_load_store_kernel"
 	#"scalar_sp_load_store_iter_1024_kernel" "vect2_sp_load_store_iter_1024_kernel" "vect4_sp_load_store_iter_1024_kernel" "vect8_sp_load_store_iter_1024_kernel" "vect16_sp_load_store_iter_1024_kernel"
@@ -108,6 +108,8 @@ then
 			do
 				echo "    # of blocks: $j threads per block: 256"
 				nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $j --tpb 256 > /dev/null 2>> errors.log
+				echo "    # of blocks: $j threads per block: 32"
+				nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $j --tpb 32 > /dev/null 2>> errors.log
 			done
 			
 			if [ $exp -gt 5 ]
@@ -116,6 +118,8 @@ then
 				do
 					echo "    # of blocks: $(($base**$j)) threads per block: 256"
 					nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $(($base**$j)) --tpb 256 > /dev/null 2>> errors.log
+					echo "    # of blocks: $(($base**$j)) threads per block: 32"
+					nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $(($base**$j)) --tpb 32 > /dev/null 2>> errors.log
 				done
 			fi
 		done

@@ -44,7 +44,10 @@ def create_summary(kernel, block_exp):
 
 	if block_exp == 0: block_exp = 12
 	blocks = [1 for i in range(9)] + [i for i in range(2,33)] + [2**i for i in range(6,int(block_exp))]
-	tpb = [2**i for i in range(0,9)] + [256 for i in range(len(blocks)-10+1)]
+	tpb = [2**i for i in range(0,9)] + [256 for i in range(len(blocks)-10+1)] + [32 for i in range(len(blocks)-10+1-32)]
+	
+	#print(blocks)
+	#print(tpb)
 
 
 	for b,t in zip(blocks, tpb):

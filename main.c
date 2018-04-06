@@ -42,7 +42,7 @@
 
 char kernel_choice[50] = "";
 int number_available_flop_kernels = 350;
-int number_available_mop_kernels = 23;
+int number_available_mop_kernels = 27;
 int number_available_power_kernels = 50;
 int number_available_shared_mem_kernels = 15;
 char *available_flop_kernels[] = {
@@ -122,7 +122,7 @@ char *available_mop_kernels[] = {
 	"scalar_dp_load_store_kernel", "vect2_dp_load_store_kernel", "vect4_dp_load_store_kernel", "vect8_dp_load_store_kernel", "vect16_dp_load_store_kernel",
 	"scalar_sp_load_store_iter_1024_kernel", "vect2_sp_load_store_iter_1024_kernel", "vect4_sp_load_store_iter_1024_kernel", "vect8_sp_load_store_iter_1024_kernel", "vect16_sp_load_store_iter_1024_kernel",
 	"scalar_dp_load_store_iter_1024_kernel", "vect2_dp_load_store_iter_1024_kernel", "vect4_dp_load_store_iter_1024_kernel", "vect8_dp_load_store_iter_1024_kernel", "vect16_dp_load_store_iter_1024_kernel",
-	"scalar_sp_load_store_shm_iter_1024_kernel", "vect2_sp_load_store_shm_iter_1024_kernel", "vect4_sp_load_store_shm_iter_1024_kernel", "vect8_sp_load_store_shm_iter_1024_kernel", "vect16_sp_load_store_shm_iter_1024_kernel"
+	"scalar_sp_load_store_shm_iter_1024_kernel_exp", "vect2_sp_load_store_shm_iter_1024_kernel_exp", "vect4_sp_load_store_shm_iter_1024_kernel_exp", "vect8_sp_load_store_shm_iter_1024_kernel_exp", "vect16_sp_load_store_shm_iter_1024_kernel_exp"
 	// experiments
 	"scalar_sp_load_kernel", "scalar_sp_load_iter_1024_kernel", "scalar_sp_load_iter_1024_global2priv_kernel",
 };
