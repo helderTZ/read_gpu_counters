@@ -12,7 +12,7 @@ set style line 2 lc rgb '#dd181f' lt 1 lw 2 pt 5 ps 1.5   # --- red
 
 
 
-set terminal   svg enhanced
+set terminal   svg noenhanced
 set output "compare_timers.svg"
 set title "Timer Comparison"
 set ylabel "Seconds [s]" 
