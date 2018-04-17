@@ -13,7 +13,7 @@ set style line 2 lc rgb '#dd181f' lt 1 lw 2 pt 5 ps 1.5   # --- red
 
 
 set terminal   svg noenhanced
-set output "compare_timers.svg"
+set output "plots/compare_timers.svg"
 set title "Timer Comparison"
 set ylabel "Seconds [s]" 
 set xlabel "Number of threads"
@@ -25,6 +25,6 @@ set key bottom
 show grid
 
 #set yrange [0.0001:128]
-plot 'scalar_sp_add_power_kernel_timers.csv' using 3:4 title "OCL\_TIMER" with line lt -1 dashtype 1, \
-	 'scalar_sp_add_power_kernel_timers.csv' using 3:5 title "TIME\_STAMP" with line lt -1 dashtype 2, \
-	 'scalar_sp_add_power_kernel_timers.csv' using 3:6 title "GPU\_TICKS" with line lt -1 dashtype 3
+plot 'data/scalar_sp_add_power_kernel_timers.csv' using 3:4 title "OCL\_TIMER" with line lt -1 dashtype 1, \
+	 'data/scalar_sp_add_power_kernel_timers.csv' using 3:5 title "TIME\_STAMP" with line lt -1 dashtype 2, \
+	 'data/scalar_sp_add_power_kernel_timers.csv' using 3:6 title "GPU\_TICKS" with line lt -1 dashtype 3

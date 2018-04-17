@@ -1,5 +1,6 @@
 #| /bin/bash
 
+cd plots
 
 #rsvg-convert -f pdf -o compare_operations.pdf compare_operations_scalar_sp_loop.svg 	\
 #												compare_operations_vect2_sp_loop.svg	\

@@ -1,5 +1,7 @@
 #! /bin/bash
 
+cd data
+
 sed -i 's/,/\./g' *.csv
 
 # create *_dp_* files

@@ -20,7 +20,7 @@ set style line 2 lc rgb '#dd181f' lt 1 lw 2 pt 5 ps 1.5   # --- red
 
 
 set terminal svg enhanced
-set output "compare_power_add.svg"
+set output "plots/compare_power_add.svg"
 set title "Power Comparison - SP Add"
 set ylabel "Power [W]" 
 set xlabel "Number of threads"
@@ -28,11 +28,11 @@ set key bottom
 show grid
 
 set yrange [0:20]
-plot 'scalar_sp_add_power_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1, \
-	 'vect2_sp_add_power_kernel.csv' using 3:4 title "vect2" with line lt -1 dashtype 2, \
-	 'vect4_sp_add_power_kernel.csv' using 3:4 title "vect4" with line lt -1 dashtype 3, \
-	 'vect8_sp_add_power_kernel.csv' using 3:4 title "vect8" with line lt -1 dashtype 4, \
-	 'vect16_sp_add_power_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 5
+plot './data/scalar_sp_add_power_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1, \
+	 './data/vect2_sp_add_power_kernel.csv' using 3:4 title "vect2" with line lt -1 dashtype 2, \
+	 './data/vect4_sp_add_power_kernel.csv' using 3:4 title "vect4" with line lt -1 dashtype 3, \
+	 './data/vect8_sp_add_power_kernel.csv' using 3:4 title "vect8" with line lt -1 dashtype 4, \
+	 './data/vect16_sp_add_power_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 5
 
 
 #set terminal   svg enhanced
