@@ -2428,7 +2428,7 @@ __kernel void vect16_sp_mad_priv_kernel() {
 __kernel void scalar_sp_add_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
-	float temp = 2.0f;
+	float temp = a[i];
 	for(j = 0; j < 1024; j++)
 		temp = temp + 2.0f;
 	a[i] = temp;
@@ -2437,8 +2437,8 @@ __kernel void scalar_sp_add_priv_iter_1024_kernel(__global float *a) {
 __kernel void scalar_sp_sub_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
-	float temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp - 2.0f;
 	a[i] = temp;
 }
@@ -2446,8 +2446,8 @@ __kernel void scalar_sp_sub_priv_iter_1024_kernel(__global float *a) {
 __kernel void scalar_sp_mul_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
-	float temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f;
 	a[i] = temp;
 }
@@ -2455,8 +2455,8 @@ __kernel void scalar_sp_mul_priv_iter_1024_kernel(__global float *a) {
 __kernel void scalar_sp_div_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
-	float temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp / 2.0f;
 	a[i] = temp;
 }
@@ -2464,8 +2464,8 @@ __kernel void scalar_sp_div_priv_iter_1024_kernel(__global float *a) {
 __kernel void scalar_sp_mad_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
-	float temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f + 2.0f;
 	a[i] = temp;
 }
@@ -2478,7 +2478,7 @@ __kernel void scalar_sp_mad_priv_iter_1024_kernel(__global float *a) {
 __kernel void vect2_sp_add_priv_iter_1024_kernel(__global float2 *a) {
 	int i = get_global_id(0);
 	int j;
-	float2 temp = 2.0f;
+	float2 temp = a[i];
 	for(j = 0; j < 1024; j++)
 		temp = temp + 2.0f;
 	a[i] = temp;
@@ -2487,8 +2487,8 @@ __kernel void vect2_sp_add_priv_iter_1024_kernel(__global float2 *a) {
 __kernel void vect2_sp_sub_priv_iter_1024_kernel(__global float2 *a) {
 	int i = get_global_id(0);
 	int j;
-	float2 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float2 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp - 2.0f;
 	a[i] = temp;
 }
@@ -2496,8 +2496,8 @@ __kernel void vect2_sp_sub_priv_iter_1024_kernel(__global float2 *a) {
 __kernel void vect2_sp_mul_priv_iter_1024_kernel(__global float2 *a) {
 	int i = get_global_id(0);
 	int j;
-	float2 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float2 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f;
 	a[i] = temp;
 }
@@ -2505,8 +2505,8 @@ __kernel void vect2_sp_mul_priv_iter_1024_kernel(__global float2 *a) {
 __kernel void vect2_sp_div_priv_iter_1024_kernel(__global float2 *a) {
 	int i = get_global_id(0);
 	int j;
-	float2 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float2 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp / 2.0f;
 	a[i] = temp;
 }
@@ -2514,8 +2514,8 @@ __kernel void vect2_sp_div_priv_iter_1024_kernel(__global float2 *a) {
 __kernel void vect2_sp_mad_priv_iter_1024_kernel(__global float2 *a) {
 	int i = get_global_id(0);
 	int j;
-	float2 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float2 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f + 2.0f;
 	a[i] = temp;
 }
@@ -2524,7 +2524,7 @@ __kernel void vect2_sp_mad_priv_iter_1024_kernel(__global float2 *a) {
 __kernel void vect4_sp_add_priv_iter_1024_kernel(__global float4 *a) {
 	int i = get_global_id(0);
 	int j;
-	float4 temp = 2.0f;
+	float4 temp = a[i];
 	for(j = 0; j < 1024; j++)
 		temp = temp + 2.0f;
 	a[i] = temp;
@@ -2533,8 +2533,8 @@ __kernel void vect4_sp_add_priv_iter_1024_kernel(__global float4 *a) {
 __kernel void vect4_sp_sub_priv_iter_1024_kernel(__global float4 *a) {
 	int i = get_global_id(0);
 	int j;
-	float4 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float4 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp - 2.0f;
 	a[i] = temp;
 }
@@ -2542,8 +2542,8 @@ __kernel void vect4_sp_sub_priv_iter_1024_kernel(__global float4 *a) {
 __kernel void vect4_sp_mul_priv_iter_1024_kernel(__global float4 *a) {
 	int i = get_global_id(0);
 	int j;
-	float4 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float4 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f;
 	a[i] = temp;
 }
@@ -2551,8 +2551,8 @@ __kernel void vect4_sp_mul_priv_iter_1024_kernel(__global float4 *a) {
 __kernel void vect4_sp_div_priv_iter_1024_kernel(__global float4 *a) {
 	int i = get_global_id(0);
 	int j;
-	float4 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float4 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp / 2.0f;
 	a[i] = temp;
 }
@@ -2560,8 +2560,8 @@ __kernel void vect4_sp_div_priv_iter_1024_kernel(__global float4 *a) {
 __kernel void vect4_sp_mad_priv_iter_1024_kernel(__global float4 *a) {
 	int i = get_global_id(0);
 	int j;
-	float4 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float4 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f + 2.0f;
 	a[i] = temp;
 }
@@ -2571,7 +2571,7 @@ __kernel void vect4_sp_mad_priv_iter_1024_kernel(__global float4 *a) {
 __kernel void vect8_sp_add_priv_iter_1024_kernel(__global float8 *a) {
 	int i = get_global_id(0);
 	int j;
-	float8 temp = 2.0f;
+	float8 temp = a[i];
 	for(j = 0; j < 1024; j++)
 		temp = temp + 2.0f;
 	a[i] = temp;
@@ -2580,8 +2580,8 @@ __kernel void vect8_sp_add_priv_iter_1024_kernel(__global float8 *a) {
 __kernel void vect8_sp_sub_priv_iter_1024_kernel(__global float8 *a) {
 	int i = get_global_id(0);
 	int j;
-	float8 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float8 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp - 2.0f;
 	a[i] = temp;
 }
@@ -2589,8 +2589,8 @@ __kernel void vect8_sp_sub_priv_iter_1024_kernel(__global float8 *a) {
 __kernel void vect8_sp_mul_priv_iter_1024_kernel(__global float8 *a) {
 	int i = get_global_id(0);
 	int j;
-	float8 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float8 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f;
 	a[i] = temp;
 }
@@ -2598,8 +2598,8 @@ __kernel void vect8_sp_mul_priv_iter_1024_kernel(__global float8 *a) {
 __kernel void vect8_sp_div_priv_iter_1024_kernel(__global float8 *a) {
 	int i = get_global_id(0);
 	int j;
-	float8 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float8 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp / 2.0f;
 	a[i] = temp;
 }
@@ -2607,8 +2607,8 @@ __kernel void vect8_sp_div_priv_iter_1024_kernel(__global float8 *a) {
 __kernel void vect8_sp_mad_priv_iter_1024_kernel(__global float8 *a) {
 	int i = get_global_id(0);
 	int j;
-	float8 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float8 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f + 2.0f;
 	a[i] = temp;
 }
@@ -2618,7 +2618,7 @@ __kernel void vect8_sp_mad_priv_iter_1024_kernel(__global float8 *a) {
 __kernel void vect16_sp_add_priv_iter_1024_kernel(__global float16 *a) {
 	int i = get_global_id(0);
 	int j;
-	float16 temp = 2.0f;
+	float16 temp = a[i];
 	for(j = 0; j < 1024; j++)
 		temp = temp + 2.0f;
 	a[i] = temp;
@@ -2627,8 +2627,8 @@ __kernel void vect16_sp_add_priv_iter_1024_kernel(__global float16 *a) {
 __kernel void vect16_sp_sub_priv_iter_1024_kernel(__global float16 *a) {
 	int i = get_global_id(0);
 	int j;
-	float16 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float16 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp - 2.0f;
 	a[i] = temp;
 }
@@ -2636,8 +2636,8 @@ __kernel void vect16_sp_sub_priv_iter_1024_kernel(__global float16 *a) {
 __kernel void vect16_sp_mul_priv_iter_1024_kernel(__global float16 *a) {
 	int i = get_global_id(0);
 	int j;
-	float16 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float16 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f;
 	a[i] = temp;
 }
@@ -2645,8 +2645,8 @@ __kernel void vect16_sp_mul_priv_iter_1024_kernel(__global float16 *a) {
 __kernel void vect16_sp_div_priv_iter_1024_kernel(__global float16 *a) {
 	int i = get_global_id(0);
 	int j;
-	float16 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float16 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp / 2.0f;
 	a[i] = temp;
 }
@@ -2654,8 +2654,8 @@ __kernel void vect16_sp_div_priv_iter_1024_kernel(__global float16 *a) {
 __kernel void vect16_sp_mad_priv_iter_1024_kernel(__global float16 *a) {
 	int i = get_global_id(0);
 	int j;
-	float16 temp = 2.0f;
-	for(i = 0; i < 1024; i++)
+	float16 temp = a[i];
+	for(j = 0; j < 1024; j++)
 		temp = temp * 2.0f + 2.0f;
 	a[i] = temp;
 }

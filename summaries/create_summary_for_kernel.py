@@ -41,16 +41,28 @@ def create_summary(kernel, block_exp):
 	pp0_energy_median = []
 	dram_energy_median = []
 	gpu_energy_median = []
-
+	
+	# 32+256 tpb mode
+	#if block_exp == 0: block_exp = 12
+	#blocks = [1 for i in range(9)] + [i for i in range(2,33)] + [2**i for i in range(6,int(block_exp))]
+	#tpb = [2**i for i in range(0,9)]  + [32 for i in range(len(blocks)-10+1)] + [256 for i in range(len(blocks)-10+1)]
+	#blocks = blocks + [i for i in range(2,33)] + [2**i for i in range(6,int(block_exp))]
+	
+	# 256 tpb mode
 	if block_exp == 0: block_exp = 12
 	blocks = [1 for i in range(9)] + [i for i in range(2,33)] + [2**i for i in range(6,int(block_exp))]
-	tpb = [2**i for i in range(0,9)] + [256 for i in range(len(blocks)-10+1)] + [32 for i in range(len(blocks)-10+1-32)]
+	tpb = [2**i for i in range(0,9)]  + [256 for i in range(len(blocks)-10+1)]
 	
 	#print(blocks)
 	#print(tpb)
+	
+	#sys.exit()
 
 
 	for b,t in zip(blocks, tpb):
+		
+		#print(b,t)
+		
 		filename = 'results_rpc_' + kernel + '_' + str(b) + '_blocks_' + str(t) + '_tpb.csv'
 		with open('../results/' + filename, 'r') as f:
 			

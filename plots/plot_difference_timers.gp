@@ -14,9 +14,9 @@ set style line 2 lc rgb '#dd181f' lt 1 lw 2 pt 5 ps 1.5   # --- red
 
 set terminal   svg noenhanced
 set output "plots/compare_timers.svg"
-set title "Timer Comparison"
-set ylabel "Seconds [s]" 
-set xlabel "Number of threads"
+set title "Timer Comparison" font "Helvetica,24"
+set ylabel "Seconds [s]" font "Helvetica,20"
+set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
 #set logscale xy 2
 #set format x '2^{%L}'

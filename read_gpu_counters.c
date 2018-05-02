@@ -212,7 +212,6 @@ uint32_t counter_format = 5;	// 0b101
 
 // ======================================================================================================================== //
 // ================================================ COUNTER CONFIGURATION ================================================= //
-// ====================================================== deprecated ====================================================== //
 // ======================================================================================================================== //
 
 /*
@@ -1714,7 +1713,13 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 	long long int ocl_nanoseconds_median = 0;
 	long long int *papi_values_median = (long long int *) calloc(numEvents, sizeof(long long int));
 	
-
+	
+	clock_t clock_start = 0;
+	clock_t clock_end = 0;
+	clock_t clock_delta = 0;
+	
+	struct timespec res, tv1, tv2;
+	clock_getres(CLOCK_REALTIME, &res);
 	
 	
 	if (!power_smoothing) {
@@ -1750,12 +1755,15 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 			exit(1);
 		}
 		
+		clock_gettime(CLOCK_REALTIME, &tv1);
+		clock_start = clock();
 		cpu_ticks0 = read_tsc_start();
 
 		// do work
 		if (!external_app) {
 			ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, &event); clCheckError(ret, __LINE__);
-			clFinish(command_queue); clCheckError(ret, __LINE__);
+			clFinish(command_queue);
+			clCheckError(ret, __LINE__);
 		}
 		else {
 			/** Don't know why this code doesn't work but system() does */
@@ -1800,6 +1808,8 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 			
 
 		cpu_ticks1 = read_tsc_end();
+		clock_end = clock();		
+		clock_gettime(CLOCK_REALTIME, &tv2);
 		
 		retval = PAPI_stop(EventSet, papi_values);
 		if (retval != PAPI_OK) {
@@ -1844,6 +1854,8 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 		uint32_t gpu_ticks0 = report0_32[3];
 		uint32_t gpu_ticks1 = report1_32[3];
 		uint32_t gpu_ticks_delta = gpu_ticks1 - gpu_ticks0;
+		
+		clock_delta = clock_end - clock_start;
 		
 		
 		// print
@@ -2176,6 +2188,13 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 		
 		if (overflow_rdtsc) printf("Possible RDTSC overflow\n");
 		if (overflow_gputicks) printf("Possible GPU_TICKS overflow\n");
+		
+		printf("\n\n");
+		printf("Clock delta: %ld\n", clock_delta);
+		printf("Clock: %f [s]\n", clock_delta / CLOCKS_PER_SEC);
+		printf("clock_gettime res:   %f [ns]\n", res.tv_sec * 1.0e9 + res.tv_nsec);
+		printf("clock_gettime delta: %f [ns]\n", (double) (tv2.tv_sec - tv1.tv_sec) * 1.0e9 + (double) (tv2.tv_nsec - tv1.tv_nsec) );
+		printf("clock_gettime delta: %f [s]\n",  ( (double) (tv2.tv_sec - tv1.tv_sec) * 1.0e9 + (double) (tv2.tv_nsec - tv1.tv_nsec) ) /1.0e9 );
 	}
 	
 	else {

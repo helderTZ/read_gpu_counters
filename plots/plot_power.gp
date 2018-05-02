@@ -21,9 +21,9 @@ set style line 2 lc rgb '#dd181f' lt 1 lw 2 pt 5 ps 1.5   # --- red
 
 set terminal svg enhanced
 set output "plots/compare_power_add.svg"
-set title "Power Comparison - SP Add"
-set ylabel "Power [W]" 
-set xlabel "Number of threads"
+set title "Power Comparison - SP Add" font "Helvetica,24"
+set ylabel "Power [W]" font "Helvetica,20"
+set xlabel "Number of threads" font "Helvetica,24"
 set key bottom
 show grid
 

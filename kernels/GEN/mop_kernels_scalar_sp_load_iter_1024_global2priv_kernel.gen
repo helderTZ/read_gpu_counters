@@ -1,5 +1,5 @@
 LABEL0
-         mov      (1|M0)         null<1>:ud    0x27E541A9:ud                   
+         mov      (1|M0)         null<1>:ud    0xE585958C:ud                   
 (W)      mov      (8|M0)         r2.0<1>:ud    r0.0<1;1,0>:ud                  
 (W)      or       (1|M0)         cr0.0<1>:ud   cr0.0<0;1,0>:ud   0x4C0:uw         {Switch}
 (W)      mov      (8|M0)         r127.0<1>:d   r2.0<8;8,1>:d                    {Compacted}

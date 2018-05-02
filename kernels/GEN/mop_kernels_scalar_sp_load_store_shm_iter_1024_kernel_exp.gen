@@ -1,0 +1,38 @@
+LABEL0
+         mov      (1|M0)         null<1>:ud    0xA78FD7DE:ud                   
+(W)      mov      (8|M0)         r3.0<1>:ud    r0.0<1;1,0>:ud                  
+(W)      or       (1|M0)         cr0.0<1>:ud   cr0.0<0;1,0>:ud   0x4C0:uw         {Switch}
+(W)      mul      (1|M0)         r4.0<1>:d     r8.4<0;1,0>:d     r3.1<0;1,0>:d   
+         shl      (16|M0)        r23.0<1>:d    r1.0<8;8,1>:uw    2:w             
+         shl      (16|M16)       r25.0<1>:d    r2.0<8;8,1>:uw    2:w             
+(W)      mov      (1|M0)         r4.1<1>:d     0:w                             
+         add      (16|M0)        r5.0<1>:d     r1.0<8;8,1>:uw    r4.0<0;1,0>:d   
+         add      (16|M16)       r9.0<1>:d     r2.0<8;8,1>:uw    r4.0<0;1,0>:d   
+         add      (16|M0)        r5.0<1>:d     r5.0<8;8,1>:d     r7.0<0;1,0>:d    {Compacted}
+         add      (16|M16)       r9.0<1>:d     r9.0<8;8,1>:d     r7.0<0;1,0>:d   
+         shl      (8|M0)         r35.0<1>:q    r5.0<8;8,1>:d     2:w             
+         shl      (8|M8)         r37.0<1>:q    r6.0<8;8,1>:d     2:w             
+         shl      (8|M16)        r39.0<1>:q    r9.0<8;8,1>:d     2:w             
+         shl      (8|M24)        r41.0<1>:q    r10.0<8;8,1>:d    2:w             
+         add      (8|M0)         r11.0<1>:q    r8.0<0;1,0>:q     r35.0<4;4,1>:q  
+         add      (8|M8)         r13.0<1>:q    r8.0<0;1,0>:q     r37.0<4;4,1>:q  
+         add      (8|M16)        r15.0<1>:q    r8.0<0;1,0>:q     r39.0<4;4,1>:q  
+         add      (8|M24)        r17.0<1>:q    r8.0<0;1,0>:q     r41.0<4;4,1>:q  
+         add      (8|M0)         r27.0<1>:q    r8.1<0;1,0>:q     r35.0<4;4,1>:q  
+         add      (8|M8)         r29.0<1>:q    r8.1<0;1,0>:q     r37.0<4;4,1>:q  
+         add      (8|M16)        r31.0<1>:q    r8.1<0;1,0>:q     r39.0<4;4,1>:q  
+         add      (8|M24)        r33.0<1>:q    r8.1<0;1,0>:q     r41.0<4;4,1>:q  
+         send     (16|M0)        r19:w         r11:uq            0xC       0x82411FF //  hdc.dc1  wr:4, rd:2, fc: 0x411ff
+         send     (16|M16)       r21:w         r15:uq            0xC       0x82411FF //  hdc.dc1  wr:4, rd:2, fc: 0x411ff
+         sends    (16|M0)        null:w        r23               r19               0x8C      0x4025EFE //  hdc.dc1  wr:2+2, rd:0, fc: 0x25efe
+         sends    (16|M16)       null:w        r25               r21               0x8C      0x4025EFE //  hdc.dc1  wr:2+2, rd:0, fc: 0x25efe
+LABEL424
+(W)      add      (1|M0)         r4.1<1>:d     r4.1<0;1,0>:d     16:w            
+(W)      cmp      (16|M0)  [(lt)f0.0]  null<1>:d     r4.1<0;1,0>:d     1024:w          
+(W)      cmp      (16|M16) [(lt)f0.0]  null<1>:d     r4.1<0;1,0>:d     1024:w          
+(W&f0.0) jmpi     (1|M0)                     LABEL424:d                       {AccWrEn}
+LABEL488
+         sends    (16|M0)        null:w        r27               r19               0x8C      0x80691FF //  hdc.dc1  wr:4+2, rd:0, fc: 0x691ff
+         sends    (16|M16)       null:w        r31               r21               0x8C      0x80691FF //  hdc.dc1  wr:4+2, rd:0, fc: 0x691ff
+(W)      mov      (8|M0)         r127.0<1>:d   r3.0<8;8,1>:d                    {Compacted}
+         send     (8|M0)         null:ud       r127:ud           0x4D00027  0x2000010 {EOT} //  spawner  wr:1, rd:0, fc: 0x10

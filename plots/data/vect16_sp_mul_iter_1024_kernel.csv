@@ -1,1 +1,1 @@
-#block size	threads per block	Total threads	IPC/EU GEN
+#block size	threads per block	Total threads	FLOP/cy (using C instructions)

@@ -24,7 +24,9 @@
 #define TOTAL_THREADS (256*128*256) 
 
 
-
+#define CACHELINE_FLOAT 16384
+#define MULTIPLIER 100
+#define STD_SIZE_PTR_CHASE (CACHELINE_FLOAT*MULTIPLIER)
 
 
 //#define USE_ZERO_COPY
@@ -45,6 +47,8 @@ int number_available_flop_kernels = 350;
 int number_available_mop_kernels = 27;
 int number_available_power_kernels = 50;
 int number_available_shared_mem_kernels = 15;
+int number_extra_kernels = 1;
+
 char *available_flop_kernels[] = {
 	"scalar_sp_add_kernel", "scalar_sp_sub_kernel", "scalar_sp_mul_kernel", "scalar_sp_div_kernel", "scalar_sp_mad_kernel", 
 	"vect2_sp_add_kernel",  "vect2_sp_sub_kernel",  "vect2_sp_mul_kernel",  "vect2_sp_div_kernel",  "vect2_sp_mad_kernel", 
@@ -146,6 +150,10 @@ char *available_shared_mem_kernels[] = {
 	"scalar_sp_load_store_shm_iter_81920_kernel", "vect2_sp_load_store_shm_iter_81920_kernel", "vect4_sp_load_store_shm_iter_81920_kernel", "vect8_sp_load_store_shm_iter_81920_kernel", "vect16_sp_load_store_shm_iter_81920_kernel",
 };
 
+char *extra_kernels[] = {
+	"pointer_chasing_kernel"
+};
+
 /* dumpBinaries
  * dumps kernel binaries to file
  * creates a file for each device the program was compiled for
@@ -229,6 +237,8 @@ int main(int argc, char** argv, char **envp) {
 	int dump_kernel = 0;
 	int ocl_verbose = 0;
 	int validate = 0;
+	int no_counters = 0;
+	int pointer_chase = 0;
 	char *app_name_args;
 	uint64_t clock_start, clock_end, clock_delta;
 	uint64_t build_clock_start, build_clock_end, build_clock_delta;
@@ -323,6 +333,10 @@ int main(int argc, char** argv, char **envp) {
 			if (strcmp(argv[i], "--validate")==0 || strcmp(argv[i], "-v")==0)
 				validate = 1;
 			
+			if (strcmp(argv[i], "--no-counters")==0)
+				no_counters = 1;
+			
+			
 		}
 	}
 	
@@ -367,12 +381,16 @@ int main(int argc, char** argv, char **envp) {
 	for (int i = 0; i < number_available_shared_mem_kernels; i++) {
 		if (strcmp(kernel_choice, available_shared_mem_kernels[i]) == 0) { match++; kernel_type = 's'; }
 	}
+	for (int i = 0; i < number_extra_kernels; i++) {
+		if (strcmp(kernel_choice, extra_kernels[i]) == 0) { match++; kernel_type = 'e'; pointer_chase = 1; }
+	}
 	if (match == 0) {
 		printf(KRED "Chosen kernel not available. Choose from:\n" KNRM);
 		for (int i = 0; i < number_available_flop_kernels; i++) printf("\t%s\n", available_flop_kernels[i]);
 		for (int i = 0; i < number_available_mop_kernels; i++) printf("\t%s\n", available_mop_kernels[i]);
 		for (int i = 0; i < number_available_power_kernels; i++) printf("\t%s\n", available_power_kernels[i]);
 		for (int i = 0; i < number_available_shared_mem_kernels; i++) printf("\t%s\n", available_shared_mem_kernels[i]);
+		for (int i = 0; i < number_extra_kernels; i++) printf("\t%s\n", extra_kernels[i]);
 		printf("Defaulting to kernel \"scalar_add_kernel\"\n");
 		strcpy(kernel_choice, "scalar_add_kernel");
 		kernel_type = 'f';
@@ -430,6 +448,8 @@ int main(int argc, char** argv, char **envp) {
 	cl_double4 *vect4_dp_A, *vect4_dp_B;
 	cl_double8 *vect8_dp_A, *vect8_dp_B;
 	cl_double16 *vect16_dp_A, *vect16_dp_B;
+	
+	float *pointer_chase_A;
 
 	// kernel source vars
 	FILE *f_source;
@@ -464,8 +484,18 @@ int main(int argc, char** argv, char **envp) {
 		clock_start = read_tsc_start();
 	}
 	
+	if (pointer_chase) {
+		
+		pointer_chase_A = (float*) MALLOC(sizeof(float) * STD_SIZE_PTR_CHASE);
+		if(pointer_chase_A==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
+		for(int i=0; i<STD_SIZE_PTR_CHASE; i++) {
+			pointer_chase_A[i] = i;
+		}
+		
+	}
+	
 	// memory initialization
-	if (!external_app) {
+	if (!external_app || !pointer_chase) {
 		
 		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			scalar_sp_A = (float*) MALLOC(sizeof(float) * global);
@@ -646,6 +676,18 @@ int main(int argc, char** argv, char **envp) {
 		}
 		//command_queue = clCreateCommandQueueWithProperties(context, device, NULL, &ret); clCheckError(ret, __LINE__);
 		
+		
+		
+		
+		
+		if(pointer_chase) {
+			
+			a = clCreateBuffer(context, MEM_ACCESS, STD_SIZE_PTR_CHASE*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, STD_SIZE_PTR_CHASE*sizeof(float), pointer_chase_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			
+		}
+			
+		
 
 		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
@@ -732,6 +774,7 @@ int main(int argc, char** argv, char **envp) {
 		else if (kernel_type == 'p' && precision_type == 'd') 	{ f_source = fopen("kernels/power_dp_kernels.cl", "r"); sprintf(source_file, "power_dp_kernels.cl"); 	}
 		else if (kernel_type == 'm') 						  	{ f_source = fopen("kernels/mop_kernels.cl", "r");		sprintf(source_file, "mop_kernels.cl"); 		}
 		else if (kernel_type == 's') 						  	{ f_source = fopen("kernels/shared_mem_kernels.cl", "r");	sprintf(source_file, "shared_mem_kernels.cl"); }
+		else if (kernel_type == 'e') 						  	{ f_source = fopen("kernels/extra_kernels.cl", "r");	sprintf(source_file, "extra_kernels.cl"); }
 		
 		if (dump_kernel) {
 			
@@ -744,10 +787,10 @@ int main(int argc, char** argv, char **envp) {
 			fclose(f_source);
 			
 			printf("\n\n>>>>>>>>>>>>>>>> KERNEL DUMP >>>>>>>>>>>>>>>>\n");
-			printf("Kernel source (%d bytes):\n%s\n", source_size, source_str);
+			printf("Kernel source %s (%d bytes):\n%s\n", source_file, source_size, source_str);
 			printf(">>>>>>>>>>>>>>>> KERNEL DUMP >>>>>>>>>>>>>>>>\n\n");
 			
-			free(source_str);
+			//free(source_str);
 		}
 		
 		if (build) {
@@ -806,7 +849,7 @@ int main(int argc, char** argv, char **envp) {
 			fclose(f_bin);
 			
 			cl_uint status;
-			program = clCreateProgramWithBinary(context, 1, &device, (const size_t*)&bin_size, (const unsigned char**)&bin_str, &status, &ocl_ret); 
+			program = clCreateProgramWithBinary(context, 1, &device, (const size_t*)&bin_size, (const unsigned char**)&bin_str, &status, &ocl_ret);
 			clCheckError(ocl_ret, __LINE__);
 			clCheckError(status, __LINE__);
 			
@@ -822,39 +865,43 @@ int main(int argc, char** argv, char **envp) {
 		free(source_file);
 		free(binary_file);
 		
-
+		
 		kernel = clCreateKernel(program, kernel_choice, &ocl_ret); 		clCheckError(ocl_ret, __LINE__);
 		printf("%s\n", kernel_choice);
-		if (strstr(kernel_choice, "priv") != NULL && strstr(kernel_choice, "args") != NULL) {
+		if (pointer_chase) {
+			//ocl_ret = clSetKernelArg(kernel, 0, sizeof(float), (void*)&pointer_chase_A[0]);
+			ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a);
+			clCheckError(ocl_ret, __LINE__);
+		} else if (strstr(kernel_choice, "priv") != NULL && strstr(kernel_choice, "args") != NULL) {
 			if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(float), (void*)&scalar_sp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(float), (void*)&scalar_sp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_float2), (void*)&vect2_sp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_float2), (void*)&vect2_sp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_float4), (void*)&vect4_sp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_float4), (void*)&vect4_sp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_float8), (void*)&vect8_sp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_float8), (void*)&vect8_sp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_float16), (void*)&vect16_sp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_float16), (void*)&vect16_sp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "dp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(double), (void*)&scalar_dp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(double), (void*)&scalar_dp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "dp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect2_dp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect2_dp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "dp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect4_dp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect4_dp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "dp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect8_dp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect8_dp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "dp") != NULL) {
-				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect16_dp_A[0]); 
+				ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_double2), (void*)&vect16_dp_A[0]);
 				clCheckError(ocl_ret, __LINE__);
 			}
 		} else {
@@ -1085,6 +1132,8 @@ int main(int argc, char** argv, char **envp) {
 		FREE(vect16_dp_A);
 		if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p') FREE(vect16_dp_B);
 	}
+	if (pointer_chase)
+		FREE(pointer_chase_A);
 	
 	//if (app_name_args != NULL) free(app_name_args);
 	//if (quiet) fclose(stdout);

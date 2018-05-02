@@ -1,1054 +1,558 @@
 LABEL0
-         mov      (1|M0)         null<1>:ud    0xEE93DB91:ud                   
-(W)      mov      (8|M0)         r119.0<1>:ud  r0.0<1;1,0>:ud                  
+         mov      (1|M0)         null<1>:ud    0x6E93BC7D:ud                   
+(W)      mov      (8|M0)         r93.0<1>:ud   r0.0<1;1,0>:ud                  
 (W)      or       (1|M0)         cr0.0<1>:ud   cr0.0<0;1,0>:ud   0x4C0:uw         {Switch}
-(W)      mov      (1|M0)         r120.0<1>:uq  r8.0<0;1,0>:uq                  
-(W)      mov      (1|M0)         r120.2<1>:uq  r8.1<0;1,0>:uq                  
-(W)      mov      (1|M0)         r120.2<1>:d   0:w                             
-LABEL96
-(W)      shl      (1|M0)         r2.0<1>:q     r120.2<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r107.0<1>:d   r120.2<0;1,0>:d   1:w             
-(W)      add      (1|M0)         r3.0<1>:q     r120.0<0;1,0>:q   r2.0<0;1,0>:q   
-(W)      add      (1|M0)         r8.2<1>:q     r120.2<0;1,0>:q   r2.0<0;1,0>:q   
-(W)      shl      (1|M0)         r108.0<1>:q   r107.0<0;1,0>:d   6:w             
-(W)      mov      (1|M0)         r4.0<1>:uq    r3.0<0;1,0>:uq                  
-(W)      add      (1|M0)         r6.0<1>:q     r3.0<0;1,0>:q     32:w            
-         mov      (8|M0)         r9.0<1>:uq    r8.2<0;1,0>:uq                  
-         mov      (8|M8)         r11.0<1>:uq   r8.2<0;1,0>:uq                  
-(W)      add      (1|M0)         r58.0<1>:q    r8.2<0;1,0>:q     32:w            
-         mov      (8|M16)        r33.0<1>:uq   r8.2<0;1,0>:uq                  
-         mov      (8|M24)        r35.0<1>:uq   r8.2<0;1,0>:uq                  
-(W)      send     (8|M0)         r5:ud         r4:ud             0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r7:ud         r6:ud             0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-         add      (8|M0)         r29.0<1>:uq   r9.0<4;4,1>:uq    0x10:uw         
-         add      (8|M8)         r31.0<1>:uq   r11.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M0)         r59.0<1>:uq   r58.0<0;1,0>:uq                 
-         mov      (8|M8)         r61.0<1>:uq   r58.0<0;1,0>:uq                 
-         add      (8|M16)        r53.0<1>:uq   r33.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r55.0<1>:uq   r35.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M16)        r83.0<1>:uq   r58.0<0;1,0>:uq                 
-         mov      (8|M24)        r85.0<1>:uq   r58.0<0;1,0>:uq                 
-(W)      add      (1|M0)         r109.0<1>:q   r120.0<0;1,0>:q   r108.0<0;1,0>:q 
-         add      (8|M0)         r79.0<1>:uq   r59.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r81.0<1>:uq   r61.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r114.0<1>:q   r120.2<0;1,0>:q   r108.0<0;1,0>:q 
-         add      (8|M16)        r103.0<1>:uq  r83.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r105.0<1>:uq  r85.0<4;4,1>:uq   0x10:uw         
-(W)      mov      (1|M0)         r110.0<1>:uq  r109.0<0;1,0>:uq                
-(W)      add      (1|M0)         r112.0<1>:q   r109.0<0;1,0>:q   32:w            
-         mov      (8|M0)         r115.0<1>:uq  r114.0<0;1,0>:uq                
-         mov      (8|M8)         r117.0<1>:uq  r114.0<0;1,0>:uq                
-         mov      (8|M0)         r13.0<1>:df   r5.0<0;1,0>:df                  
-         mov      (8|M8)         r15.0<1>:df   r5.0<0;1,0>:df                  
-         mov      (8|M0)         r17.0<1>:df   r5.1<0;1,0>:df                  
-         mov      (8|M8)         r19.0<1>:df   r5.1<0;1,0>:df                  
-         mov      (8|M0)         r21.0<1>:df   r5.2<0;1,0>:df                  
-         mov      (8|M8)         r23.0<1>:df   r5.2<0;1,0>:df                  
-         mov      (8|M0)         r25.0<1>:df   r5.3<0;1,0>:df                  
-         mov      (8|M8)         r27.0<1>:df   r5.3<0;1,0>:df                  
-         mov      (8|M16)        r37.0<1>:df   r5.0<0;1,0>:df                  
-         mov      (8|M24)        r39.0<1>:df   r5.0<0;1,0>:df                  
-         mov      (8|M16)        r41.0<1>:df   r5.1<0;1,0>:df                  
-         mov      (8|M24)        r43.0<1>:df   r5.1<0;1,0>:df                  
-         mov      (8|M16)        r45.0<1>:df   r5.2<0;1,0>:df                  
-         mov      (8|M24)        r47.0<1>:df   r5.2<0;1,0>:df                  
-         mov      (8|M16)        r49.0<1>:df   r5.3<0;1,0>:df                  
-         mov      (8|M24)        r51.0<1>:df   r5.3<0;1,0>:df                  
-         sends    (16|M0)        null:w        r9                r13               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r63.0<1>:df   r7.0<0;1,0>:df                  
-         mov      (8|M8)         r65.0<1>:df   r7.0<0;1,0>:df                  
-         mov      (8|M0)         r67.0<1>:df   r7.1<0;1,0>:df                  
-         mov      (8|M8)         r69.0<1>:df   r7.1<0;1,0>:df                  
-         sends    (16|M0)        null:w        r29               r21               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r71.0<1>:df   r7.2<0;1,0>:df                  
-         mov      (8|M8)         r73.0<1>:df   r7.2<0;1,0>:df                  
-         mov      (8|M0)         r75.0<1>:df   r7.3<0;1,0>:df                  
-         mov      (8|M8)         r77.0<1>:df   r7.3<0;1,0>:df                  
-         sends    (16|M16)       null:w        r33               r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r87.0<1>:df   r7.0<0;1,0>:df                  
-         mov      (8|M24)        r89.0<1>:df   r7.0<0;1,0>:df                  
-         mov      (8|M16)        r91.0<1>:df   r7.1<0;1,0>:df                  
-         mov      (8|M24)        r93.0<1>:df   r7.1<0;1,0>:df                  
-         sends    (16|M16)       null:w        r53               r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r95.0<1>:df   r7.2<0;1,0>:df                  
-         mov      (8|M24)        r97.0<1>:df   r7.2<0;1,0>:df                  
-         mov      (8|M16)        r99.0<1>:df   r7.3<0;1,0>:df                  
-         mov      (8|M24)        r101.0<1>:df  r7.3<0;1,0>:df                  
-         sends    (16|M0)        null:w        r59               r63               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r79               r71               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r83               r87               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r103              r95               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-(W)      add      (1|M0)         r54.0<1>:q    r114.0<0;1,0>:q   32:w            
-         mov      (8|M16)        r29.0<1>:uq   r114.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r114.0<0;1,0>:uq                
-         add      (8|M0)         r25.0<1>:uq   r115.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r117.0<4;4,1>:uq  0x10:uw         
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   2:w             
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   3:w             
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r111:ud       r110:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r113:ud       r112:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   4:w             
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r111.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r111.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r111.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r111.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r111.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r111.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r111.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r111.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r111.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r111.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r111.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r111.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r111.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r111.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r111.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r111.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r115              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r113.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r113.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r113.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r113.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r113.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r113.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r113.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r113.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r113.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r113.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r113.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r113.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r113.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r113.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r113.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r113.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   5:w             
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   6:w             
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   7:w             
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   8:w             
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   9:w             
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   10:w            
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   11:w            
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   12:w            
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   13:w            
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   14:w            
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-(W)      or       (1|M0)         r103.0<1>:d   r120.2<0;1,0>:d   15:w            
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r120.2<1>:d   r120.2<0;1,0>:d   16:w            
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      cmp      (16|M0)  [(lt)f0.0]  null<1>:d     r120.2<0;1,0>:d   1024:w          
-(W)      cmp      (16|M16) [(lt)f0.0]  null<1>:d     r120.2<0;1,0>:d   1024:w          
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-(W)      shl      (1|M0)         r104.0<1>:q   r103.0<0;1,0>:d   6:w             
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-(W)      add      (1|M0)         r105.0<1>:q   r120.0<0;1,0>:q   r104.0<0;1,0>:q 
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r110.0<1>:q   r120.2<0;1,0>:q   r104.0<0;1,0>:q 
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      add      (1|M0)         r54.0<1>:q    r110.0<0;1,0>:q   32:w            
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      mov      (1|M0)         r106.0<1>:uq  r105.0<0;1,0>:uq                
-(W)      add      (1|M0)         r108.0<1>:q   r105.0<0;1,0>:q   32:w            
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r111.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M8)         r113.0<1>:uq  r110.0<0;1,0>:uq                
-         mov      (8|M16)        r29.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M24)        r31.0<1>:uq   r110.0<0;1,0>:uq                
-         mov      (8|M0)         r55.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M8)         r57.0<1>:uq   r54.0<0;1,0>:uq                 
-         mov      (8|M16)        r79.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r25.0<1>:uq   r111.0<4;4,1>:uq  0x10:uw         
-         add      (8|M8)         r27.0<1>:uq   r113.0<4;4,1>:uq  0x10:uw         
-         add      (8|M16)        r49.0<1>:uq   r29.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r51.0<1>:uq   r31.0<4;4,1>:uq   0x10:uw         
-         mov      (8|M24)        r81.0<1>:uq   r54.0<0;1,0>:uq                 
-         add      (8|M0)         r75.0<1>:uq   r55.0<4;4,1>:uq   0x10:uw         
-         add      (8|M8)         r77.0<1>:uq   r57.0<4;4,1>:uq   0x10:uw         
-         add      (8|M16)        r99.0<1>:uq   r79.0<4;4,1>:uq   0x10:uw         
-         add      (8|M24)        r101.0<1>:uq  r81.0<4;4,1>:uq   0x10:uw         
-(W)      send     (8|M0)         r107:ud       r106:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-(W)      send     (8|M0)         r109:ud       r108:ud           0xC       0x21D0AFF //  hdc.dc1  wr:1h, rd:1, fc: 0x50aff
-         mov      (8|M0)         r9.0<1>:df    r107.0<0;1,0>:df                
-         mov      (8|M8)         r11.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M0)         r13.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M8)         r15.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M0)         r17.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M8)         r19.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M0)         r21.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M8)         r23.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M16)        r33.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M24)        r35.0<1>:df   r107.0<0;1,0>:df                
-         mov      (8|M16)        r37.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M24)        r39.0<1>:df   r107.1<0;1,0>:df                
-         mov      (8|M16)        r41.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M24)        r43.0<1>:df   r107.2<0;1,0>:df                
-         mov      (8|M16)        r45.0<1>:df   r107.3<0;1,0>:df                
-         mov      (8|M24)        r47.0<1>:df   r107.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r111              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r59.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M8)         r61.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M0)         r63.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M8)         r65.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M0)        null:w        r25               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M0)         r67.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M8)         r69.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M0)         r71.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M8)         r73.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M16)       null:w        r29               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r83.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M24)        r85.0<1>:df   r109.0<0;1,0>:df                
-         mov      (8|M16)        r87.0<1>:df   r109.1<0;1,0>:df                
-         mov      (8|M24)        r89.0<1>:df   r109.1<0;1,0>:df                
-         sends    (16|M16)       null:w        r49               r41               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         mov      (8|M16)        r91.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M24)        r93.0<1>:df   r109.2<0;1,0>:df                
-         mov      (8|M16)        r95.0<1>:df   r109.3<0;1,0>:df                
-         mov      (8|M24)        r97.0<1>:df   r109.3<0;1,0>:df                
-         sends    (16|M0)        null:w        r55               r59               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M0)        null:w        r75               r67               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r79               r83               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-         sends    (16|M16)       null:w        r99               r91               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
-(W&f0.0) jmpi     (1|M0)                     LABEL96:d                        {AccWrEn}
-LABEL16784
-(W)      mov      (8|M0)         r127.0<1>:d   r119.0<8;8,1>:d                  {Compacted}
+(W)      mul      (1|M0)         r3.0<1>:d     r8.4<0;1,0>:d     r93.1<0;1,0>:d  
+(W)      mov      (1|M0)         r8.7<1>:d     0:w                             
+         add      (16|M0)        r4.0<1>:d     r1.0<8;8,1>:uw    r3.0<0;1,0>:d   
+         add      (16|M16)       r9.0<1>:d     r2.0<8;8,1>:uw    r3.0<0;1,0>:d   
+         add      (16|M0)        r4.0<1>:d     r4.0<8;8,1>:d     r7.0<0;1,0>:d    {Compacted}
+         add      (16|M16)       r9.0<1>:d     r9.0<8;8,1>:d     r7.0<0;1,0>:d   
+         shl      (8|M0)         r11.0<1>:q    r4.0<8;8,1>:d     6:w             
+         shl      (8|M8)         r13.0<1>:q    r5.0<8;8,1>:d     6:w             
+         shl      (8|M16)        r15.0<1>:q    r9.0<8;8,1>:d     6:w             
+         shl      (8|M24)        r17.0<1>:q    r10.0<8;8,1>:d    6:w             
+         add      (8|M0)         r19.0<1>:q    r8.0<0;1,0>:q     r11.0<4;4,1>:q  
+         add      (8|M0)         r27.0<1>:q    r8.1<0;1,0>:q     r11.0<4;4,1>:q  
+         add      (8|M8)         r21.0<1>:q    r8.0<0;1,0>:q     r13.0<4;4,1>:q  
+         add      (8|M8)         r29.0<1>:q    r8.1<0;1,0>:q     r13.0<4;4,1>:q  
+         add      (8|M16)        r23.0<1>:q    r8.0<0;1,0>:q     r15.0<4;4,1>:q  
+         add      (8|M16)        r31.0<1>:q    r8.1<0;1,0>:q     r15.0<4;4,1>:q  
+         add      (8|M24)        r25.0<1>:q    r8.0<0;1,0>:q     r17.0<4;4,1>:q  
+         add      (8|M24)        r33.0<1>:q    r8.1<0;1,0>:q     r17.0<4;4,1>:q  
+         mov      (8|M0)         r94.0<1>:uq   r19.0<4;4,1>:uq                 
+         add      (8|M0)         r102.0<1>:q   r19.0<4;4,1>:q    32:w            
+         mov      (8|M0)         r110.0<1>:uq  r27.0<4;4,1>:uq                 
+         add      (8|M0)         r118.0<1>:q   r27.0<4;4,1>:q    32:w            
+         mov      (8|M8)         r96.0<1>:uq   r21.0<4;4,1>:uq                 
+         add      (8|M8)         r104.0<1>:q   r21.0<4;4,1>:q    32:w            
+         mov      (8|M8)         r112.0<1>:uq  r29.0<4;4,1>:uq                 
+         add      (8|M8)         r120.0<1>:q   r29.0<4;4,1>:q    32:w            
+         mov      (8|M16)        r98.0<1>:uq   r23.0<4;4,1>:uq                 
+         add      (8|M16)        r106.0<1>:q   r23.0<4;4,1>:q    32:w            
+         mov      (8|M16)        r114.0<1>:uq  r31.0<4;4,1>:uq                 
+         add      (8|M16)        r122.0<1>:q   r31.0<4;4,1>:q    32:w            
+         mov      (8|M24)        r100.0<1>:uq  r25.0<4;4,1>:uq                 
+         add      (8|M24)        r108.0<1>:q   r25.0<4;4,1>:q    32:w            
+         mov      (8|M24)        r116.0<1>:uq  r33.0<4;4,1>:uq                 
+         add      (8|M24)        r124.0<1>:q   r33.0<4;4,1>:q    32:w            
+LABEL584
+         add      (8|M0)         r25.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r27.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r45.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r47.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r9:w          r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M0)         r65.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r67.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r17:w         r25:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r29:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r45:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r85.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r87.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r49:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r65:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r69:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r85:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M0)         r89.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r91.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r3.0<1>:uq    r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r116.0<4;4,1>:uq  0x10:uw         
+(W)      add      (1|M0)         r8.7<1>:d     r8.7<0;1,0>:d     16:w            
+(W)      cmp      (16|M0)  [(lt)f0.0]  null<1>:d     r8.7<0;1,0>:d     1024:w          
+(W)      cmp      (16|M16) [(lt)f0.0]  null<1>:d     r8.7<0;1,0>:d     1024:w          
+         sends    (16|M0)        null:w        r110              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r9.0<1>:uq    r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r114              r29               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r3                r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r13.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r49               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r69               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r33.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r35.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r53.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r55.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r73.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r75.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r3.0<1>:uq    r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r9.0<1>:uq    r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r13.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r17:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r25:w         r33:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r53:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r65:w         r73:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r85:w         r3:uq             0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r3.0<1>:uq    r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r17.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r19.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r21.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r23.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r17               r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r21               r85               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r41.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r43.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r61.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r63.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r81.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r83.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r85.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r87.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r89.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r91.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r25:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r33:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r53:w         r61:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r41.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r43.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r65:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r73:w         r81:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r9:w          r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r17:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M0)         r61.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r63.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r81.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r83.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r61               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r114              r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r81               r53               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r25.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r27.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         sends    (16|M0)        null:w        r118              r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r85               r73               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r45.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r47.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r65.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r67.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r85.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r87.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r89.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r91.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r9:w          r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r17:w         r25:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r29:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r45:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r49:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r65:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r69:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r85:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         sends    (16|M0)        null:w        r110              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r9.0<1>:uq    r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r29               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r3                r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r13.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r49               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r69               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r33.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r35.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r53.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r55.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r73.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r75.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r3.0<1>:uq    r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r9.0<1>:uq    r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r13.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r17:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r25:w         r33:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r53:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r65:w         r73:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r85:w         r3:uq             0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r3.0<1>:uq    r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r17.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r19.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r21.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r23.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r17               r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r21               r85               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r41.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r43.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r61.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r63.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r81.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r83.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r85.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r87.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r89.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r91.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r25:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r33:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r53:w         r61:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r41.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r43.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r65:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r73:w         r81:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r9:w          r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r17:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M0)         r61.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r63.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r81.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r83.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r61               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r114              r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r81               r53               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r25.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r27.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         sends    (16|M0)        null:w        r118              r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r85               r73               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r45.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r47.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r65.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r67.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r85.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r87.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r89.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r91.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r9:w          r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r17:w         r25:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r29:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r45:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r49:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r65:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r69:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r85:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         sends    (16|M0)        null:w        r110              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r9.0<1>:uq    r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r29               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r3                r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r13.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r49               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r69               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r33.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r35.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r53.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r55.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r73.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r75.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r3.0<1>:uq    r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r9.0<1>:uq    r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r13.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r17:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r25:w         r33:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r53:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r65:w         r73:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r85:w         r3:uq             0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r3.0<1>:uq    r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r17.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r19.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r21.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r23.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r17               r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r21               r85               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r41.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r43.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r61.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r63.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r81.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r83.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r85.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r87.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r89.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r91.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r25:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r33:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r53:w         r61:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r41.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r43.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r65:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r73:w         r81:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r9:w          r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r17:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M0)         r61.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r63.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r81.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r83.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r61               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r114              r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r81               r53               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r25.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r27.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         sends    (16|M0)        null:w        r118              r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r85               r73               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r45.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r47.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r65.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r67.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r85.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r87.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r89.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r91.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r9:w          r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r17:w         r25:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r29:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r45:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r49:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r65:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r69:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r85:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         sends    (16|M0)        null:w        r110              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r9.0<1>:uq    r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r29               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r3                r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r13.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r49               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r69               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r33.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r35.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r53.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r55.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r73.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r75.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r3.0<1>:uq    r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r9.0<1>:uq    r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r13.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r17:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r25:w         r33:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r53:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r65:w         r73:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r85:w         r3:uq             0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r3.0<1>:uq    r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r17.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r19.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r21.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r23.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r17               r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r21               r85               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r41.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r43.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r61.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r63.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r81.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r83.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r85.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r87.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r89.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r91.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r25:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r33:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r53:w         r61:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r41.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r43.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r65:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r73:w         r81:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r9:w          r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r17:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M0)         r61.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r63.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r81.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r83.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r61               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r114              r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r81               r53               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r25.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r27.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         sends    (16|M0)        null:w        r118              r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r85               r73               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r45.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r47.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r65.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r67.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r85.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r87.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r89.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r91.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r9:w          r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r17:w         r25:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r29:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r45:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r49:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r65:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r69:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r85:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         sends    (16|M0)        null:w        r110              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r9.0<1>:uq    r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r29               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r3                r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r13.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r49               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r69               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r33.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r35.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r53.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r55.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r73.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r75.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r3.0<1>:uq    r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r9.0<1>:uq    r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r13.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r17:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r25:w         r33:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r53:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r65:w         r73:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r85:w         r3:uq             0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r3.0<1>:uq    r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r5.0<1>:uq    r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r17.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r19.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r21.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r23.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r17               r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r21               r85               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r41.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r43.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         add      (8|M16)        r61.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r63.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r81.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r83.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r85.0<1>:uq   r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r87.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r89.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r91.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r25:w         r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r33:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r45:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r53:w         r61:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M16)        r41.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r43.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r65:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r73:w         r81:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r9:w          r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r17:w         r41:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         add      (8|M0)         r61.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r63.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r81.0<1>:uq   r114.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r83.0<1>:uq   r116.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r110              r25               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r61               r33               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r114              r45               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r81               r53               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r25.0<1>:uq   r94.0<4;4,1>:uq   0x10:uw         
+         add      (8|M8)         r27.0<1>:uq   r96.0<4;4,1>:uq   0x10:uw         
+         sends    (16|M0)        null:w        r118              r65               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r85               r73               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r45.0<1>:uq   r98.0<4;4,1>:uq   0x10:uw         
+         add      (8|M24)        r47.0<1>:uq   r100.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r65.0<1>:uq   r102.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r67.0<1>:uq   r104.0<4;4,1>:uq  0x10:uw         
+         add      (8|M16)        r85.0<1>:uq   r106.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r87.0<1>:uq   r108.0<4;4,1>:uq  0x10:uw         
+         add      (8|M0)         r89.0<1>:uq   r110.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r91.0<1>:uq   r112.0<4;4,1>:uq  0x10:uw         
+         send     (16|M0)        r9:w          r94:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r17:w         r25:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r29:w         r98:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r37:w         r45:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r49:w         r102:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M0)        r57:w         r65:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r69:w         r106:uq           0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         send     (16|M16)       r77:w         r85:uq            0xC       0x88416FF //  hdc.dc1  wr:4, rd:8, fc: 0x416ff
+         sends    (16|M0)        null:w        r110              r9                0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r89               r17               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M0)         r9.0<1>:uq    r118.0<4;4,1>:uq  0x10:uw         
+         add      (8|M8)         r11.0<1>:uq   r120.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M16)       null:w        r114              r29               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r3                r37               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         add      (8|M16)        r13.0<1>:uq   r122.0<4;4,1>:uq  0x10:uw         
+         add      (8|M24)        r15.0<1>:uq   r124.0<4;4,1>:uq  0x10:uw         
+         sends    (16|M0)        null:w        r118              r49               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M0)        null:w        r9                r57               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r122              r69               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+         sends    (16|M16)       null:w        r13               r77               0x20C     0x80696FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x696ff
+(W&f0.0) jmpi     (1|M0)                     LABEL584:d                       {AccWrEn}
+LABEL8840
+(W)      mov      (8|M0)         r127.0<1>:d   r93.0<8;8,1>:d                   {Compacted}
          send     (8|M0)         null:ud       r127:ud           0x4D00027  0x2000010 {EOT} //  spawner  wr:1, rd:0, fc: 0x10
