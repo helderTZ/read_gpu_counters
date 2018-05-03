@@ -213,7 +213,7 @@ __kernel void vect8_sp_mad_power_kernel(__global float8 *a, __global float8 *b) 
 __kernel void vect16_sp_add_power_kernel(__global float16 *a, __global float16 *b) {
 	int i = get_global_id(0);
 	int j, k;
-	for(k = 0; k < 128; k++) {
+	for(k = 0; k < 64; k++) {
 		for(j = 0; j < 8192; j++) {
 			a[i] = a[i] + b[i];
 		}

@@ -10,6 +10,9 @@ set style line 2 lc rgb '#dd181f' lt 1 lw 2 pt 5 ps 1.5   # --- red
 
 #set ytics (-1,0,0.0625,0.125,0.25,0.5,1,2,4,8,16,32,64,128)
 
+set border 3
+set tics scale 0
+unset grid
 
 
 set terminal   svg noenhanced

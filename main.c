@@ -770,7 +770,7 @@ int main(int argc, char** argv, char **envp) {
 		else if (kernel_type == 'f' && precision_type == 's') 	{ f_source = fopen("kernels/flop_sp_kernels.cl", "r"); 	sprintf(source_file, "flop_sp_kernels.cl"); 	}
 		else if (kernel_type == 'f' && precision_type == 'd' && unroll_flag) 	{ f_source = fopen("kernels/flop_dp_unroll_kernels.cl", "r"); 	sprintf(source_file, "flop_dp_unroll_kernels.cl"); 	}
 		else if (kernel_type == 'f' && precision_type == 'd' && !unroll_flag) 	{ f_source = fopen("kernels/flop_dp_kernels.cl", "r"); 			sprintf(source_file, "flop_dp_kernels.cl"); 		}
-		else if (kernel_type == 'p' && precision_type == 's') 	{ f_source = fopen("kernels/power_sp_kernels.cl", "r"); sprintf(source_file, "power_sp_kernels.cl"); 	}
+		else if (kernel_type == 'p' && precision_type == 's') 	{ f_source = fopen("kernels/power_sp_kernels.cl", "r"); sprintf(source_file, "power_sp_kernels_v2.cl"); 	}
 		else if (kernel_type == 'p' && precision_type == 'd') 	{ f_source = fopen("kernels/power_dp_kernels.cl", "r"); sprintf(source_file, "power_dp_kernels.cl"); 	}
 		else if (kernel_type == 'm') 						  	{ f_source = fopen("kernels/mop_kernels.cl", "r");		sprintf(source_file, "mop_kernels.cl"); 		}
 		else if (kernel_type == 's') 						  	{ f_source = fopen("kernels/shared_mem_kernels.cl", "r");	sprintf(source_file, "shared_mem_kernels.cl"); }
