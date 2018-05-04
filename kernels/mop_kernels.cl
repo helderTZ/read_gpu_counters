@@ -156,8 +156,60 @@
 
 
 
+/*******************************************************
+ * LOAD ONLY
+ * Scalar single-precision with loop
+ * *****************************************************/
 
+ __kernel void scalar_sp_load_1024_kernel(__global float *src) {
+	int i = get_global_id(0);
+	int j;
+	float temp;
+	for(j = 0; j < 1024; j++)
+		temp += src[i];
+	src[i] = temp;
+}
 
+/*******************************************************
+ * LOAD ONLY
+ * Vector single-precision with loop
+ * *****************************************************/
+
+ __kernel void vect2_sp_load_iter_1024_kernel(__global float2 *src) {
+	int i = get_global_id(0);
+	int j;
+	float2 temp;
+	for(j = 0; j < 1024; j++)
+		temp += src[i];
+	src[i] = temp;
+}
+
+ __kernel void vect4_sp_load_iter_1024_kernel(__global float4 *src) {
+	int i = get_global_id(0);
+	int j;
+	float4 temp;
+	for(j = 0; j < 1024; j++)
+		temp += src[i];
+	src[i] = temp;
+}
+
+ __kernel void vect8_sp_load_iter_1024_kernel(__global float8 *src) {
+	int i = get_global_id(0);
+	int j;
+	float8 temp;
+	for(j = 0; j < 1024; j++)
+		temp += src[i];
+	src[i] = temp;
+}
+
+ __kernel void vect16_sp_load_iter_1024_kernel(__global float16 *src) {
+	int i = get_global_id(0);
+	int j;
+	float16 temp;
+	for(j = 0; j < 1024; j++)
+		temp += src[i];
+	src[i] = temp;
+}
 
 
 
