@@ -43,8 +43,8 @@
 
 
 char kernel_choice[50] = "";
-int number_available_flop_kernels = 350;
-int number_available_mop_kernels = 32;
+int number_available_flop_kernels = 250;
+int number_available_mop_kernels = 25;
 int number_available_power_kernels = 50;
 int number_available_shared_mem_kernels = 15;
 int number_extra_kernels = 1;
@@ -60,16 +60,6 @@ char *available_flop_kernels[] = {
 	"vect4_dp_add_kernel",  "vect4_dp_sub_kernel",  "vect4_dp_mul_kernel",  "vect4_dp_div_kernel",  "vect4_dp_mad_kernel", 
 	"vect8_dp_add_kernel",  "vect8_dp_sub_kernel",  "vect8_dp_mul_kernel",  "vect8_dp_div_kernel",  "vect8_dp_mad_kernel", 
 	"vect16_dp_add_kernel", "vect16_dp_sub_kernel", "vect16_dp_mul_kernel", "vect16_dp_div_kernel", "vect16_dp_mad_kernel", 
-	"scalar_sp_add_iter_8192_kernel", "scalar_sp_sub_iter_8192_kernel", "scalar_sp_mul_iter_8192_kernel", "scalar_sp_div_iter_8192_kernel", "scalar_sp_mad_iter_8192_kernel", 
-	"vect2_sp_add_iter_8192_kernel",  "vect2_sp_sub_iter_8192_kernel",  "vect2_sp_mul_iter_8192_kernel",  "vect2_sp_div_iter_8192_kernel",  "vect2_sp_mad_iter_8192_kernel", 
-	"vect4_sp_add_iter_8192_kernel",  "vect4_sp_sub_iter_8192_kernel",  "vect4_sp_mul_iter_8192_kernel",  "vect4_sp_div_iter_8192_kernel",  "vect4_sp_mad_iter_8192_kernel", 
-	"vect8_sp_add_iter_8192_kernel",  "vect8_sp_sub_iter_8192_kernel",  "vect8_sp_mul_iter_8192_kernel",  "vect8_sp_div_iter_8192_kernel",  "vect8_sp_mad_iter_8192_kernel", 
-	"vect16_sp_add_iter_8192_kernel", "vect16_sp_sub_iter_8192_kernel", "vect16_sp_mul_iter_8192_kernel", "vect16_sp_div_iter_8192_kernel", "vect16_sp_mad_iter_8192_kernel", 
-	"scalar_dp_add_iter_8192_kernel", "scalar_dp_sub_iter_8192_kernel", "scalar_dp_mul_iter_8192_kernel", "scalar_dp_div_iter_8192_kernel", "scalar_dp_mad_iter_8192_kernel", 
-	"vect2_dp_add_iter_8192_kernel",  "vect2_dp_sub_iter_8192_kernel",  "vect2_dp_mul_iter_8192_kernel",  "vect2_dp_div_iter_8192_kernel",  "vect2_dp_mad_iter_8192_kernel", 
-	"vect4_dp_add_iter_8192_kernel",  "vect4_dp_sub_iter_8192_kernel",  "vect4_dp_mul_iter_8192_kernel",  "vect4_dp_div_iter_8192_kernel",  "vect4_dp_mad_iter_8192_kernel", 
-	"vect8_dp_add_iter_8192_kernel",  "vect8_dp_sub_iter_8192_kernel",  "vect8_dp_mul_iter_8192_kernel",  "vect8_dp_div_iter_8192_kernel",  "vect8_dp_mad_iter_8192_kernel", 
-	"vect16_dp_add_iter_8192_kernel", "vect16_dp_sub_iter_8192_kernel", "vect16_dp_mul_iter_8192_kernel", "vect16_dp_div_iter_8192_kernel", "vect16_dp_mad_iter_8192_kernel", 
 	"scalar_sp_add_iter_1024_kernel", "scalar_sp_sub_iter_1024_kernel", "scalar_sp_mul_iter_1024_kernel", "scalar_sp_div_iter_1024_kernel", "scalar_sp_mad_iter_1024_kernel", 
 	"vect2_sp_add_iter_1024_kernel",  "vect2_sp_sub_iter_1024_kernel",  "vect2_sp_mul_iter_1024_kernel",  "vect2_sp_div_iter_1024_kernel",  "vect2_sp_mad_iter_1024_kernel", 
 	"vect4_sp_add_iter_1024_kernel",  "vect4_sp_sub_iter_1024_kernel",  "vect4_sp_mul_iter_1024_kernel",  "vect4_sp_div_iter_1024_kernel",  "vect4_sp_mad_iter_1024_kernel", 
@@ -110,16 +100,6 @@ char *available_flop_kernels[] = {
 	"vect4_dp_add_priv_iter_1024_kernel",  "vect4_dp_sub_priv_iter_1024_kernel",  "vect4_dp_mul_priv_iter_1024_kernel",  "vect4_dp_div_priv_iter_1024_kernel",  "vect4_dp_mad_priv_iter_1024_kernel", 
 	"vect8_dp_add_priv_iter_1024_kernel",  "vect8_dp_sub_priv_iter_1024_kernel",  "vect8_dp_mul_priv_iter_1024_kernel",  "vect8_dp_div_priv_iter_1024_kernel",  "vect8_dp_mad_priv_iter_1024_kernel", 
 	"vect16_dp_add_priv_iter_1024_kernel", "vect16_dp_sub_priv_iter_1024_kernel", "vect16_dp_mul_priv_iter_1024_kernel", "vect16_dp_div_priv_iter_1024_kernel", "vect16_dp_mad_priv_iter_1024_kernel", 
-	"scalar_sp_add_priv_iter_1024_args_kernel", "scalar_sp_sub_priv_iter_1024_args_kernel", "scalar_sp_mul_priv_iter_1024_args_kernel", "scalar_sp_div_priv_iter_1024_args_kernel", "scalar_sp_mad_priv_iter_1024_args_kernel", 
-	"vect2_sp_add_priv_iter_1024_args_kernel",  "vect2_sp_sub_priv_iter_1024_args_kernel",  "vect2_sp_mul_priv_iter_1024_args_kernel",  "vect2_sp_div_priv_iter_1024_args_kernel",  "vect2_sp_mad_priv_iter_1024_args_kernel", 
-	"vect4_sp_add_priv_iter_1024_args_kernel",  "vect4_sp_sub_priv_iter_1024_args_kernel",  "vect4_sp_mul_priv_iter_1024_args_kernel",  "vect4_sp_div_priv_iter_1024_args_kernel",  "vect4_sp_mad_priv_iter_1024_args_kernel", 
-	"vect8_sp_add_priv_iter_1024_args_kernel",  "vect8_sp_sub_priv_iter_1024_args_kernel",  "vect8_sp_mul_priv_iter_1024_args_kernel",  "vect8_sp_div_priv_iter_1024_args_kernel",  "vect8_sp_mad_priv_iter_1024_args_kernel", 
-	"vect16_sp_add_priv_iter_1024_args_kernel", "vect16_sp_sub_priv_iter_1024_args_kernel", "vect16_sp_mul_priv_iter_1024_args_kernel", "vect16_sp_div_priv_iter_1024_args_kernel", "vect16_sp_mad_priv_iter_1024_args_kernel", 
-	"scalar_dp_add_priv_iter_1024_args_kernel", "scalar_dp_sub_priv_iter_1024_args_kernel", "scalar_dp_mul_priv_iter_1024_args_kernel", "scalar_dp_div_priv_iter_1024_args_kernel", "scalar_dp_mad_priv_iter_1024_args_kernel", 
-	"vect2_dp_add_priv_iter_1024_args_kernel",  "vect2_dp_sub_priv_iter_1024_args_kernel",  "vect2_dp_mul_priv_iter_1024_args_kernel",  "vect2_dp_div_priv_iter_1024_args_kernel",  "vect2_dp_mad_priv_iter_1024_args_kernel", 
-	"vect4_dp_add_priv_iter_1024_args_kernel",  "vect4_dp_sub_priv_iter_1024_args_kernel",  "vect4_dp_mul_priv_iter_1024_args_kernel",  "vect4_dp_div_priv_iter_1024_args_kernel",  "vect4_dp_mad_priv_iter_1024_args_kernel", 
-	"vect8_dp_add_priv_iter_1024_args_kernel",  "vect8_dp_sub_priv_iter_1024_args_kernel",  "vect8_dp_mul_priv_iter_1024_args_kernel",  "vect8_dp_div_priv_iter_1024_args_kernel",  "vect8_dp_mad_priv_iter_1024_args_kernel", 
-	"vect16_dp_add_priv_iter_1024_args_kernel", "vect16_dp_sub_priv_iter_1024_args_kernel", "vect16_dp_mul_priv_iter_1024_args_kernel", "vect16_dp_div_priv_iter_1024_args_kernel", "vect16_dp_mad_priv_iter_1024_args_kernel", 
 };
 char *available_mop_kernels[] = {
 	"scalar_sp_load_store_kernel", "vect2_sp_load_store_kernel", "vect4_sp_load_store_kernel", "vect8_sp_load_store_kernel", "vect16_sp_load_store_kernel",
@@ -127,9 +107,6 @@ char *available_mop_kernels[] = {
 	"scalar_sp_load_store_iter_1024_kernel", "vect2_sp_load_store_iter_1024_kernel", "vect4_sp_load_store_iter_1024_kernel", "vect8_sp_load_store_iter_1024_kernel", "vect16_sp_load_store_iter_1024_kernel",
 	"scalar_dp_load_store_iter_1024_kernel", "vect2_dp_load_store_iter_1024_kernel", "vect4_dp_load_store_iter_1024_kernel", "vect8_dp_load_store_iter_1024_kernel", "vect16_dp_load_store_iter_1024_kernel",
 	"scalar_sp_load_iter_1024_kernel", "vect2_sp_load_iter_1024_kernel", "vect4_sp_load_iter_1024_kernel", "vect8_sp_load_iter_1024_kernel", "vect16_sp_load_iter_1024_kernel",
-	"scalar_sp_load_store_shm_iter_1024_kernel_exp", "vect2_sp_load_store_shm_iter_1024_kernel_exp", "vect4_sp_load_store_shm_iter_1024_kernel_exp", "vect8_sp_load_store_shm_iter_1024_kernel_exp", "vect16_sp_load_store_shm_iter_1024_kernel_exp"
-	// experiments
-	"scalar_sp_load_kernel", "scalar_sp_load_iter_1024_kernel", "scalar_sp_load_iter_1024_global2priv_kernel",
 };
 
 char *available_power_kernels[] = {

@@ -23,18 +23,18 @@ unset grid
 
 
 set terminal svg enhanced
-set output "plots/compare_power_add.svg"
-set title "Power Comparison - SP Add" font "Helvetica,24"
+set output "plots/compare_power_mad.svg"
+set title "Power Comparison - SP Mad" font "Helvetica,24"
 set ylabel "Power [W]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,24"
 set key bottom
 
 set yrange [0:20]
-plot './data/scalar_sp_add_power_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1, \
-	 './data/vect2_sp_add_power_kernel.csv' using 3:4 title "vect2" with line lt -1 dashtype 2, \
-	 './data/vect4_sp_add_power_kernel.csv' using 3:4 title "vect4" with line lt -1 dashtype 3, \
-	 './data/vect8_sp_add_power_kernel.csv' using 3:4 title "vect8" with line lt -1 dashtype 4, \
-	 './data/vect16_sp_add_power_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 5
+plot './data/scalar_sp_mad_power_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1, \
+	 './data/vect2_sp_mad_power_kernel.csv' using 3:4 title "vect2" with line lt -1 dashtype 2, \
+	 './data/vect4_sp_mad_power_kernel.csv' using 3:4 title "vect4" with line lt -1 dashtype 3, \
+	 './data/vect8_sp_mad_power_kernel.csv' using 3:4 title "vect8" with line lt -1 dashtype 4
+	 #'./data/vect16_sp_mad_power_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 5
 
 
 #set terminal   svg enhanced

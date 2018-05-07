@@ -90,7 +90,7 @@ if [[ $2 == "mop" ]]
 then
 	
 	reps=$1
-	for kernel in "scalar_sp_load_iter_1024_kernel" "vect2_sp_load_iter_1024_kernel" "vect4_sp_load_iter_1024_kernel" "vect8_sp_load_iter_1024_kernel" "vect16_sp_load_iter_1024_kernel"
+	for kernel in "scalar_dp_load_store_iter_1024_kernel" "vect2_dp_load_store_iter_1024_kernel" "vect4_dp_load_store_iter_1024_kernel" "vect8_dp_load_store_iter_1024_kernel" "vect16_dp_load_store_iter_1024_kernel"
 	#"scalar_sp_load_store_iter_1024_kernel" "vect2_sp_load_store_iter_1024_kernel" "vect4_sp_load_store_iter_1024_kernel" "vect8_sp_load_store_iter_1024_kernel" "vect16_sp_load_store_iter_1024_kernel"
 	#"scalar_sp_load_store_kernel" "vect2_sp_load_store_kernel" "vect4_sp_load_store_kernel" "vect8_sp_load_store_kernel" "vect16_sp_load_store_kernel"
 	#"scalar_dp_load_store_kernel" "vect2_dp_load_store_kernel" "vect4_dp_load_store_kernel" "vect8_dp_load_store_kernel" "vect16_dp_load_store_kernel"
@@ -134,7 +134,8 @@ if [[ $2 == "power" ]]
 then
 	
 	reps=$1
-	for kernel in  "scalar_sp_add_power_kernel" "vect2_sp_add_power_kernel" "vect4_sp_add_power_kernel" "vect8_sp_add_power_kernel" "vect16_sp_add_power_kernel"
+	for kernel in  "scalar_sp_mad_power_kernel" "vect2_sp_mad_power_kernel" "vect4_sp_mad_power_kernel" "vect8_sp_mad_power_kernel" "vect16_sp_mad_power_kernel"
+	#"scalar_sp_mad_power_kernel" "vect2_sp_mad_power_kernel" "vect4_sp_mad_power_kernel" "vect8_sp_mad_power_kernel" "vect16_sp_mad_power_kernel"
 	#"scalar_sp_add_power_kernel" "scalar_sp_sub_power_kernel" "scalar_sp_mul_power_kernel" "scalar_sp_div_power_kernel" "scalar_sp_mad_power_kernel" "vect2_sp_add_power_kernel" "vect2_sp_sub_power_kernel" "vect2_sp_mul_power_kernel" "vect2_sp_div_power_kernel" "vect2_sp_mad_power_kernel" "vect4_sp_add_power_kernel" "vect4_sp_sub_power_kernel" "vect4_sp_mul_power_kernel" "vect4_sp_div_power_kernel" "vect4_sp_mad_power_kernel" "vect8_sp_add_power_kernel" "vect8_sp_sub_power_kernel" "vect8_sp_mul_power_kernel" "vect8_sp_div_power_kernel" "vect8_sp_mad_power_kernel" "vect16_sp_add_power_kernel" "vect16_sp_sub_power_kernel" "vect16_sp_mul_power_kernel" "vect16_sp_div_power_kernel" "vect16_sp_mad_power_kernel"
 	#"scalar_sp_add_power_kernel" "scalar_sp_sub_power_kernel" "scalar_sp_mul_power_kernel" "scalar_sp_div_power_kernel" "scalar_sp_mad_power_kernel"
 	#"vect2_sp_add_power_kernel" "vect2_sp_sub_power_kernel" "vect2_sp_mul_power_kernel" "vect2_sp_div_power_kernel" "vect2_sp_mad_power_kernel"
