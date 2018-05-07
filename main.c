@@ -101,6 +101,7 @@ char *available_flop_kernels[] = {
 	"vect8_dp_add_priv_iter_1024_kernel",  "vect8_dp_sub_priv_iter_1024_kernel",  "vect8_dp_mul_priv_iter_1024_kernel",  "vect8_dp_div_priv_iter_1024_kernel",  "vect8_dp_mad_priv_iter_1024_kernel", 
 	"vect16_dp_add_priv_iter_1024_kernel", "vect16_dp_sub_priv_iter_1024_kernel", "vect16_dp_mul_priv_iter_1024_kernel", "vect16_dp_div_priv_iter_1024_kernel", "vect16_dp_mad_priv_iter_1024_kernel", 
 };
+
 char *available_mop_kernels[] = {
 	"scalar_sp_load_store_kernel", "vect2_sp_load_store_kernel", "vect4_sp_load_store_kernel", "vect8_sp_load_store_kernel", "vect16_sp_load_store_kernel",
 	"scalar_dp_load_store_kernel", "vect2_dp_load_store_kernel", "vect4_dp_load_store_kernel", "vect8_dp_load_store_kernel", "vect16_dp_load_store_kernel",
@@ -204,7 +205,6 @@ int main(int argc, char** argv, char **envp) {
 	int threads_per_block = 0;
 	int fma = 0;
 	int power_smoothing = 0;
-	int power_clamping = 0;
 	int quiet = 0;
 	int external_app = 0;
 	int custom_counter = 0;
@@ -221,7 +221,7 @@ int main(int argc, char** argv, char **envp) {
 	uint64_t clock_start, clock_end, clock_delta;
 	uint64_t build_clock_start, build_clock_end, build_clock_delta;
 	uint64_t readbin_clock_start, readbin_clock_end, readbin_clock_delta;
-	uint64_t nominal_cpu_freq = 3500000000;
+	uint64_t nominal_cpu_freq = 2700000000;
 	
 	/* ============================================================================================ */
 	/* ===================================== preliminary stuff ==================================== */
@@ -276,10 +276,6 @@ int main(int argc, char** argv, char **envp) {
 			
 			if (strcmp(argv[i], "-q")==0 || strcmp(argv[i], "--quiet")==0)
 				quiet = 1;
-			
-			// not implemented yet, it would segfault
-			if (strcmp(argv[i], "--power-clamping")==0)
-				power_clamping = 1;
 			
 			if (strcmp(argv[i], "--external-app")==0) {
 				external_app = 1;
@@ -350,25 +346,18 @@ int main(int argc, char** argv, char **envp) {
 	for (int i = 0; i < number_available_flop_kernels; i++) {
 		if (strcmp(kernel_choice, available_flop_kernels[i]) == 0) { match++; kernel_type = 'f'; }
 	}
-	for (int i = 0; i < number_available_mop_kernels; i++) {
-		if (strcmp(kernel_choice, available_mop_kernels[i]) == 0) { match++; kernel_type = 'm'; }
-	}
-	for (int i = 0; i < number_available_power_kernels; i++) {
-		if (strcmp(kernel_choice, available_power_kernels[i]) == 0) { match++; kernel_type = 'p'; }
-	}
-	for (int i = 0; i < number_available_shared_mem_kernels; i++) {
-		if (strcmp(kernel_choice, available_shared_mem_kernels[i]) == 0) { match++; kernel_type = 's'; }
-	}
-	for (int i = 0; i < number_extra_kernels; i++) {
-		if (strcmp(kernel_choice, extra_kernels[i]) == 0) { match++; kernel_type = 'e'; pointer_chase = 1; }
-	}
+	for (int i = 0; i < number_available_mop_kernels; i++) 			{ if (strcmp(kernel_choice, available_mop_kernels[i]) == 0) 		{ match++; kernel_type = 'm'; } }
+	for (int i = 0; i < number_available_power_kernels; i++) 		{ if (strcmp(kernel_choice, available_power_kernels[i]) == 0) 		{ match++; kernel_type = 'p'; } }
+	for (int i = 0; i < number_available_shared_mem_kernels; i++) 	{ if (strcmp(kernel_choice, available_shared_mem_kernels[i]) == 0) 	{ match++; kernel_type = 's'; } }
+	for (int i = 0; i < number_extra_kernels; i++)					{ if (strcmp(kernel_choice, extra_kernels[i]) == 0) 				{ match++; kernel_type = 'e'; pointer_chase = 1; } }
+	
 	if (match == 0) {
 		printf(KRED "Chosen kernel not available. Choose from:\n" KNRM);
-		for (int i = 0; i < number_available_flop_kernels; i++) printf("\t%s\n", available_flop_kernels[i]);
-		for (int i = 0; i < number_available_mop_kernels; i++) printf("\t%s\n", available_mop_kernels[i]);
-		for (int i = 0; i < number_available_power_kernels; i++) printf("\t%s\n", available_power_kernels[i]);
-		for (int i = 0; i < number_available_shared_mem_kernels; i++) printf("\t%s\n", available_shared_mem_kernels[i]);
-		for (int i = 0; i < number_extra_kernels; i++) printf("\t%s\n", extra_kernels[i]);
+		for (int i = 0; i < number_available_flop_kernels; i++) 		printf("\t%s\n", available_flop_kernels[i]);
+		for (int i = 0; i < number_available_mop_kernels; i++) 			printf("\t%s\n", available_mop_kernels[i]);
+		for (int i = 0; i < number_available_power_kernels; i++) 		printf("\t%s\n", available_power_kernels[i]);
+		for (int i = 0; i < number_available_shared_mem_kernels; i++) 	printf("\t%s\n", available_shared_mem_kernels[i]);
+		for (int i = 0; i < number_extra_kernels; i++) 					printf("\t%s\n", extra_kernels[i]);
 		printf("Defaulting to kernel \"scalar_add_kernel\"\n");
 		strcpy(kernel_choice, "scalar_add_kernel");
 		kernel_type = 'f';
