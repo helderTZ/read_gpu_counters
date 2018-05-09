@@ -22,11 +22,12 @@ def create_plotdata(kernel_name, wb_name, ws_name):
 		
 		# print header
 		#print('#block size\tthreads per block\tTotal threads\tIPC/EU GEN', file=f)
-		print('#block size\tthreads per block\tTotal threads\tGPU Power (pkg – pp0 – dram) (OCL_TIMER)', file=f)
+		#print('#block size\tthreads per block\tTotal threads\tGPU Power (pkg – pp0 – dram) (OCL_TIMER)', file=f)
+		print('#block size\tthreads per block\tTotal threads\tTheoretical bandwidth read+write (GB/s)', file=f)
 		#print('#block size\tthreads per block\tTotal threads\tFLOP/cy (using C instructions)', file=f)
 		#print('#block size\tthreads per block\tTotal threads\tBandwidth/EU Read (bytes/cy)\tBandwidth/EU Read (GB/s)', file=f)
 		#print('#block size\tthreads per block\tTotal threads\tBandwidth/EU Read (bytes/cy)\tTheoretical bandwidth', file=f)
-		#print('#block size\tthreads per block\tTotal threads\tBandwidth/EU Read (bytes/cy)\tTheoretical GFLOP/s', file=f)
+		#print('#block size\tthreads per block\tTotal threads\tBandwidth/EU Read (bytes/cy)\tTheoretical bandwidth read+write (GB/s)', file=f)
 		#print('#block size\tthreads per block\tTotal threads\tBandwidth/EU Read (bytes/cy)\tBandwidth/EU Read (GB/s)', file=f)
 		#print(kernel_name + '\t' + '#block size\tthreads per block\tTotal threads\tGPU Power (pkg – pp0 – dram) (OCL_TIMER)')
 		
@@ -49,8 +50,8 @@ def create_plotdata(kernel_name, wb_name, ws_name):
 				#elif ws.cell_value(0,j) == "IPC/EU (using GEN instructions)":
 				#elif ws.cell_value(0,j) == "GPU Power (pkg – pp0 – dram) (OCL_TIMER)":
 				#elif ws.cell_value(0,j) == "FLOP/cy (using C instructions)":
-				#elif ws.cell_value(0,j) == "Bandwidth/EU Read (bytes/cy)":
-				elif ws.cell_value(0,j) == "Theoretical GFLOP/s":
+				elif ws.cell_value(0,j) == "Theoretical bandwidth read+write (GB/s)":
+				#elif ws.cell_value(0,j) == "Theoretical GFLOP/s":
 					ipc.append(ws.cell_value(i,j))
 				#elif ws.cell_value(0,j) == "Bandwidth/EU Read (GB/s)":
 					#ipc2.append(ws.cell_value(i,j))
