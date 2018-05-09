@@ -1879,8 +1879,8 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 		
 		for(int power_it = 0; power_it < power_reps; power_it++) {
 			
+			printf(">>>> power smoothing iter %d <<<<\n", power_it);
 			
-		
 			//================================= CONFIGURE COUNTERS =================================//
 			err = intel_register_access_init(pci_dev, 0, drm_fd);
 			if (err==-1) {

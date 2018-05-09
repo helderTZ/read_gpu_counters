@@ -31,10 +31,10 @@ set key bottom
 
 set yrange [0:20]
 plot './data/scalar_sp_mad_power_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1, \
-	 './data/vect2_sp_mad_power_kernel.csv' using 3:4 title "vect2" with line lt -1 dashtype 2, \
-	 './data/vect4_sp_mad_power_kernel.csv' using 3:4 title "vect4" with line lt -1 dashtype 3, \
-	 './data/vect8_sp_mad_power_kernel.csv' using 3:4 title "vect8" with line lt -1 dashtype 4
-	 #'./data/vect16_sp_mad_power_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 5
+	 './data/vect2_sp_mad_power_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 2, \
+	 './data/vect4_sp_mad_power_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 3, \
+	 './data/vect8_sp_mad_power_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 4, \
+	 './data/vect16_sp_mad_power_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 5
 
 
 #set terminal   svg enhanced

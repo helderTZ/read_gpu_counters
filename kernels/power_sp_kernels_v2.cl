@@ -122,7 +122,7 @@ __kernel void __attribute__((vec_type_hint(float16))) vect16_sp_add_power_kernel
 	int i = get_global_id(0);
 	int j, k;
 	float16 temp = a[i];
-	for(k = 0; k < 32; k++) {
+	for(k = 0; k < 1; k++) {
 		for(j = 0; j < 8192; j++) {
 			temp = temp * (float16) 2.0f + (float16) 1.0f;
 		}
