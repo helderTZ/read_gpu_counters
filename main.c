@@ -887,8 +887,14 @@ int main(int argc, char** argv, char **envp) {
 		printf("[OpenCL setup: %f s]\n", clock_delta/(double)nominal_cpu_freq);
 	}
 	
-
 	
+	size_t workgroup_size;
+	ocl_ret = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE, sizeof(size_t), &workgroup_size, NULL);
+	clCheckError(ocl_ret, __LINE__);
+	printf("Prefered work group size: %d\n", (int) workgroup_size);
+	ocl_ret = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(size_t), &workgroup_size, NULL);
+	clCheckError(ocl_ret, __LINE__);
+	printf("Work group size: %d\n", (int) workgroup_size);
 
 
 	/* ============================================================================================ */

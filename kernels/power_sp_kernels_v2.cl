@@ -3,7 +3,7 @@
   * for power measurement
   * ***************************************************/
  
- __kernel void scalar_sp_add_power_kernel(__global float *a, __global float*b) {
+ __kernel void __attribute__((vec_type_hint(float))) scalar_sp_add_power_kernel(__global float *a, __global float*b) {
 	int i = get_global_id(0);
 	int j, k;
 	float temp = a[i];
@@ -15,7 +15,7 @@
 	a[i] = temp;
 }
 
- __kernel void scalar_sp_mad_power_kernel(__global float *a, __global float*b) {
+ __kernel void __attribute__((vec_type_hint(float))) scalar_sp_mad_power_kernel(__global float *a, __global float*b) {
 	int i = get_global_id(0);
 	int j, k;
 	float temp = a[i];

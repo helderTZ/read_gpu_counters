@@ -2242,7 +2242,7 @@ __kernel void __attribute__((vec_type_hint(float16))) vect16_sp_mad_priv_kernel(
   * Scalar single-precision private mem with loop kernels
   * ***************************************************/
  
-__kernel void scalar_sp_add_priv_iter_1024_kernel(__global float *a) {
+__kernel void __attribute__((vec_type_hint(float))) scalar_sp_add_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = a[i];
@@ -2251,7 +2251,7 @@ __kernel void scalar_sp_add_priv_iter_1024_kernel(__global float *a) {
 	a[i] = temp;
 }
 
-__kernel void scalar_sp_sub_priv_iter_1024_kernel(__global float *a) {
+__kernel void __attribute__((vec_type_hint(float))) scalar_sp_sub_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = a[i];
@@ -2261,7 +2261,7 @@ __kernel void scalar_sp_sub_priv_iter_1024_kernel(__global float *a) {
 }
 
 
-__kernel void scalar_sp_mul_priv_iter_1024_kernel(__global float *a) {
+__kernel void __attribute__((vec_type_hint(float))) scalar_sp_mul_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = a[i];
@@ -2270,7 +2270,7 @@ __kernel void scalar_sp_mul_priv_iter_1024_kernel(__global float *a) {
 	a[i] = temp;
 }
 
-__kernel void scalar_sp_div_priv_iter_1024_kernel(__global float *a) {
+__kernel void __attribute__((vec_type_hint(float))) scalar_sp_div_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = a[i];
@@ -2279,7 +2279,7 @@ __kernel void scalar_sp_div_priv_iter_1024_kernel(__global float *a) {
 	a[i] = temp;
 }
 
-__kernel void scalar_sp_mad_priv_iter_1024_kernel(__global float *a) {
+__kernel void __attribute__((vec_type_hint(float))) scalar_sp_mad_priv_iter_1024_kernel(__global float *a) {
 	int i = get_global_id(0);
 	int j;
 	float temp = a[i];

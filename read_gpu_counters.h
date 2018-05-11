@@ -353,6 +353,8 @@ long long read_tsc_start();
 
 long long read_tsc_end();
 
+void serialize();
+
 /* read_u64_file
  * reads unsigned 64 bytes from file
  * actually reads 32 bytes and converts to 64 bits unsigned value

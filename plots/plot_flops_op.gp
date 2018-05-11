@@ -37,7 +37,7 @@ set title "SIMD Comparison - Scalar SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -54,7 +54,7 @@ set title "SIMD Comparison - Vect2 SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -71,7 +71,7 @@ set title "SIMD Comparison - Vect4 SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -88,7 +88,7 @@ set title "SIMD Comparison - Vect8 SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -105,7 +105,7 @@ set title "SIMD Comparison - Vect16 SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -136,7 +136,7 @@ set title "SIMD Comparison - Scalar SP (Loop kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -153,7 +153,7 @@ set title "SIMD Comparison - Vect2 SP (Loop kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -170,7 +170,7 @@ set title "SIMD Comparison - Vect4 SP (Loop kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -187,7 +187,7 @@ set title "SIMD Comparison - Vect8 SP (Loop kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -204,7 +204,7 @@ set title "SIMD Comparison - Vect16 SP (Loop kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -219,7 +219,7 @@ plot 'data/vect16_sp_add_iter_1024_kernel.csv'  using 3:4 title "add" with line 
 
 ##################################################################
 ##                                                              ##
-##                              Unroll                            ##
+##                              Unroll                          ##
 ##                                                              ##
 ##################################################################
 
@@ -236,7 +236,7 @@ set title "SIMD Comparison - Scalar SP (Unroll kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -253,7 +253,7 @@ set title "SIMD Comparison - Vect2 SP (Unroll kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -270,7 +270,7 @@ set title "SIMD Comparison - Vect4 SP (Unroll kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -287,7 +287,7 @@ set title "SIMD Comparison - Vect8 SP (Unroll kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -304,7 +304,7 @@ set title "SIMD Comparison - Vect16 SP (Unroll kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -319,7 +319,7 @@ plot 'data/vect16_sp_add_iter_128_unroll_64_kernel.csv'  using 3:4 title "add" w
 
 ##################################################################
 ##                                                              ##
-##                              Priv                          ##
+##                              Priv                            ##
 ##                                                              ##
 ##################################################################
 
@@ -336,7 +336,7 @@ set title "SIMD Comparison - Scalar SP (Priv kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -353,7 +353,7 @@ set title "SIMD Comparison - Vect2 SP (Priv kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -370,7 +370,7 @@ set title "SIMD Comparison - Vect4 SP (Priv kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -387,7 +387,7 @@ set title "SIMD Comparison - Vect8 SP (Priv kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -404,7 +404,7 @@ set title "SIMD Comparison - Vect16 SP (Priv kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"

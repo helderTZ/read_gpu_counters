@@ -372,7 +372,9 @@ long long read_tsc_end(){
 	return ((long long)d << 32 | a);
 }
 
-
+void serialize(){
+	asm volatile ( "xorl %%eax, %%eax \n cpuid " : : : "%eax","%ebx","%ecx","%edx" );
+}
 
 
 
@@ -1894,12 +1896,16 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 			if (custom_counter_dword != 0) OUTREG(eu_perf_cnt_ctl_0_addr, custom_counter_dword);
 			else CONFIG_COUNTERS
 			intel_register_access_fini();
+			
+			serialize();
+			
 			emit_report_perf_count(batch,
 									bo,
 									0,  		 /* report dst offset */
 									0xdeadbeef); /* report id */
 			intel_batchbuffer_flush_with_context(batch, context0);
 			
+						
 			//================================= START PAPI =================================//
 			retval = PAPI_start(EventSet);
 			if (retval != PAPI_OK) {
@@ -1909,6 +1915,7 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 			
 			//================================= RUN KERNEL =================================//
 			cpu_ticks0 = read_tsc_start();
+			
 			ret = clEnqueueNDRangeKernel(command_queue, kernel, 1, NULL, &global, &local, 0, NULL, &event); clCheckError(ret, __LINE__);
 			clFinish(command_queue); clCheckError(ret, __LINE__);
 			cpu_ticks1 = read_tsc_end();
@@ -1920,17 +1927,19 @@ void read_counters_rpc(int dump, int power_smoothing, int external_app, char *ap
 				exit(1);
 			}
 			
+						
 			//================================= GET COUNTERS =================================//
 			emit_report_perf_count(batch,
 									bo,
 									256,   		 /* report dst offset */
 									0xbeefbeef); /* report id */
-
+			
 			intel_batchbuffer_flush_with_context(batch, context1);
 			ret = drm_intel_bo_map(bo, false /* write enable */);
 			report0_32 = bo->virtual;
 			report1_32 = report0_32 + 64;
 			
+			serialize();
 			
 			//================================= RETURN COUNTERS TO DEFAULT SETTING =================================//
 			err = intel_register_access_init(pci_dev, 0, drm_fd);

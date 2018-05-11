@@ -1,0 +1,6 @@
+LABEL0
+         mov      (1|M0)         null<1>:ud    0x83B43A33:ud                   
+(W)      mov      (8|M0)         r2.0<1>:ud    r0.0<1;1,0>:ud                  
+(W)      or       (1|M0)         cr0.0<1>:ud   cr0.0<0;1,0>:ud   0x4C0:uw         {Switch}
+(W)      mov      (8|M0)         r127.0<1>:d   r2.0<8;8,1>:d                    {Compacted}
+         send     (8|M0)         null:ud       r127:ud           0x4D00027  0x2000010 {EOT} //  spawner  wr:1, rd:0, fc: 0x10

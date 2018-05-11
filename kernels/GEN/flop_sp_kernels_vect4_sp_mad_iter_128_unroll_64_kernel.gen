@@ -1,0 +1,1284 @@
+LABEL0
+         mov      (1|M0)         null<1>:ud    0x90DC58F6:ud                   
+(W)      mov      (8|M0)         r6.0<1>:ud    r0.0<1;1,0>:ud                  
+(W)      or       (1|M0)         cr0.0<1>:ud   cr0.0<0;1,0>:ud   0x4C0:uw         {Switch}
+(W)      mul      (1|M0)         r3.0<1>:d     r8.4<0;1,0>:d     r6.1<0;1,0>:d   
+(W)      mov      (1|M0)         r8.7<1>:d     0:w                             
+         add      (16|M0)        r4.0<1>:d     r1.0<8;8,1>:uw    r3.0<0;1,0>:d   
+         add      (16|M16)       r81.0<1>:d    r2.0<8;8,1>:uw    r3.0<0;1,0>:d   
+         add      (16|M0)        r4.0<1>:d     r4.0<8;8,1>:d     r7.0<0;1,0>:d    {Compacted}
+         add      (16|M16)       r81.0<1>:d    r81.0<8;8,1>:d    r7.0<0;1,0>:d   
+         shl      (8|M0)         r83.0<1>:q    r4.0<8;8,1>:d     4:w             
+         shl      (8|M8)         r85.0<1>:q    r5.0<8;8,1>:d     4:w             
+         shl      (8|M16)        r87.0<1>:q    r81.0<8;8,1>:d    4:w             
+         shl      (8|M24)        r9.0<1>:q     r82.0<8;8,1>:d    4:w             
+         add      (8|M0)         r46.0<1>:q    r8.0<0;1,0>:q     r83.0<4;4,1>:q  
+         add      (8|M8)         r48.0<1>:q    r8.0<0;1,0>:q     r85.0<4;4,1>:q  
+         add      (8|M16)        r50.0<1>:q    r8.0<0;1,0>:q     r87.0<4;4,1>:q  
+         add      (8|M24)        r52.0<1>:q    r8.0<0;1,0>:q     r9.0<4;4,1>:q   
+         add      (8|M0)         r54.0<1>:q    r8.1<0;1,0>:q     r83.0<4;4,1>:q  
+         add      (8|M8)         r56.0<1>:q    r8.1<0;1,0>:q     r85.0<4;4,1>:q  
+         add      (8|M16)        r58.0<1>:q    r8.1<0;1,0>:q     r87.0<4;4,1>:q  
+         add      (8|M24)        r60.0<1>:q    r8.1<0;1,0>:q     r9.0<4;4,1>:q   
+         send     (16|M0)        r62:w         r46:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r70:w         r50:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+LABEL360
+         send     (16|M0)        r81:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r89:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+(W)      add      (1|M0)         r8.7<1>:d     r8.7<0;1,0>:d     1:w             
+(W)      cmp      (16|M0)  [(lt)f0.0]  null<1>:d     r8.7<0;1,0>:d     128:w           
+(W)      cmp      (16|M16) [(lt)f0.0]  null<1>:d     r8.7<0;1,0>:d     128:w           
+         mad      (16|M0)        r97.0<1>:f    r81.0<8;1>:f      r62.0<8;1>:f      r81.0<1>:f       {Compacted}
+         mad      (16|M0)        r101.0<1>:f   r83.0<8;1>:f      r64.0<8;1>:f      r83.0<1>:f       {Compacted}
+         mad      (16|M0)        r105.0<1>:f   r85.0<8;1>:f      r66.0<8;1>:f      r85.0<1>:f       {Compacted}
+         mad      (16|M0)        r109.0<1>:f   r87.0<8;1>:f      r68.0<8;1>:f      r87.0<1>:f       {Compacted}
+         mad      (16|M16)       r99.0<1>:f    r89.0<8;1>:f      r70.0<8;1>:f      r89.0<1>:f       {Compacted}
+         mad      (16|M16)       r103.0<1>:f   r91.0<8;1>:f      r72.0<8;1>:f      r91.0<1>:f       {Compacted}
+         mad      (16|M16)       r107.0<1>:f   r93.0<8;1>:f      r74.0<8;1>:f      r93.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r95.0<8;1>:f      r76.0<8;1>:f      r95.0<1>:f       {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r97.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r101.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r105.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r109.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r99.0<8;8,1>:f                  
+         mov      (16|M16)       r19.0<1>:f    r103.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r107.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r111.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r26:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r34:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r113.0<1>:f   r26.0<8;1>:f      r97.0<8;1>:f      r26.0<1>:f       {Compacted}
+         mad      (16|M0)        r117.0<1>:f   r28.0<8;1>:f      r101.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M0)        r121.0<1>:f   r30.0<8;1>:f      r105.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r125.0<1>:f   r32.0<8;1>:f      r109.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r34.0<8;1>:f      r99.0<8;1>:f      r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r36.0<8;1>:f      r103.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r38.0<8;1>:f      r107.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r40.0<8;1>:f      r111.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mov      (16|M0)        r85.0<1>:f    r113.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r87.0<1>:f    r117.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r89.0<1>:f    r121.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r91.0<1>:f    r125.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r93.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r95.0<1>:f    r119.0<8;8,1>:f                 
+         mov      (16|M16)       r97.0<1>:f    r123.0<8;8,1>:f                 
+         mov      (16|M16)       r99.0<1>:f    r83.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r85               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r94:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r102:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r111.0<1>:f   r94.0<8;1>:f      r113.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r102.0<8;1>:f     r115.0<8;1>:f     r102.0<1>:f      {Compacted}
+         mad      (16|M0)        r115.0<1>:f   r96.0<8;1>:f      r117.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r104.0<8;1>:f     r119.0<8;1>:f     r104.0<1>:f      {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r98.0<8;1>:f      r121.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r106.0<8;1>:f     r123.0<8;1>:f     r106.0<1>:f      {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r100.0<8;1>:f     r125.0<8;1>:f     r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r108.0<8;1>:f     r83.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mov      (16|M0)        r86.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r82.0<1>:f    r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r84.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r88.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r90.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r92.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r94.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r96.0<1>:f    r125.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r82               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r90               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r82:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r99.0<1>:f    r82.0<8;1>:f      r111.0<8;1>:f     r82.0<1>:f       {Compacted}
+         mad      (16|M0)        r103.0<1>:f   r84.0<8;1>:f      r115.0<8;1>:f     r84.0<1>:f       {Compacted}
+         mad      (16|M0)        r107.0<1>:f   r86.0<8;1>:f      r119.0<8;1>:f     r86.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r90.0<8;1>:f      r113.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r88.0<8;1>:f      r123.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r92.0<8;1>:f      r117.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r115.0<1>:f   r99.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r119.0<1>:f   r107.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r117.0<1>:f   r103.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r121.0<1>:f   r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r9.0<1>:f     r101.0<8;8,1>:f                 
+         mov      (16|M16)       r11.0<1>:f    r105.0<8;8,1>:f                 
+         mov      (16|M16)       r13.0<1>:f    r109.0<8;8,1>:f                 
+         mov      (16|M16)       r15.0<1>:f    r113.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r115              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r10:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r115.0<1>:f   r10.0<8;1>:f      r99.0<8;1>:f      r10.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r14.0<8;1>:f      r107.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M0)        r83.0<1>:f    r16.0<8;1>:f      r111.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r18.0<8;1>:f      r101.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r20.0<8;1>:f      r105.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r22.0<8;1>:f      r109.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r24.0<8;1>:f      r113.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r32.0<1>:f    r83.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r34.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r36.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r38.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r40.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r26               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r96:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r88:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r107.0<1>:f   r96.0<8;1>:f      r117.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r105.0<1>:f   r88.0<8;1>:f      r115.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M0)        r109.0<1>:f   r90.0<8;1>:f      r119.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r113.0<1>:f   r92.0<8;1>:f      r123.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M0)        r117.0<1>:f   r94.0<8;1>:f      r83.0<8;1>:f      r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r98.0<8;1>:f      r121.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r100.0<8;1>:f     r125.0<8;1>:f     r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r102.0<8;1>:f     r85.0<8;1>:f      r102.0<1>:f      {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r105.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r109.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r113.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r117.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r107.0<8;8,1>:f                 
+         mov      (16|M16)       r19.0<1>:f    r111.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r26:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r34:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M0)        r125.0<1>:f   r28.0<8;1>:f      r109.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M0)        r85.0<1>:f    r30.0<8;1>:f      r113.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r89.0<1>:f    r32.0<8;1>:f      r117.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r34.0<8;1>:f      r107.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r36.0<8;1>:f      r111.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r38.0<8;1>:f      r115.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M16)       r91.0<1>:f    r40.0<8;1>:f      r119.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mov      (16|M0)        r93.0<1>:f    r121.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r95.0<1>:f    r125.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r97.0<1>:f    r85.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r99.0<1>:f    r89.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r101.0<1>:f   r123.0<8;8,1>:f                 
+         mov      (16|M16)       r103.0<1>:f   r83.0<8;8,1>:f                  
+         mov      (16|M16)       r105.0<1>:f   r87.0<8;8,1>:f                  
+         mov      (16|M16)       r107.0<1>:f   r91.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r101              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r102:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r94:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r113.0<1>:f   r102.0<8;1>:f     r123.0<8;1>:f     r102.0<1>:f      {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M0)        r115.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r98.0<8;1>:f      r85.0<8;1>:f      r98.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r100.0<8;1>:f     r89.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r104.0<8;1>:f     r83.0<8;1>:f      r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r106.0<8;1>:f     r87.0<8;1>:f      r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r108.0<8;1>:f     r91.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mov      (16|M0)        r82.0<1>:f    r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r84.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r86.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r88.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r90.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r92.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r94.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r96.0<1>:f    r125.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r82               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r90               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r82:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r99.0<1>:f    r82.0<8;1>:f      r111.0<8;1>:f     r82.0<1>:f       {Compacted}
+         mad      (16|M0)        r103.0<1>:f   r84.0<8;1>:f      r115.0<8;1>:f     r84.0<1>:f       {Compacted}
+         mad      (16|M0)        r107.0<1>:f   r86.0<8;1>:f      r119.0<8;1>:f     r86.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r90.0<8;1>:f      r113.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r88.0<8;1>:f      r123.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r92.0<8;1>:f      r117.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r115.0<1>:f   r99.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r119.0<1>:f   r107.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r117.0<1>:f   r103.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r121.0<1>:f   r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r9.0<1>:f     r101.0<8;8,1>:f                 
+         mov      (16|M16)       r11.0<1>:f    r105.0<8;8,1>:f                 
+         mov      (16|M16)       r13.0<1>:f    r109.0<8;8,1>:f                 
+         mov      (16|M16)       r15.0<1>:f    r113.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r115              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r10:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r115.0<1>:f   r10.0<8;1>:f      r99.0<8;1>:f      r10.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r14.0<8;1>:f      r107.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M0)        r83.0<1>:f    r16.0<8;1>:f      r111.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r18.0<8;1>:f      r101.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r20.0<8;1>:f      r105.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r22.0<8;1>:f      r109.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r24.0<8;1>:f      r113.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r32.0<1>:f    r83.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r34.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r36.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r38.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r40.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r26               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r96:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r88:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r107.0<1>:f   r96.0<8;1>:f      r117.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r105.0<1>:f   r88.0<8;1>:f      r115.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M0)        r109.0<1>:f   r90.0<8;1>:f      r119.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r113.0<1>:f   r92.0<8;1>:f      r123.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M0)        r117.0<1>:f   r94.0<8;1>:f      r83.0<8;1>:f      r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r98.0<8;1>:f      r121.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r100.0<8;1>:f     r125.0<8;1>:f     r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r102.0<8;1>:f     r85.0<8;1>:f      r102.0<1>:f      {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r105.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r109.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r113.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r117.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r107.0<8;8,1>:f                 
+         mov      (16|M16)       r19.0<1>:f    r111.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r26:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r34:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M0)        r125.0<1>:f   r28.0<8;1>:f      r109.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M0)        r85.0<1>:f    r30.0<8;1>:f      r113.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r89.0<1>:f    r32.0<8;1>:f      r117.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r34.0<8;1>:f      r107.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r36.0<8;1>:f      r111.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r38.0<8;1>:f      r115.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M16)       r91.0<1>:f    r40.0<8;1>:f      r119.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mov      (16|M0)        r93.0<1>:f    r121.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r95.0<1>:f    r125.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r97.0<1>:f    r85.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r99.0<1>:f    r89.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r101.0<1>:f   r123.0<8;8,1>:f                 
+         mov      (16|M16)       r103.0<1>:f   r83.0<8;8,1>:f                  
+         mov      (16|M16)       r105.0<1>:f   r87.0<8;8,1>:f                  
+         mov      (16|M16)       r107.0<1>:f   r91.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r101              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r102:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r94:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r113.0<1>:f   r102.0<8;1>:f     r123.0<8;1>:f     r102.0<1>:f      {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M0)        r115.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r98.0<8;1>:f      r85.0<8;1>:f      r98.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r100.0<8;1>:f     r89.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r104.0<8;1>:f     r83.0<8;1>:f      r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r106.0<8;1>:f     r87.0<8;1>:f      r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r108.0<8;1>:f     r91.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mov      (16|M0)        r82.0<1>:f    r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r84.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r86.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r88.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r90.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r92.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r94.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r96.0<1>:f    r125.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r82               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r90               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r82:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r99.0<1>:f    r82.0<8;1>:f      r111.0<8;1>:f     r82.0<1>:f       {Compacted}
+         mad      (16|M0)        r103.0<1>:f   r84.0<8;1>:f      r115.0<8;1>:f     r84.0<1>:f       {Compacted}
+         mad      (16|M0)        r107.0<1>:f   r86.0<8;1>:f      r119.0<8;1>:f     r86.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r90.0<8;1>:f      r113.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r88.0<8;1>:f      r123.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r92.0<8;1>:f      r117.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r115.0<1>:f   r99.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r119.0<1>:f   r107.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r117.0<1>:f   r103.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r121.0<1>:f   r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r9.0<1>:f     r101.0<8;8,1>:f                 
+         mov      (16|M16)       r11.0<1>:f    r105.0<8;8,1>:f                 
+         mov      (16|M16)       r13.0<1>:f    r109.0<8;8,1>:f                 
+         mov      (16|M16)       r15.0<1>:f    r113.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r115              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r10:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r115.0<1>:f   r10.0<8;1>:f      r99.0<8;1>:f      r10.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r14.0<8;1>:f      r107.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M0)        r83.0<1>:f    r16.0<8;1>:f      r111.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r18.0<8;1>:f      r101.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r20.0<8;1>:f      r105.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r22.0<8;1>:f      r109.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r24.0<8;1>:f      r113.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r32.0<1>:f    r83.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r34.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r36.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r38.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r40.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r26               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r96:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r88:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r107.0<1>:f   r96.0<8;1>:f      r117.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r105.0<1>:f   r88.0<8;1>:f      r115.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M0)        r109.0<1>:f   r90.0<8;1>:f      r119.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r113.0<1>:f   r92.0<8;1>:f      r123.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M0)        r117.0<1>:f   r94.0<8;1>:f      r83.0<8;1>:f      r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r98.0<8;1>:f      r121.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r100.0<8;1>:f     r125.0<8;1>:f     r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r102.0<8;1>:f     r85.0<8;1>:f      r102.0<1>:f      {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r105.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r109.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r113.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r117.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r107.0<8;8,1>:f                 
+         mov      (16|M16)       r19.0<1>:f    r111.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r26:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r34:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M0)        r125.0<1>:f   r28.0<8;1>:f      r109.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M0)        r85.0<1>:f    r30.0<8;1>:f      r113.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r89.0<1>:f    r32.0<8;1>:f      r117.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r34.0<8;1>:f      r107.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r36.0<8;1>:f      r111.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r38.0<8;1>:f      r115.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M16)       r91.0<1>:f    r40.0<8;1>:f      r119.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mov      (16|M0)        r93.0<1>:f    r121.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r95.0<1>:f    r125.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r97.0<1>:f    r85.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r99.0<1>:f    r89.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r101.0<1>:f   r123.0<8;8,1>:f                 
+         mov      (16|M16)       r103.0<1>:f   r83.0<8;8,1>:f                  
+         mov      (16|M16)       r105.0<1>:f   r87.0<8;8,1>:f                  
+         mov      (16|M16)       r107.0<1>:f   r91.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r101              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r102:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r94:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r113.0<1>:f   r102.0<8;1>:f     r123.0<8;1>:f     r102.0<1>:f      {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M0)        r115.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r98.0<8;1>:f      r85.0<8;1>:f      r98.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r100.0<8;1>:f     r89.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r104.0<8;1>:f     r83.0<8;1>:f      r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r106.0<8;1>:f     r87.0<8;1>:f      r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r108.0<8;1>:f     r91.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mov      (16|M0)        r82.0<1>:f    r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r84.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r86.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r88.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r90.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r92.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r94.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r96.0<1>:f    r125.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r82               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r90               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r82:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r99.0<1>:f    r82.0<8;1>:f      r111.0<8;1>:f     r82.0<1>:f       {Compacted}
+         mad      (16|M0)        r103.0<1>:f   r84.0<8;1>:f      r115.0<8;1>:f     r84.0<1>:f       {Compacted}
+         mad      (16|M0)        r107.0<1>:f   r86.0<8;1>:f      r119.0<8;1>:f     r86.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r90.0<8;1>:f      r113.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r88.0<8;1>:f      r123.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r92.0<8;1>:f      r117.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r115.0<1>:f   r99.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r119.0<1>:f   r107.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r117.0<1>:f   r103.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r121.0<1>:f   r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r9.0<1>:f     r101.0<8;8,1>:f                 
+         mov      (16|M16)       r11.0<1>:f    r105.0<8;8,1>:f                 
+         mov      (16|M16)       r13.0<1>:f    r109.0<8;8,1>:f                 
+         mov      (16|M16)       r15.0<1>:f    r113.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r115              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r10:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r115.0<1>:f   r10.0<8;1>:f      r99.0<8;1>:f      r10.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r14.0<8;1>:f      r107.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M0)        r83.0<1>:f    r16.0<8;1>:f      r111.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r18.0<8;1>:f      r101.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r20.0<8;1>:f      r105.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r22.0<8;1>:f      r109.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r24.0<8;1>:f      r113.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r32.0<1>:f    r83.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r34.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r36.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r38.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r40.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r26               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r96:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r88:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r107.0<1>:f   r96.0<8;1>:f      r117.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r105.0<1>:f   r88.0<8;1>:f      r115.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M0)        r109.0<1>:f   r90.0<8;1>:f      r119.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r113.0<1>:f   r92.0<8;1>:f      r123.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M0)        r117.0<1>:f   r94.0<8;1>:f      r83.0<8;1>:f      r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r98.0<8;1>:f      r121.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r100.0<8;1>:f     r125.0<8;1>:f     r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r102.0<8;1>:f     r85.0<8;1>:f      r102.0<1>:f      {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r105.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r109.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r113.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r117.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r107.0<8;8,1>:f                 
+         mov      (16|M16)       r19.0<1>:f    r111.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r26:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r34:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M0)        r125.0<1>:f   r28.0<8;1>:f      r109.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M0)        r85.0<1>:f    r30.0<8;1>:f      r113.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r89.0<1>:f    r32.0<8;1>:f      r117.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r34.0<8;1>:f      r107.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r36.0<8;1>:f      r111.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r38.0<8;1>:f      r115.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M16)       r91.0<1>:f    r40.0<8;1>:f      r119.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mov      (16|M0)        r93.0<1>:f    r121.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r95.0<1>:f    r125.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r97.0<1>:f    r85.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r99.0<1>:f    r89.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r101.0<1>:f   r123.0<8;8,1>:f                 
+         mov      (16|M16)       r103.0<1>:f   r83.0<8;8,1>:f                  
+         mov      (16|M16)       r105.0<1>:f   r87.0<8;8,1>:f                  
+         mov      (16|M16)       r107.0<1>:f   r91.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r101              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r102:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r94:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r113.0<1>:f   r102.0<8;1>:f     r123.0<8;1>:f     r102.0<1>:f      {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M0)        r115.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r98.0<8;1>:f      r85.0<8;1>:f      r98.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r100.0<8;1>:f     r89.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r104.0<8;1>:f     r83.0<8;1>:f      r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r106.0<8;1>:f     r87.0<8;1>:f      r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r108.0<8;1>:f     r91.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mov      (16|M0)        r82.0<1>:f    r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r84.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r86.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r88.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r90.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r92.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r94.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r96.0<1>:f    r125.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r82               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r90               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r82:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r99.0<1>:f    r82.0<8;1>:f      r111.0<8;1>:f     r82.0<1>:f       {Compacted}
+         mad      (16|M0)        r103.0<1>:f   r84.0<8;1>:f      r115.0<8;1>:f     r84.0<1>:f       {Compacted}
+         mad      (16|M0)        r107.0<1>:f   r86.0<8;1>:f      r119.0<8;1>:f     r86.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r90.0<8;1>:f      r113.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r88.0<8;1>:f      r123.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r92.0<8;1>:f      r117.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r115.0<1>:f   r99.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r119.0<1>:f   r107.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r117.0<1>:f   r103.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r121.0<1>:f   r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r9.0<1>:f     r101.0<8;8,1>:f                 
+         mov      (16|M16)       r11.0<1>:f    r105.0<8;8,1>:f                 
+         mov      (16|M16)       r13.0<1>:f    r109.0<8;8,1>:f                 
+         mov      (16|M16)       r15.0<1>:f    r113.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r115              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r10:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r115.0<1>:f   r10.0<8;1>:f      r99.0<8;1>:f      r10.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r14.0<8;1>:f      r107.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M0)        r83.0<1>:f    r16.0<8;1>:f      r111.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r18.0<8;1>:f      r101.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r20.0<8;1>:f      r105.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r22.0<8;1>:f      r109.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r24.0<8;1>:f      r113.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r32.0<1>:f    r83.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r34.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r36.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r38.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r40.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r26               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r96:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r88:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r107.0<1>:f   r96.0<8;1>:f      r117.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r105.0<1>:f   r88.0<8;1>:f      r115.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M0)        r109.0<1>:f   r90.0<8;1>:f      r119.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r113.0<1>:f   r92.0<8;1>:f      r123.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M0)        r117.0<1>:f   r94.0<8;1>:f      r83.0<8;1>:f      r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r98.0<8;1>:f      r121.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r100.0<8;1>:f     r125.0<8;1>:f     r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r102.0<8;1>:f     r85.0<8;1>:f      r102.0<1>:f      {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r105.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r109.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r113.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r117.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r107.0<8;8,1>:f                 
+         mov      (16|M16)       r19.0<1>:f    r111.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r26:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r34:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M0)        r125.0<1>:f   r28.0<8;1>:f      r109.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M0)        r85.0<1>:f    r30.0<8;1>:f      r113.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r89.0<1>:f    r32.0<8;1>:f      r117.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r34.0<8;1>:f      r107.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r36.0<8;1>:f      r111.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r38.0<8;1>:f      r115.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M16)       r91.0<1>:f    r40.0<8;1>:f      r119.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mov      (16|M0)        r93.0<1>:f    r121.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r95.0<1>:f    r125.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r97.0<1>:f    r85.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r99.0<1>:f    r89.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r101.0<1>:f   r123.0<8;8,1>:f                 
+         mov      (16|M16)       r103.0<1>:f   r83.0<8;8,1>:f                  
+         mov      (16|M16)       r105.0<1>:f   r87.0<8;8,1>:f                  
+         mov      (16|M16)       r107.0<1>:f   r91.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r101              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r102:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r94:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r113.0<1>:f   r102.0<8;1>:f     r123.0<8;1>:f     r102.0<1>:f      {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M0)        r115.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r98.0<8;1>:f      r85.0<8;1>:f      r98.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r100.0<8;1>:f     r89.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r104.0<8;1>:f     r83.0<8;1>:f      r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r106.0<8;1>:f     r87.0<8;1>:f      r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r108.0<8;1>:f     r91.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mov      (16|M0)        r82.0<1>:f    r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r84.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r86.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r88.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r90.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r92.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r94.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r96.0<1>:f    r125.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r82               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r90               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r82:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r99.0<1>:f    r82.0<8;1>:f      r111.0<8;1>:f     r82.0<1>:f       {Compacted}
+         mad      (16|M0)        r103.0<1>:f   r84.0<8;1>:f      r115.0<8;1>:f     r84.0<1>:f       {Compacted}
+         mad      (16|M0)        r107.0<1>:f   r86.0<8;1>:f      r119.0<8;1>:f     r86.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r90.0<8;1>:f      r113.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r88.0<8;1>:f      r123.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r92.0<8;1>:f      r117.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r115.0<1>:f   r99.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r119.0<1>:f   r107.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r117.0<1>:f   r103.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r121.0<1>:f   r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r9.0<1>:f     r101.0<8;8,1>:f                 
+         mov      (16|M16)       r11.0<1>:f    r105.0<8;8,1>:f                 
+         mov      (16|M16)       r13.0<1>:f    r109.0<8;8,1>:f                 
+         mov      (16|M16)       r15.0<1>:f    r113.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r115              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r10:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r115.0<1>:f   r10.0<8;1>:f      r99.0<8;1>:f      r10.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r14.0<8;1>:f      r107.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M0)        r83.0<1>:f    r16.0<8;1>:f      r111.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r18.0<8;1>:f      r101.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r20.0<8;1>:f      r105.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r22.0<8;1>:f      r109.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r24.0<8;1>:f      r113.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r32.0<1>:f    r83.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r34.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r36.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r38.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r40.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r26               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r96:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r88:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r107.0<1>:f   r96.0<8;1>:f      r117.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r105.0<1>:f   r88.0<8;1>:f      r115.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M0)        r109.0<1>:f   r90.0<8;1>:f      r119.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r113.0<1>:f   r92.0<8;1>:f      r123.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M0)        r117.0<1>:f   r94.0<8;1>:f      r83.0<8;1>:f      r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r98.0<8;1>:f      r121.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r100.0<8;1>:f     r125.0<8;1>:f     r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r102.0<8;1>:f     r85.0<8;1>:f      r102.0<1>:f      {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r105.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r109.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r113.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r117.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r107.0<8;8,1>:f                 
+         mov      (16|M16)       r19.0<1>:f    r111.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r26:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r34:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M0)        r125.0<1>:f   r28.0<8;1>:f      r109.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M0)        r85.0<1>:f    r30.0<8;1>:f      r113.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r89.0<1>:f    r32.0<8;1>:f      r117.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r34.0<8;1>:f      r107.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r36.0<8;1>:f      r111.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r38.0<8;1>:f      r115.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M16)       r91.0<1>:f    r40.0<8;1>:f      r119.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mov      (16|M0)        r93.0<1>:f    r121.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r95.0<1>:f    r125.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r97.0<1>:f    r85.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r99.0<1>:f    r89.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r101.0<1>:f   r123.0<8;8,1>:f                 
+         mov      (16|M16)       r103.0<1>:f   r83.0<8;8,1>:f                  
+         mov      (16|M16)       r105.0<1>:f   r87.0<8;8,1>:f                  
+         mov      (16|M16)       r107.0<1>:f   r91.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r101              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r102:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r94:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r113.0<1>:f   r102.0<8;1>:f     r123.0<8;1>:f     r102.0<1>:f      {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M0)        r115.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r98.0<8;1>:f      r85.0<8;1>:f      r98.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r100.0<8;1>:f     r89.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r104.0<8;1>:f     r83.0<8;1>:f      r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r106.0<8;1>:f     r87.0<8;1>:f      r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r108.0<8;1>:f     r91.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mov      (16|M0)        r82.0<1>:f    r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r84.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r86.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r88.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r90.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r92.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r94.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r96.0<1>:f    r125.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r82               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r90               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r82:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r99.0<1>:f    r82.0<8;1>:f      r111.0<8;1>:f     r82.0<1>:f       {Compacted}
+         mad      (16|M0)        r103.0<1>:f   r84.0<8;1>:f      r115.0<8;1>:f     r84.0<1>:f       {Compacted}
+         mad      (16|M0)        r107.0<1>:f   r86.0<8;1>:f      r119.0<8;1>:f     r86.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r90.0<8;1>:f      r113.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r88.0<8;1>:f      r123.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r92.0<8;1>:f      r117.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r115.0<1>:f   r99.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r119.0<1>:f   r107.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r117.0<1>:f   r103.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r121.0<1>:f   r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r9.0<1>:f     r101.0<8;8,1>:f                 
+         mov      (16|M16)       r11.0<1>:f    r105.0<8;8,1>:f                 
+         mov      (16|M16)       r13.0<1>:f    r109.0<8;8,1>:f                 
+         mov      (16|M16)       r15.0<1>:f    r113.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r115              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r10:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r115.0<1>:f   r10.0<8;1>:f      r99.0<8;1>:f      r10.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r14.0<8;1>:f      r107.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M0)        r83.0<1>:f    r16.0<8;1>:f      r111.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r18.0<8;1>:f      r101.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r20.0<8;1>:f      r105.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r22.0<8;1>:f      r109.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r24.0<8;1>:f      r113.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r32.0<1>:f    r83.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r34.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r36.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r38.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r40.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r26               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r96:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r88:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r107.0<1>:f   r96.0<8;1>:f      r117.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r105.0<1>:f   r88.0<8;1>:f      r115.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M0)        r109.0<1>:f   r90.0<8;1>:f      r119.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M0)        r113.0<1>:f   r92.0<8;1>:f      r123.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M0)        r117.0<1>:f   r94.0<8;1>:f      r83.0<8;1>:f      r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r98.0<8;1>:f      r121.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r100.0<8;1>:f     r125.0<8;1>:f     r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r102.0<8;1>:f     r85.0<8;1>:f      r102.0<1>:f      {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r105.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r109.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r113.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r117.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r107.0<8;8,1>:f                 
+         mov      (16|M16)       r19.0<1>:f    r111.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r26:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r34:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M0)        r125.0<1>:f   r28.0<8;1>:f      r109.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M0)        r85.0<1>:f    r30.0<8;1>:f      r113.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M0)        r89.0<1>:f    r32.0<8;1>:f      r117.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r34.0<8;1>:f      r107.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r36.0<8;1>:f      r111.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r38.0<8;1>:f      r115.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mad      (16|M16)       r91.0<1>:f    r40.0<8;1>:f      r119.0<8;1>:f     r40.0<1>:f       {Compacted}
+         mov      (16|M0)        r93.0<1>:f    r121.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r95.0<1>:f    r125.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r97.0<1>:f    r85.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r99.0<1>:f    r89.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r101.0<1>:f   r123.0<8;8,1>:f                 
+         mov      (16|M16)       r103.0<1>:f   r83.0<8;8,1>:f                  
+         mov      (16|M16)       r105.0<1>:f   r87.0<8;8,1>:f                  
+         mov      (16|M16)       r107.0<1>:f   r91.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r101              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M16)       r102:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M0)        r94:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M16)       r113.0<1>:f   r102.0<8;1>:f     r123.0<8;1>:f     r102.0<1>:f      {Compacted}
+         mad      (16|M0)        r111.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M0)        r115.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M0)        r119.0<1>:f   r98.0<8;1>:f      r85.0<8;1>:f      r98.0<1>:f       {Compacted}
+         mad      (16|M0)        r123.0<1>:f   r100.0<8;1>:f     r89.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r104.0<8;1>:f     r83.0<8;1>:f      r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r106.0<8;1>:f     r87.0<8;1>:f      r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r108.0<8;1>:f     r91.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mov      (16|M0)        r82.0<1>:f    r111.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r84.0<1>:f    r115.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r86.0<1>:f    r119.0<8;8,1>:f                  {Compacted}
+         mov      (16|M0)        r88.0<1>:f    r123.0<8;8,1>:f                  {Compacted}
+         mov      (16|M16)       r90.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r92.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r94.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r96.0<1>:f    r125.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r82               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r90               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r82:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r42.0<1>:f    r82.0<8;1>:f      r111.0<8;1>:f     r82.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r84.0<8;1>:f      r115.0<8;1>:f     r84.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r86.0<8;1>:f      r119.0<8;1>:f     r86.0<1>:f       {Compacted}
+         mad      (16|M0)        r10.0<1>:f    r88.0<8;1>:f      r123.0<8;1>:f     r88.0<1>:f       {Compacted}
+         mad      (16|M16)       r99.0<1>:f    r90.0<8;1>:f      r113.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r92.0<8;1>:f      r117.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r103.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r96.0<8;1>:f      r125.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r12.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r14.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r16.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r18.0<1>:f    r10.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r20.0<1>:f    r99.0<8;8,1>:f                  
+         mov      (16|M16)       r22.0<1>:f    r101.0<8;8,1>:f                 
+         mov      (16|M16)       r24.0<1>:f    r103.0<8;8,1>:f                 
+         mov      (16|M16)       r26.0<1>:f    r105.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r12               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r20               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r107:w        r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r28:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r36.0<1>:f    r107.0<8;1>:f     r42.0<8;1>:f      r107.0<1>:f      {Compacted}
+         mad      (16|M0)        r38.0<1>:f    r109.0<8;1>:f     r44.0<8;1>:f      r109.0<1>:f      {Compacted}
+         mad      (16|M0)        r40.0<1>:f    r111.0<8;1>:f     r4.0<8;1>:f       r111.0<1>:f      {Compacted}
+         mad      (16|M0)        r42.0<1>:f    r113.0<8;1>:f     r10.0<8;1>:f      r113.0<1>:f      {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r28.0<8;1>:f      r99.0<8;1>:f      r28.0<1>:f       {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r30.0<8;1>:f      r101.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r32.0<8;1>:f      r103.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r34.0<8;1>:f      r105.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r36.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r38.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r40.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r17.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r19.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r21.0<1>:f    r119.0<8;8,1>:f                 
+         mov      (16|M16)       r23.0<1>:f    r121.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r17               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r9:w          r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r26.0<1>:f    r9.0<8;1>:f       r36.0<8;1>:f      r9.0<1>:f        {Compacted}
+         mad      (16|M0)        r28.0<1>:f    r11.0<8;1>:f      r38.0<8;1>:f      r11.0<1>:f       {Compacted}
+         mad      (16|M0)        r30.0<1>:f    r13.0<8;1>:f      r40.0<8;1>:f      r13.0<1>:f       {Compacted}
+         mad      (16|M0)        r32.0<1>:f    r15.0<8;1>:f      r42.0<8;1>:f      r15.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r18.0<8;1>:f      r115.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r20.0<8;1>:f      r117.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r22.0<8;1>:f      r119.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r24.0<8;1>:f      r121.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r34.0<1>:f    r26.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r36.0<1>:f    r28.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r38.0<1>:f    r30.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r40.0<1>:f    r32.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r87.0<1>:f    r123.0<8;8,1>:f                 
+         mov      (16|M16)       r89.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         mov      (16|M16)       r93.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r87               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r95:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r104:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r42.0<1>:f    r95.0<8;1>:f      r26.0<8;1>:f      r95.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r97.0<8;1>:f      r28.0<8;1>:f      r97.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r99.0<8;1>:f      r30.0<8;1>:f      r99.0<1>:f       {Compacted}
+         mad      (16|M0)        r10.0<1>:f    r101.0<8;1>:f     r32.0<8;1>:f      r101.0<1>:f      {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r104.0<8;1>:f     r123.0<8;1>:f     r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r106.0<8;1>:f     r125.0<8;1>:f     r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r108.0<8;1>:f     r83.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r110.0<8;1>:f     r85.0<8;1>:f      r110.0<1>:f      {Compacted}
+         mov      (16|M0)        r12.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r14.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r16.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r18.0<1>:f    r10.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r20.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r22.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r24.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r26.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r12               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r20               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r21:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r30:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r38.0<1>:f    r21.0<8;1>:f      r42.0<8;1>:f      r21.0<1>:f       {Compacted}
+         mad      (16|M0)        r40.0<1>:f    r23.0<8;1>:f      r44.0<8;1>:f      r23.0<1>:f       {Compacted}
+         mad      (16|M0)        r42.0<1>:f    r25.0<8;1>:f      r4.0<8;1>:f       r25.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r27.0<8;1>:f      r10.0<8;1>:f      r27.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r30.0<8;1>:f      r113.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r32.0<8;1>:f      r115.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r34.0<8;1>:f      r117.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r36.0<8;1>:f      r119.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r38.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r40.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r85.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r87.0<1>:f    r123.0<8;8,1>:f                 
+         mov      (16|M16)       r89.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r85               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r93:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r26.0<1>:f    r93.0<8;1>:f      r38.0<8;1>:f      r93.0<1>:f       {Compacted}
+         mad      (16|M0)        r28.0<1>:f    r95.0<8;1>:f      r40.0<8;1>:f      r95.0<1>:f       {Compacted}
+         mad      (16|M0)        r30.0<1>:f    r97.0<8;1>:f      r42.0<8;1>:f      r97.0<1>:f       {Compacted}
+         mad      (16|M0)        r32.0<1>:f    r99.0<8;1>:f      r44.0<8;1>:f      r99.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r18.0<8;1>:f      r121.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r103.0<1>:f   r20.0<8;1>:f      r123.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r22.0<8;1>:f      r125.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r107.0<1>:f   r24.0<8;1>:f      r83.0<8;1>:f      r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r34.0<1>:f    r26.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r36.0<1>:f    r28.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r38.0<1>:f    r30.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r40.0<1>:f    r32.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r109.0<1>:f   r101.0<8;8,1>:f                 
+         mov      (16|M16)       r111.0<1>:f   r103.0<8;8,1>:f                 
+         mov      (16|M16)       r113.0<1>:f   r105.0<8;8,1>:f                 
+         mov      (16|M16)       r115.0<1>:f   r107.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r109              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r117:w        r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r10:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r4.0<1>:f     r117.0<8;1>:f     r26.0<8;1>:f      r117.0<1>:f      {Compacted}
+         mad      (16|M0)        r18.0<1>:f    r119.0<8;1>:f     r28.0<8;1>:f      r119.0<1>:f      {Compacted}
+         mad      (16|M0)        r20.0<1>:f    r121.0<8;1>:f     r30.0<8;1>:f      r121.0<1>:f      {Compacted}
+         mad      (16|M0)        r22.0<1>:f    r123.0<8;1>:f     r32.0<8;1>:f      r123.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r10.0<8;1>:f      r101.0<8;1>:f     r10.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r14.0<8;1>:f      r105.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r16.0<8;1>:f      r107.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mov      (16|M0)        r24.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r18.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r20.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r22.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r89.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         mov      (16|M16)       r93.0<1>:f    r85.0<8;8,1>:f                  
+         mov      (16|M16)       r95.0<1>:f    r87.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r24               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r89               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r97:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r32:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r40.0<1>:f    r97.0<8;1>:f      r4.0<8;1>:f       r97.0<1>:f       {Compacted}
+         mad      (16|M0)        r42.0<1>:f    r99.0<8;1>:f      r18.0<8;1>:f      r99.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r101.0<8;1>:f     r20.0<8;1>:f      r101.0<1>:f      {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r103.0<8;1>:f     r22.0<8;1>:f      r103.0<1>:f      {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r32.0<8;1>:f      r125.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r107.0<1>:f   r34.0<8;1>:f      r83.0<8;1>:f      r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r36.0<8;1>:f      r85.0<8;1>:f      r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r38.0<8;1>:f      r87.0<8;1>:f      r38.0<1>:f       {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r40.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M16)       r113.0<1>:f   r105.0<8;8,1>:f                 
+         mov      (16|M16)       r115.0<1>:f   r107.0<8;8,1>:f                 
+         mov      (16|M16)       r117.0<1>:f   r109.0<8;8,1>:f                 
+         mov      (16|M16)       r119.0<1>:f   r111.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r113              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r17:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r26:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r34.0<1>:f    r17.0<8;1>:f      r40.0<8;1>:f      r17.0<1>:f       {Compacted}
+         mad      (16|M0)        r36.0<1>:f    r19.0<8;1>:f      r42.0<8;1>:f      r19.0<1>:f       {Compacted}
+         mad      (16|M0)        r38.0<1>:f    r21.0<8;1>:f      r44.0<8;1>:f      r21.0<1>:f       {Compacted}
+         mad      (16|M0)        r40.0<1>:f    r23.0<8;1>:f      r4.0<8;1>:f       r23.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r28.0<8;1>:f      r107.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r30.0<8;1>:f      r109.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r32.0<8;1>:f      r111.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mov      (16|M0)        r85.0<1>:f    r34.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r87.0<1>:f    r36.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r89.0<1>:f    r38.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r91.0<1>:f    r40.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r93.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r95.0<1>:f    r123.0<8;8,1>:f                 
+         mov      (16|M16)       r97.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r99.0<1>:f    r83.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r85               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r85:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r94:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r42.0<1>:f    r85.0<8;1>:f      r34.0<8;1>:f      r85.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r87.0<8;1>:f      r36.0<8;1>:f      r87.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r89.0<8;1>:f      r38.0<8;1>:f      r89.0<1>:f       {Compacted}
+         mad      (16|M0)        r10.0<1>:f    r91.0<8;1>:f      r40.0<8;1>:f      r91.0<1>:f       {Compacted}
+         mad      (16|M16)       r103.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r96.0<8;1>:f      r123.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M16)       r107.0<1>:f   r98.0<8;1>:f      r125.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r100.0<8;1>:f     r83.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mov      (16|M0)        r12.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r14.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r16.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r18.0<1>:f    r10.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r111.0<1>:f   r103.0<8;8,1>:f                 
+         mov      (16|M16)       r113.0<1>:f   r105.0<8;8,1>:f                 
+         mov      (16|M16)       r115.0<1>:f   r107.0<8;8,1>:f                 
+         mov      (16|M16)       r117.0<1>:f   r109.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r12               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r111              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r119:w        r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r20:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r28.0<1>:f    r119.0<8;1>:f     r42.0<8;1>:f      r119.0<1>:f      {Compacted}
+         mad      (16|M0)        r30.0<1>:f    r121.0<8;1>:f     r44.0<8;1>:f      r121.0<1>:f      {Compacted}
+         mad      (16|M0)        r32.0<1>:f    r123.0<8;1>:f     r4.0<8;1>:f       r123.0<1>:f      {Compacted}
+         mad      (16|M0)        r34.0<1>:f    r125.0<8;1>:f     r10.0<8;1>:f      r125.0<1>:f      {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r20.0<8;1>:f      r103.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r22.0<8;1>:f      r105.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r24.0<8;1>:f      r107.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mad      (16|M16)       r89.0<1>:f    r26.0<8;1>:f      r109.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mov      (16|M0)        r36.0<1>:f    r28.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r38.0<1>:f    r30.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r40.0<1>:f    r32.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r42.0<1>:f    r34.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         mov      (16|M16)       r93.0<1>:f    r85.0<8;8,1>:f                  
+         mov      (16|M16)       r95.0<1>:f    r87.0<8;8,1>:f                  
+         mov      (16|M16)       r97.0<1>:f    r89.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r36               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r91               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r99:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r108:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r44.0<1>:f    r99.0<8;1>:f      r28.0<8;1>:f      r99.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r101.0<8;1>:f     r30.0<8;1>:f      r101.0<1>:f      {Compacted}
+         mad      (16|M0)        r10.0<1>:f    r103.0<8;1>:f     r32.0<8;1>:f      r103.0<1>:f      {Compacted}
+         mad      (16|M0)        r12.0<1>:f    r105.0<8;1>:f     r34.0<8;1>:f      r105.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r108.0<8;1>:f     r83.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r110.0<8;1>:f     r85.0<8;1>:f      r110.0<1>:f      {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r112.0<8;1>:f     r87.0<8;1>:f      r112.0<1>:f      {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r114.0<8;1>:f     r89.0<8;1>:f      r114.0<1>:f      {Compacted}
+         mov      (16|M0)        r14.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r16.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r18.0<1>:f    r10.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r20.0<1>:f    r12.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r22.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r24.0<1>:f    r119.0<8;8,1>:f                 
+         mov      (16|M16)       r26.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r28.0<1>:f    r123.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r14               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r22               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r23:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r32:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r40.0<1>:f    r23.0<8;1>:f      r44.0<8;1>:f      r23.0<1>:f       {Compacted}
+         mad      (16|M0)        r42.0<1>:f    r25.0<8;1>:f      r4.0<8;1>:f       r25.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r27.0<8;1>:f      r10.0<8;1>:f      r27.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r29.0<8;1>:f      r12.0<8;1>:f      r29.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r32.0<8;1>:f      r117.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r34.0<8;1>:f      r119.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r36.0<8;1>:f      r121.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r38.0<8;1>:f      r123.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r40.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M16)       r89.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         mov      (16|M16)       r93.0<1>:f    r85.0<8;8,1>:f                  
+         mov      (16|M16)       r95.0<1>:f    r87.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r89               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r97:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r26.0<1>:f    r97.0<8;1>:f      r40.0<8;1>:f      r97.0<1>:f       {Compacted}
+         mad      (16|M0)        r28.0<1>:f    r99.0<8;1>:f      r42.0<8;1>:f      r99.0<1>:f       {Compacted}
+         mad      (16|M0)        r30.0<1>:f    r101.0<8;1>:f     r44.0<8;1>:f      r101.0<1>:f      {Compacted}
+         mad      (16|M0)        r32.0<1>:f    r103.0<8;1>:f     r4.0<8;1>:f       r103.0<1>:f      {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r18.0<8;1>:f      r125.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r107.0<1>:f   r20.0<8;1>:f      r83.0<8;1>:f      r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r22.0<8;1>:f      r85.0<8;1>:f      r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r24.0<8;1>:f      r87.0<8;1>:f      r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r34.0<1>:f    r26.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r36.0<1>:f    r28.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r38.0<1>:f    r30.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r40.0<1>:f    r32.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r113.0<1>:f   r105.0<8;8,1>:f                 
+         mov      (16|M16)       r115.0<1>:f   r107.0<8;8,1>:f                 
+         mov      (16|M16)       r117.0<1>:f   r109.0<8;8,1>:f                 
+         mov      (16|M16)       r119.0<1>:f   r111.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r113              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r81:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r90:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r42.0<1>:f    r81.0<8;1>:f      r26.0<8;1>:f      r81.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r83.0<8;1>:f      r28.0<8;1>:f      r83.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r85.0<8;1>:f      r30.0<8;1>:f      r85.0<1>:f       {Compacted}
+         mad      (16|M0)        r10.0<1>:f    r87.0<8;1>:f      r32.0<8;1>:f      r87.0<1>:f       {Compacted}
+         mad      (16|M16)       r99.0<1>:f    r90.0<8;1>:f      r105.0<8;1>:f     r90.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r92.0<8;1>:f      r107.0<8;1>:f     r92.0<1>:f       {Compacted}
+         mad      (16|M16)       r103.0<1>:f   r94.0<8;1>:f      r109.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r96.0<8;1>:f      r111.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mov      (16|M0)        r12.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r14.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r16.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r18.0<1>:f    r10.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r107.0<1>:f   r99.0<8;8,1>:f                  
+         mov      (16|M16)       r109.0<1>:f   r101.0<8;8,1>:f                 
+         mov      (16|M16)       r111.0<1>:f   r103.0<8;8,1>:f                 
+         mov      (16|M16)       r113.0<1>:f   r105.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r12               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r107              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r115:w        r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r20:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r28.0<1>:f    r115.0<8;1>:f     r42.0<8;1>:f      r115.0<1>:f      {Compacted}
+         mad      (16|M0)        r30.0<1>:f    r117.0<8;1>:f     r44.0<8;1>:f      r117.0<1>:f      {Compacted}
+         mad      (16|M0)        r32.0<1>:f    r119.0<8;1>:f     r4.0<8;1>:f       r119.0<1>:f      {Compacted}
+         mad      (16|M0)        r34.0<1>:f    r121.0<8;1>:f     r10.0<8;1>:f      r121.0<1>:f      {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r20.0<8;1>:f      r99.0<8;1>:f      r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r22.0<8;1>:f      r101.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r24.0<8;1>:f      r103.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mov      (16|M0)        r36.0<1>:f    r28.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r38.0<1>:f    r30.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r40.0<1>:f    r32.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r42.0<1>:f    r34.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r87.0<1>:f    r123.0<8;8,1>:f                 
+         mov      (16|M16)       r89.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         mov      (16|M16)       r93.0<1>:f    r85.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r36               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r87               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r95:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r104:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r44.0<1>:f    r95.0<8;1>:f      r28.0<8;1>:f      r95.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r97.0<8;1>:f      r30.0<8;1>:f      r97.0<1>:f       {Compacted}
+         mad      (16|M0)        r10.0<1>:f    r99.0<8;1>:f      r32.0<8;1>:f      r99.0<1>:f       {Compacted}
+         mad      (16|M0)        r12.0<1>:f    r101.0<8;1>:f     r34.0<8;1>:f      r101.0<1>:f      {Compacted}
+         mad      (16|M16)       r113.0<1>:f   r104.0<8;1>:f     r123.0<8;1>:f     r104.0<1>:f      {Compacted}
+         mad      (16|M16)       r115.0<1>:f   r106.0<8;1>:f     r125.0<8;1>:f     r106.0<1>:f      {Compacted}
+         mad      (16|M16)       r117.0<1>:f   r108.0<8;1>:f     r83.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mad      (16|M16)       r119.0<1>:f   r110.0<8;1>:f     r85.0<8;1>:f      r110.0<1>:f      {Compacted}
+         mov      (16|M0)        r14.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r16.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r18.0<1>:f    r10.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r20.0<1>:f    r12.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r22.0<1>:f    r113.0<8;8,1>:f                 
+         mov      (16|M16)       r24.0<1>:f    r115.0<8;8,1>:f                 
+         mov      (16|M16)       r26.0<1>:f    r117.0<8;8,1>:f                 
+         mov      (16|M16)       r28.0<1>:f    r119.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r14               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r22               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r23:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r32:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r40.0<1>:f    r23.0<8;1>:f      r44.0<8;1>:f      r23.0<1>:f       {Compacted}
+         mad      (16|M0)        r42.0<1>:f    r25.0<8;1>:f      r4.0<8;1>:f       r25.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r27.0<8;1>:f      r10.0<8;1>:f      r27.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r29.0<8;1>:f      r12.0<8;1>:f      r29.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r32.0<8;1>:f      r113.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r34.0<8;1>:f      r115.0<8;1>:f     r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r36.0<8;1>:f      r117.0<8;1>:f     r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r38.0<8;1>:f      r119.0<8;1>:f     r38.0<1>:f       {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r40.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M16)       r85.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r87.0<1>:f    r123.0<8;8,1>:f                 
+         mov      (16|M16)       r89.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r85               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r93:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r18:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r26.0<1>:f    r93.0<8;1>:f      r40.0<8;1>:f      r93.0<1>:f       {Compacted}
+         mad      (16|M0)        r28.0<1>:f    r95.0<8;1>:f      r42.0<8;1>:f      r95.0<1>:f       {Compacted}
+         mad      (16|M0)        r30.0<1>:f    r97.0<8;1>:f      r44.0<8;1>:f      r97.0<1>:f       {Compacted}
+         mad      (16|M0)        r32.0<1>:f    r99.0<8;1>:f      r4.0<8;1>:f       r99.0<1>:f       {Compacted}
+         mad      (16|M16)       r101.0<1>:f   r18.0<8;1>:f      r121.0<8;1>:f     r18.0<1>:f       {Compacted}
+         mad      (16|M16)       r103.0<1>:f   r20.0<8;1>:f      r123.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r22.0<8;1>:f      r125.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r107.0<1>:f   r24.0<8;1>:f      r83.0<8;1>:f      r24.0<1>:f       {Compacted}
+         mov      (16|M0)        r34.0<1>:f    r26.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r36.0<1>:f    r28.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r38.0<1>:f    r30.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r40.0<1>:f    r32.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r109.0<1>:f   r101.0<8;8,1>:f                 
+         mov      (16|M16)       r111.0<1>:f   r103.0<8;8,1>:f                 
+         mov      (16|M16)       r113.0<1>:f   r105.0<8;8,1>:f                 
+         mov      (16|M16)       r115.0<1>:f   r107.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r34               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r109              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r117:w        r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r10:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r4.0<1>:f     r117.0<8;1>:f     r26.0<8;1>:f      r117.0<1>:f      {Compacted}
+         mad      (16|M0)        r18.0<1>:f    r119.0<8;1>:f     r28.0<8;1>:f      r119.0<1>:f      {Compacted}
+         mad      (16|M0)        r20.0<1>:f    r121.0<8;1>:f     r30.0<8;1>:f      r121.0<1>:f      {Compacted}
+         mad      (16|M0)        r22.0<1>:f    r123.0<8;1>:f     r32.0<8;1>:f      r123.0<1>:f      {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r10.0<8;1>:f      r101.0<8;1>:f     r10.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r12.0<8;1>:f      r103.0<8;1>:f     r12.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r14.0<8;1>:f      r105.0<8;1>:f     r14.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r16.0<8;1>:f      r107.0<8;1>:f     r16.0<1>:f       {Compacted}
+         mov      (16|M0)        r24.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r26.0<1>:f    r18.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r28.0<1>:f    r20.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r30.0<1>:f    r22.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r89.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         mov      (16|M16)       r93.0<1>:f    r85.0<8;8,1>:f                  
+         mov      (16|M16)       r95.0<1>:f    r87.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r24               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r89               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r97:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r32:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r40.0<1>:f    r97.0<8;1>:f      r4.0<8;1>:f       r97.0<1>:f       {Compacted}
+         mad      (16|M0)        r42.0<1>:f    r99.0<8;1>:f      r18.0<8;1>:f      r99.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r101.0<8;1>:f     r20.0<8;1>:f      r101.0<1>:f      {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r103.0<8;1>:f     r22.0<8;1>:f      r103.0<1>:f      {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r32.0<8;1>:f      r125.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mad      (16|M16)       r107.0<1>:f   r34.0<8;1>:f      r83.0<8;1>:f      r34.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r36.0<8;1>:f      r85.0<8;1>:f      r36.0<1>:f       {Compacted}
+         mad      (16|M16)       r111.0<1>:f   r38.0<8;1>:f      r87.0<8;1>:f      r38.0<1>:f       {Compacted}
+         mov      (16|M0)        r9.0<1>:f     r40.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r11.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r13.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r15.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M16)       r113.0<1>:f   r105.0<8;8,1>:f                 
+         mov      (16|M16)       r115.0<1>:f   r107.0<8;8,1>:f                 
+         mov      (16|M16)       r117.0<1>:f   r109.0<8;8,1>:f                 
+         mov      (16|M16)       r119.0<1>:f   r111.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r9                0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r113              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r17:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r26:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r34.0<1>:f    r17.0<8;1>:f      r40.0<8;1>:f      r17.0<1>:f       {Compacted}
+         mad      (16|M0)        r36.0<1>:f    r19.0<8;1>:f      r42.0<8;1>:f      r19.0<1>:f       {Compacted}
+         mad      (16|M0)        r38.0<1>:f    r21.0<8;1>:f      r44.0<8;1>:f      r21.0<1>:f       {Compacted}
+         mad      (16|M0)        r40.0<1>:f    r23.0<8;1>:f      r4.0<8;1>:f       r23.0<1>:f       {Compacted}
+         mad      (16|M16)       r121.0<1>:f   r26.0<8;1>:f      r105.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mad      (16|M16)       r123.0<1>:f   r28.0<8;1>:f      r107.0<8;1>:f     r28.0<1>:f       {Compacted}
+         mad      (16|M16)       r125.0<1>:f   r30.0<8;1>:f      r109.0<8;1>:f     r30.0<1>:f       {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r32.0<8;1>:f      r111.0<8;1>:f     r32.0<1>:f       {Compacted}
+         mov      (16|M0)        r85.0<1>:f    r34.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r87.0<1>:f    r36.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r89.0<1>:f    r38.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r91.0<1>:f    r40.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r93.0<1>:f    r121.0<8;8,1>:f                 
+         mov      (16|M16)       r95.0<1>:f    r123.0<8;8,1>:f                 
+         mov      (16|M16)       r97.0<1>:f    r125.0<8;8,1>:f                 
+         mov      (16|M16)       r99.0<1>:f    r83.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r85               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r93               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r85:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r94:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r42.0<1>:f    r85.0<8;1>:f      r34.0<8;1>:f      r85.0<1>:f       {Compacted}
+         mad      (16|M0)        r44.0<1>:f    r87.0<8;1>:f      r36.0<8;1>:f      r87.0<1>:f       {Compacted}
+         mad      (16|M0)        r4.0<1>:f     r89.0<8;1>:f      r38.0<8;1>:f      r89.0<1>:f       {Compacted}
+         mad      (16|M0)        r10.0<1>:f    r91.0<8;1>:f      r40.0<8;1>:f      r91.0<1>:f       {Compacted}
+         mad      (16|M16)       r103.0<1>:f   r94.0<8;1>:f      r121.0<8;1>:f     r94.0<1>:f       {Compacted}
+         mad      (16|M16)       r105.0<1>:f   r96.0<8;1>:f      r123.0<8;1>:f     r96.0<1>:f       {Compacted}
+         mad      (16|M16)       r107.0<1>:f   r98.0<8;1>:f      r125.0<8;1>:f     r98.0<1>:f       {Compacted}
+         mad      (16|M16)       r109.0<1>:f   r100.0<8;1>:f     r83.0<8;1>:f      r100.0<1>:f      {Compacted}
+         mov      (16|M0)        r12.0<1>:f    r42.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r14.0<1>:f    r44.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r16.0<1>:f    r4.0<8;8,1>:f                    {Compacted}
+         mov      (16|M0)        r18.0<1>:f    r10.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r111.0<1>:f   r103.0<8;8,1>:f                 
+         mov      (16|M16)       r113.0<1>:f   r105.0<8;8,1>:f                 
+         mov      (16|M16)       r115.0<1>:f   r107.0<8;8,1>:f                 
+         mov      (16|M16)       r117.0<1>:f   r109.0<8;8,1>:f                 
+         sends    (16|M0)        null:w        r46               r12               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r111              0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r119:w        r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r20:w         r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r28.0<1>:f    r119.0<8;1>:f     r42.0<8;1>:f      r119.0<1>:f      {Compacted}
+         mad      (16|M0)        r30.0<1>:f    r121.0<8;1>:f     r44.0<8;1>:f      r121.0<1>:f      {Compacted}
+         mad      (16|M0)        r32.0<1>:f    r123.0<8;1>:f     r4.0<8;1>:f       r123.0<1>:f      {Compacted}
+         mad      (16|M0)        r34.0<1>:f    r125.0<8;1>:f     r10.0<8;1>:f      r125.0<1>:f      {Compacted}
+         mad      (16|M16)       r83.0<1>:f    r20.0<8;1>:f      r103.0<8;1>:f     r20.0<1>:f       {Compacted}
+         mad      (16|M16)       r85.0<1>:f    r22.0<8;1>:f      r105.0<8;1>:f     r22.0<1>:f       {Compacted}
+         mad      (16|M16)       r87.0<1>:f    r24.0<8;1>:f      r107.0<8;1>:f     r24.0<1>:f       {Compacted}
+         mad      (16|M16)       r89.0<1>:f    r26.0<8;1>:f      r109.0<8;1>:f     r26.0<1>:f       {Compacted}
+         mov      (16|M0)        r36.0<1>:f    r28.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r38.0<1>:f    r30.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r40.0<1>:f    r32.0<8;8,1>:f                   {Compacted}
+         mov      (16|M0)        r42.0<1>:f    r34.0<8;8,1>:f                   {Compacted}
+         mov      (16|M16)       r91.0<1>:f    r83.0<8;8,1>:f                  
+         mov      (16|M16)       r93.0<1>:f    r85.0<8;8,1>:f                  
+         mov      (16|M16)       r95.0<1>:f    r87.0<8;8,1>:f                  
+         mov      (16|M16)       r97.0<1>:f    r89.0<8;8,1>:f                  
+         sends    (16|M0)        null:w        r46               r36               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r91               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         send     (16|M0)        r99:w         r54:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         send     (16|M16)       r108:w        r58:uq            0xC       0x88419FF //  hdc.dc1  wr:4, rd:8, fc: 0x419ff
+         mad      (16|M0)        r62.0<1>:f    r99.0<8;1>:f      r28.0<8;1>:f      r99.0<1>:f       {Compacted}
+         mad      (16|M0)        r64.0<1>:f    r101.0<8;1>:f     r30.0<8;1>:f      r101.0<1>:f      {Compacted}
+         mad      (16|M0)        r66.0<1>:f    r103.0<8;1>:f     r32.0<8;1>:f      r103.0<1>:f      {Compacted}
+         mad      (16|M0)        r68.0<1>:f    r105.0<8;1>:f     r34.0<8;1>:f      r105.0<1>:f      {Compacted}
+         mad      (16|M16)       r70.0<1>:f    r108.0<8;1>:f     r83.0<8;1>:f      r108.0<1>:f      {Compacted}
+         mad      (16|M16)       r72.0<1>:f    r110.0<8;1>:f     r85.0<8;1>:f      r110.0<1>:f      {Compacted}
+         mad      (16|M16)       r74.0<1>:f    r112.0<8;1>:f     r87.0<8;1>:f      r112.0<1>:f      {Compacted}
+         mad      (16|M16)       r76.0<1>:f    r114.0<8;1>:f     r89.0<8;1>:f      r114.0<1>:f      {Compacted}
+         sends    (16|M0)        null:w        r46               r62               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+         sends    (16|M16)       null:w        r50               r70               0x20C     0x80699FF //  hdc.dc1  wr:4+8, rd:0, fc: 0x699ff
+(W&f0.0) jmpi     (1|M0)                     LABEL360:d                       {AccWrEn}
+LABEL14440
+(W)      mov      (8|M0)         r127.0<1>:d   r6.0<8;8,1>:d                    {Compacted}
+         send     (8|M0)         null:ud       r127:ud           0x4D00027  0x2000010 {EOT} //  spawner  wr:1, rd:0, fc: 0x10

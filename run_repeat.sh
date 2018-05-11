@@ -42,7 +42,7 @@ if [[ $2 == "flop" ]]
 then
 	
 	reps=$1
-	for kernel in  "scalar_sp_add_priv_iter_1024_kernel" "vect2_sp_add_priv_iter_1024_kernel" "vect4_sp_add_priv_iter_1024_kernel" "vect8_sp_add_priv_iter_1024_kernel" "vect16_sp_add_priv_iter_1024_kernel"
+	for kernel in "scalar_sp_add_priv_iter_1024_kernel" "vect2_sp_add_priv_iter_1024_kernel" "vect4_sp_add_priv_iter_1024_kernel" "vect8_sp_add_priv_iter_1024_kernel" "vect16_sp_add_priv_iter_1024_kernel" "scalar_sp_mad_priv_iter_1024_kernel" "vect2_sp_mad_priv_iter_1024_kernel" "vect4_sp_mad_priv_iter_1024_kernel" "vect8_sp_mad_priv_iter_1024_kernel" "vect16_sp_mad_priv_iter_1024_kernel"
 	#"scalar_sp_add_priv_iter_1024_kernel" "vect2_sp_add_priv_iter_1024_kernel" "vect4_sp_add_priv_iter_1024_kernel" "vect8_sp_add_priv_iter_1024_kernel" "vect16_sp_add_priv_iter_1024_kernel" "scalar_sp_sub_priv_iter_1024_kernel" "vect2_sp_sub_priv_iter_1024_kernel" "vect4_sp_sub_priv_iter_1024_kernel" "vect8_sp_sub_priv_iter_1024_kernel" "vect16_sp_sub_priv_iter_1024_kernel" "scalar_sp_mul_priv_iter_1024_kernel" "vect2_sp_mul_priv_iter_1024_kernel" "vect4_sp_mul_priv_iter_1024_kernel" "vect8_sp_mul_priv_iter_1024_kernel" "vect16_sp_mul_priv_iter_1024_kernel" "scalar_sp_div_priv_iter_1024_kernel" "vect2_sp_div_priv_iter_1024_kernel" "vect4_sp_div_priv_iter_1024_kernel" "vect8_sp_div_priv_iter_1024_kernel" "vect16_sp_div_priv_iter_1024_kernel" "scalar_sp_mad_priv_iter_1024_kernel" "vect2_sp_mad_priv_iter_1024_kernel" "vect4_sp_mad_priv_iter_1024_kernel" "vect8_sp_mad_priv_iter_1024_kernel" "vect16_sp_mad_priv_iter_1024_kernel"
 	#"scalar_dp_add_kernel" "scalar_dp_sub_kernel" "scalar_dp_mul_kernel" "scalar_dp_div_kernel" "scalar_dp_mad_kernel" "vect2_dp_add_kernel" "vect2_dp_sub_kernel" "vect2_dp_mul_kernel" "vect2_dp_div_kernel" "vect2_dp_mad_kernel" "vect4_dp_add_kernel" "vect4_dp_sub_kernel" "vect4_dp_mul_kernel" "vect4_dp_div_kernel" "vect4_dp_mad_kernel" "vect8_dp_add_kernel" "vect8_dp_sub_kernel" "vect8_dp_mul_kernel" "vect8_dp_div_kernel" "vect8_dp_mad_kernel" "vect16_dp_add_kernel" "vect16_dp_sub_kernel" "vect16_dp_mul_kernel" "vect16_dp_div_kernel" "vect16_dp_mad_kernel" 
 	#"scalar_dp_add_iter_1024_kernel" "scalar_dp_sub_iter_1024_kernel" "scalar_dp_mul_iter_1024_kernel" "scalar_dp_div_iter_1024_kernel" "scalar_dp_mad_iter_1024_kernel" "vect2_dp_add_iter_1024_kernel" "vect2_dp_sub_iter_1024_kernel" "vect2_dp_mul_iter_1024_kernel" "vect2_dp_div_iter_1024_kernel" "vect2_dp_mad_iter_1024_kernel" "vect4_dp_add_iter_1024_kernel" "vect4_dp_sub_iter_1024_kernel" "vect4_dp_mul_iter_1024_kernel" "vect4_dp_div_iter_1024_kernel" "vect4_dp_mad_iter_1024_kernel" "vect8_dp_add_iter_1024_kernel" "vect8_dp_sub_iter_1024_kernel" "vect8_dp_mul_iter_1024_kernel" "vect8_dp_div_iter_1024_kernel" "vect8_dp_mad_iter_1024_kernel" "vect16_dp_add_iter_1024_kernel" "vect16_dp_sub_iter_1024_kernel" "vect16_dp_mul_iter_1024_kernel" "vect16_dp_div_iter_1024_kernel" "vect16_dp_mad_iter_1024_kernel"  "scalar_dp_add_iter_128_unroll_64_kernel" "scalar_dp_sub_iter_128_unroll_64_kernel" "scalar_dp_mul_iter_128_unroll_64_kernel" "scalar_dp_div_iter_128_unroll_64_kernel" "scalar_dp_mad_iter_128_unroll_64_kernel" "vect2_dp_add_iter_128_unroll_64_kernel"  "vect2_dp_sub_iter_128_unroll_64_kernel"  "vect2_dp_mul_iter_128_unroll_64_kernel"  "vect2_dp_div_iter_128_unroll_64_kernel"  "vect2_dp_mad_iter_128_unroll_64_kernel"  "vect4_dp_add_iter_128_unroll_64_kernel"  "vect4_dp_sub_iter_128_unroll_64_kernel"  "vect4_dp_mul_iter_128_unroll_64_kernel"  "vect4_dp_div_iter_128_unroll_64_kernel"  "vect4_dp_mad_iter_128_unroll_64_kernel"  "vect8_dp_add_iter_128_unroll_64_kernel"  "vect8_dp_sub_iter_128_unroll_64_kernel"  "vect8_dp_mul_iter_128_unroll_64_kernel"  "vect8_dp_div_iter_128_unroll_64_kernel"  "vect8_dp_mad_iter_128_unroll_64_kernel" "vect16_dp_add_iter_128_unroll_64_kernel" "vect16_dp_sub_iter_128_unroll_64_kernel" "vect16_dp_mul_iter_128_unroll_64_kernel" "vect16_dp_div_iter_128_unroll_64_kernel" "vect16_dp_mad_iter_128_unroll_64_kernel" 
@@ -150,14 +150,14 @@ then
 			for j in `seq 0 8`
 			do
 				echo "    # of blocks: 1 threads per block: $(($base**$j))"
-				nice -n -20 ./read_gpu_counters -d -c $kernel --blocks 1 --tpb $(($base**$j)) --power-smoothing > /dev/null 2>> errors.log
-				#nice -n -20 ./read_gpu_counters -d -c $kernel --blocks 1 --tpb $(($base**$j)) > /dev/null 2>> errors.log
+				#nice -n -20 ./read_gpu_counters -d -c $kernel --blocks 1 --tpb $(($base**$j)) --power-smoothing > /dev/null 2>> errors.log
+				nice -n -20 ./read_gpu_counters -d -c $kernel --blocks 1 --tpb $(($base**$j)) > /dev/null 2>> errors.log
 			done
 			for j in `seq 2 32`
 			do
 				echo "    # of blocks: $j threads per block: 256"
-				nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $j --tpb 256 --power-smoothing > /dev/null 2>> errors.log
-				#nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $j --tpb 256 > /dev/null 2>> errors.log
+				#nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $j --tpb 256 --power-smoothing > /dev/null 2>> errors.log
+				nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $j --tpb 256 > /dev/null 2>> errors.log
 			done
 			
 			if [ $exp -gt 5 ]
@@ -165,8 +165,8 @@ then
 				for j in `seq 6 $exp`
 				do
 					echo "    # of blocks: $(($base**$j)) threads per block: 256"
-					nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $(($base**$j)) --tpb 256 --power-smoothing > /dev/null 2>> errors.log
-					#nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $(($base**$j)) --tpb 256 > /dev/null 2>> errors.log
+					#nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $(($base**$j)) --tpb 256 --power-smoothing > /dev/null 2>> errors.log
+					nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $(($base**$j)) --tpb 256 > /dev/null 2>> errors.log
 				done
 			fi
 		done

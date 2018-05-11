@@ -39,7 +39,7 @@ set title "SIMD Comparison - Add SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -59,7 +59,7 @@ set title "SIMD Comparison - Sub SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -79,7 +79,7 @@ set title "SIMD Comparison - Mul SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -100,7 +100,7 @@ set title "SIMD Comparison - Div SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -120,7 +120,7 @@ set title "SIMD Comparison - Mad SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -155,7 +155,7 @@ set title "SIMD Comparison - Add SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -175,7 +175,7 @@ set title "SIMD Comparison - Sub SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -195,7 +195,7 @@ set title "SIMD Comparison - Mul SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -216,7 +216,7 @@ set title "SIMD Comparison - Div SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -236,7 +236,7 @@ set title "SIMD Comparison - Mad SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -272,7 +272,7 @@ set title "SIMD Comparison - Add SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -292,7 +292,7 @@ set title "SIMD Comparison - Sub SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -312,7 +312,7 @@ set title "SIMD Comparison - Mul SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -333,7 +333,7 @@ set title "SIMD Comparison - Div SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -353,7 +353,7 @@ set title "SIMD Comparison - Mad SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -389,7 +389,7 @@ set title "SIMD Comparison - Add SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -409,7 +409,7 @@ set title "SIMD Comparison - Sub SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -429,7 +429,7 @@ set title "SIMD Comparison - Mul SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -450,7 +450,7 @@ set title "SIMD Comparison - Div SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
@@ -470,7 +470,7 @@ set title "SIMD Comparison - Mad SP (Simple kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
 set xlabel "Number of threads" font "Helvetica,20"
 set style func linespoints
-set logscale x 2
+set logscale xy 2
 set format x '2^{%L}'
 set format y '2^{%L}'
 set key bottom font ",20"
