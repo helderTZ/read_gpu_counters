@@ -43,7 +43,7 @@
 
 
 char kernel_choice[50] = "";
-int number_available_flop_kernels = 250;
+int number_available_flop_kernels = 300;
 int number_available_mop_kernels = 25;
 int number_available_power_kernels = 50;
 int number_available_shared_mem_kernels = 15;
@@ -95,7 +95,13 @@ char *available_flop_kernels[] = {
 	"vect4_sp_add_priv_iter_1024_kernel",  "vect4_sp_sub_priv_iter_1024_kernel",  "vect4_sp_mul_priv_iter_1024_kernel",  "vect4_sp_div_priv_iter_1024_kernel",  "vect4_sp_mad_priv_iter_1024_kernel", 
 	"vect8_sp_add_priv_iter_1024_kernel",  "vect8_sp_sub_priv_iter_1024_kernel",  "vect8_sp_mul_priv_iter_1024_kernel",  "vect8_sp_div_priv_iter_1024_kernel",  "vect8_sp_mad_priv_iter_1024_kernel", 
 	"vect16_sp_add_priv_iter_1024_kernel", "vect16_sp_sub_priv_iter_1024_kernel", "vect16_sp_mul_priv_iter_1024_kernel", "vect16_sp_div_priv_iter_1024_kernel", "vect16_sp_mad_priv_iter_1024_kernel", 
+	"scalar_sp_add_priv_iter_8192_kernel", "scalar_sp_sub_priv_iter_8192_kernel", "scalar_sp_mul_priv_iter_8192_kernel", "scalar_sp_div_priv_iter_8192_kernel", "scalar_sp_mad_priv_iter_8192_kernel", 
+	"vect2_sp_add_priv_iter_8192_kernel",  "vect2_sp_sub_priv_iter_8192_kernel",  "vect2_sp_mul_priv_iter_8192_kernel",  "vect2_sp_div_priv_iter_8192_kernel",  "vect2_sp_mad_priv_iter_8192_kernel", 
+	"vect4_sp_add_priv_iter_8192_kernel",  "vect4_sp_sub_priv_iter_8192_kernel",  "vect4_sp_mul_priv_iter_8192_kernel",  "vect4_sp_div_priv_iter_8192_kernel",  "vect4_sp_mad_priv_iter_8192_kernel", 
+	"vect8_sp_add_priv_iter_8192_kernel",  "vect8_sp_sub_priv_iter_8192_kernel",  "vect8_sp_mul_priv_iter_8192_kernel",  "vect8_sp_div_priv_iter_8192_kernel",  "vect8_sp_mad_priv_iter_8192_kernel", 
+	"vect16_sp_add_priv_iter_8192_kernel", "vect16_sp_sub_priv_iter_8192_kernel", "vect16_sp_mul_priv_iter_8192_kernel", "vect16_sp_div_priv_iter_8192_kernel", "vect16_sp_mad_priv_iter_8192_kernel", 
 	"scalar_dp_add_priv_iter_1024_kernel", "scalar_dp_sub_priv_iter_1024_kernel", "scalar_dp_mul_priv_iter_1024_kernel", "scalar_dp_div_priv_iter_1024_kernel", "scalar_dp_mad_priv_iter_1024_kernel", 
+	"scalar_dp_add_priv_iter_8192_kernel", "scalar_dp_sub_priv_iter_8192_kernel", "scalar_dp_mul_priv_iter_8192_kernel", "scalar_dp_div_priv_iter_8192_kernel", "scalar_dp_mad_priv_iter_8192_kernel", 
 	"vect2_dp_add_priv_iter_1024_kernel",  "vect2_dp_sub_priv_iter_1024_kernel",  "vect2_dp_mul_priv_iter_1024_kernel",  "vect2_dp_div_priv_iter_1024_kernel",  "vect2_dp_mad_priv_iter_1024_kernel", 
 	"vect4_dp_add_priv_iter_1024_kernel",  "vect4_dp_sub_priv_iter_1024_kernel",  "vect4_dp_mul_priv_iter_1024_kernel",  "vect4_dp_div_priv_iter_1024_kernel",  "vect4_dp_mad_priv_iter_1024_kernel", 
 	"vect8_dp_add_priv_iter_1024_kernel",  "vect8_dp_sub_priv_iter_1024_kernel",  "vect8_dp_mul_priv_iter_1024_kernel",  "vect8_dp_div_priv_iter_1024_kernel",  "vect8_dp_mad_priv_iter_1024_kernel", 
@@ -737,7 +743,7 @@ int main(int argc, char** argv, char **envp) {
 		else if (kernel_type == 'f' && precision_type == 's') 	{ f_source = fopen("kernels/flop_sp_kernels.cl", "r"); 	sprintf(source_file, "flop_sp_kernels.cl"); 	}
 		else if (kernel_type == 'f' && precision_type == 'd' && unroll_flag) 	{ f_source = fopen("kernels/flop_dp_unroll_kernels.cl", "r"); 	sprintf(source_file, "flop_dp_unroll_kernels.cl"); 	}
 		else if (kernel_type == 'f' && precision_type == 'd' && !unroll_flag) 	{ f_source = fopen("kernels/flop_dp_kernels.cl", "r"); 			sprintf(source_file, "flop_dp_kernels.cl"); 		}
-		else if (kernel_type == 'p' && precision_type == 's') 	{ f_source = fopen("kernels/power_sp_kernels.cl", "r"); sprintf(source_file, "power_sp_kernels_v2.cl"); 	}
+		else if (kernel_type == 'p' && precision_type == 's') 	{ f_source = fopen("kernels/power_sp_kernels_v3.cl", "r"); sprintf(source_file, "power_sp_kernels_v3.cl"); 	}
 		else if (kernel_type == 'p' && precision_type == 'd') 	{ f_source = fopen("kernels/power_dp_kernels.cl", "r"); sprintf(source_file, "power_dp_kernels.cl"); 	}
 		else if (kernel_type == 'm') 						  	{ f_source = fopen("kernels/mop_kernels.cl", "r");		sprintf(source_file, "mop_kernels.cl"); 		}
 		else if (kernel_type == 's') 						  	{ f_source = fopen("kernels/shared_mem_kernels.cl", "r");	sprintf(source_file, "shared_mem_kernels.cl"); }
@@ -1030,31 +1036,43 @@ int main(int argc, char** argv, char **envp) {
 			
 			if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				fprintf(f_validate_A, "%f\n", scalar_sp_A[i]);
-				fprintf(f_validate_B, "%f\n", scalar_sp_B[i]);
+				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+					fprintf(f_validate_B, "%f\n", scalar_sp_B[i]);
+				}
 			} else if (strstr(kernel_choice, "vect2") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				fprintf(f_validate_A, "%f\t%f\n", vect2_sp_A[i].x, vect2_sp_A[i].y);
-				fprintf(f_validate_B, "%f\t%f\n", vect2_sp_B[i].x, vect2_sp_B[i].y);
+				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+					fprintf(f_validate_B, "%f\t%f\n", vect2_sp_B[i].x, vect2_sp_B[i].y);
+				}
 			} else if (strstr(kernel_choice, "vect4") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				fprintf(f_validate_A, "%f\t%f\t%f\t%f\n", vect4_sp_A[i].x, vect4_sp_A[i].y, vect4_sp_A[i].w, vect4_sp_A[i].z);
-				fprintf(f_validate_B, "%f\t%f\t%f\t%f\n", vect4_sp_B[i].x, vect4_sp_B[i].y, vect4_sp_B[i].w, vect4_sp_B[i].z);
+				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+					fprintf(f_validate_B, "%f\t%f\t%f\t%f\n", vect4_sp_B[i].x, vect4_sp_B[i].y, vect4_sp_B[i].w, vect4_sp_B[i].z);
+				}
 			} else if (strstr(kernel_choice, "vect8") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				fprintf(f_validate_A, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect8_sp_A[i].s0, vect8_sp_A[i].s1, vect8_sp_A[i].s2, vect8_sp_A[i].s3,
 																			vect8_sp_A[i].s4, vect8_sp_A[i].s5, vect8_sp_A[i].s6, vect8_sp_A[i].s7);
-				fprintf(f_validate_B, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect8_sp_B[i].s0, vect8_sp_B[i].s1, vect8_sp_B[i].s2, vect8_sp_B[i].s3,
-																			vect8_sp_B[i].s4, vect8_sp_B[i].s5, vect8_sp_B[i].s6, vect8_sp_B[i].s7);
+				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+					fprintf(f_validate_B, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect8_sp_B[i].s0, vect8_sp_B[i].s1, vect8_sp_B[i].s2, vect8_sp_B[i].s3,
+																				vect8_sp_B[i].s4, vect8_sp_B[i].s5, vect8_sp_B[i].s6, vect8_sp_B[i].s7);
+				}
 			} else if (strstr(kernel_choice, "vect16") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				fprintf(f_validate_A, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect16_sp_A[i].s0, vect16_sp_A[i].s1, vect16_sp_A[i].s2, vect16_sp_A[i].s3,
 																											vect16_sp_A[i].s4, vect16_sp_A[i].s5, vect16_sp_A[i].s6, vect16_sp_A[i].s7,
 																											vect16_sp_A[i].s8, vect16_sp_A[i].s9, vect16_sp_A[i].sa, vect16_sp_A[i].sb, 
 																											vect16_sp_A[i].sc, vect16_sp_A[i].sd, vect16_sp_A[i].se, vect16_sp_A[i].sf);
-				fprintf(f_validate_B, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect16_sp_B[i].s0, vect16_sp_B[i].s1, vect16_sp_B[i].s2, vect16_sp_B[i].s3,
-																											vect16_sp_B[i].s4, vect16_sp_B[i].s5, vect16_sp_B[i].s6, vect16_sp_B[i].s7,
-																											vect16_sp_B[i].s8, vect16_sp_B[i].s9, vect16_sp_B[i].sa, vect16_sp_B[i].sb, 
-																											vect16_sp_B[i].sc, vect16_sp_B[i].sd, vect16_sp_B[i].se, vect16_sp_B[i].sf);
+				if (kernel_type == 'f' || kernel_type == 's' || kernel_type == 'p' || kernel_type == 'm') {
+					fprintf(f_validate_B, "%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\t%f\n", 	vect16_sp_B[i].s0, vect16_sp_B[i].s1, vect16_sp_B[i].s2, vect16_sp_B[i].s3,
+																												vect16_sp_B[i].s4, vect16_sp_B[i].s5, vect16_sp_B[i].s6, vect16_sp_B[i].s7,
+																												vect16_sp_B[i].s8, vect16_sp_B[i].s9, vect16_sp_B[i].sa, vect16_sp_B[i].sb, 
+																												vect16_sp_B[i].sc, vect16_sp_B[i].sd, vect16_sp_B[i].se, vect16_sp_B[i].sf);
+				}
 			}
 			
 		}
 		
+		fclose(f_validate_A);
+		fclose(f_validate_B);
 	}
 	
 	
