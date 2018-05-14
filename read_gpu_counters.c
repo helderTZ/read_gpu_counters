@@ -221,17 +221,17 @@ uint32_t counter_format = 5;	// 0b101
 						OUTREG(eu_perf_cnt_ctl_3_addr, dword_for_counting_flops_in_fpu0_in_eu3_row_0 | dword_for_counting_flops_in_fpu1_in_eu3_row_0 << 12);			// A13, A14	
 */
 
-
+/*
 #define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_2_addr, dword_for_counting_flops_in_fpu1_in_eu0_row_0 | dword_for_counting_flops_in_fpu0_in_eu0_row_0 << 12);			// A7, A8	
-
+*/
 
 /*
 #define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_flops_in_fpus_in_eu0_row_0 | dword_for_counting_flops_in_fpus_in_eu0_row_0 << 12);			// A7, A8
 */
 
-/*
+
 #define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_sends_in_row0_in_send_pipeline | dword_for_counting_sends_in_row1_in_send_pipeline << 12);	// A7, A8
-*/
+
 
 /*
 #define CONFIG_COUNTERS OUTREG(eu_perf_cnt_ctl_0_addr, dword_for_counting_movs_in_row0_in_fpu0_pipeline | dword_for_counting_movs_in_row0_in_fpu1_pipeline << 12);		// A7, A8

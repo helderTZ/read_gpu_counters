@@ -24,10 +24,12 @@ set style func linespoints
 #set logscale xy 2
 #set format x '2^{%L}'
 #set format y '2^{%L}'
-set key bottom
-show grid
+set key top left
+#show grid
+
+#set xtics (1,1024,2048,4096,8192)
 
 #set yrange [0.0001:128]
-plot 'data/scalar_sp_add_power_kernel_timers.csv' using 3:4 title "OCL\_TIMER" with line lt -1 dashtype 1, \
+plot 'data/scalar_sp_add_power_kernel_timers.csv' using 3:4 title "OCL\_TIMER"  with line lt -1 dashtype 1, \
 	 'data/scalar_sp_add_power_kernel_timers.csv' using 3:5 title "TIME\_STAMP" with line lt -1 dashtype 2, \
-	 'data/scalar_sp_add_power_kernel_timers.csv' using 3:6 title "GPU\_TICKS" with line lt -1 dashtype 3
+	 'data/scalar_sp_add_power_kernel_timers.csv' using 3:6 title "GPU\_TICKS"  with line lt -1 dashtype 3

@@ -1,4 +1,4 @@
-#block size	threads per block	Total threads	GPU Power (pkg – pp0 – dram) (OCL_TIMER)
+#block size	threads per block	Total threads	Theoretical GFLOP/s
 1.0	1.0	1.0	0.030062385321100917	
 1.0	2.0	2.0	0.05997862090172936	
 1.0	4.0	4.0	0.1201032136992728	
