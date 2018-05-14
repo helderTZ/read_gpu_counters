@@ -24,12 +24,6 @@ unset grid
 ##                                                              ##
 ##################################################################
 
-##################################################################
-##                                                              ##
-##                              SP                              ##
-##                                                              ##
-##################################################################
-
 if (0) {
 
 
@@ -137,12 +131,6 @@ plot 'data/scalar_sp_mad_kernel.csv' using 3:4 title "scalar" with line lt -1 da
 ##################################################################
 ##                                                              ##
 ##                              Loop                            ##
-##                                                              ##
-##################################################################
-
-##################################################################
-##                                                              ##
-##                              SP                              ##
 ##                                                              ##
 ##################################################################
 
@@ -257,12 +245,6 @@ plot 'data/scalar_sp_mad_iter_1024_kernel.csv' using 3:4 title "scalar" with lin
 ##                                                              ##
 ##################################################################
 
-##################################################################
-##                                                              ##
-##                              SP                              ##
-##                                                              ##
-##################################################################
-
 if (0) {
 
 
@@ -371,126 +353,114 @@ plot 'data/scalar_sp_mad_iter_128_unroll_64_kernel.csv' using 3:4 title "scalar"
 
 ##################################################################
 ##                                                              ##
-##                             Priv                             ##
+##                       priv iter 1024                         ##
 ##                                                              ##
 ##################################################################
 
-##################################################################
-##                                                              ##
-##                              SP                              ##
-##                                                              ##
-##################################################################
+
+set terminal   svg enhanced
+set output "plots/compare_gflops_simd_add_sp_priv_iter_1024.svg"
+set title "SIMD Comparison - Add SP (Priv 1024 kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_add_priv_iter_1024_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_add_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_add_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_add_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_add_priv_iter_1024_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
 
 
 
 set terminal   svg enhanced
-set output "plots/compare_gflops_simd_add_sp_priv.svg"
-set title "SIMD Comparison - Add SP (Simple kernel)" font "Helvetica,24"
+set output "plots/compare_gflops_simd_sub_sp_priv_iter_1024.svg"
+set title "SIMD Comparison - Sub SP (Priv 1024 kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
-set xlabel "Number of threads" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
 set style func linespoints
 set logscale x 2
-set format x '2^{%L}'
-#set format y '2^{%L}'
-set key top left font ",20"
+set format x '%3.0f'
+set key bottom right font ",20"
 
 set yrange [0:400]
-plot 'data/scalar_sp_add_priv_iter_1024_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1 lc "#00000000", \
-	 'data/vect2_sp_add_priv_iter_1024_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 1 lc "#88000000", \
-	 'data/vect4_sp_add_priv_iter_1024_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 2 lc "#00000000", \
-	 'data/vect8_sp_add_priv_iter_1024_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 2 lc "#88000000", \
-	 'data/vect16_sp_add_priv_iter_1024_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 3 lc "#00000000"
-
-
-
-set terminal   svg enhanced
-set output "plots/compare_gflops_simd_sub_sp_priv.svg"
-set title "SIMD Comparison - Sub SP (Simple kernel)" font "Helvetica,24"
-set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
-set xlabel "Number of threads" font "Helvetica,20"
-set style func linespoints
-set logscale x 2
-set format x '2^{%L}'
-#set format y '2^{%L}'
-set key top left font ",20"
-
-set yrange [0:400]
-plot 'data/scalar_sp_sub_priv_iter_1024_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1 lc "#00000000", \
-	 'data/vect2_sp_sub_priv_iter_1024_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 1 lc "#88000000", \
-	 'data/vect4_sp_sub_priv_iter_1024_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 2 lc "#00000000", \
-	 'data/vect8_sp_sub_priv_iter_1024_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 2 lc "#88000000", \
-	 'data/vect16_sp_sub_priv_iter_1024_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 3 lc "#00000000"
+plot 'data/scalar_sp_sub_priv_iter_1024_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_sub_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_sub_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_sub_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_sub_priv_iter_1024_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
 
 
 	 
 set terminal   svg enhanced
-set output "plots/compare_gflops_simd_mul_sp_priv.svg"
-set title "SIMD Comparison - Mul SP (Simple kernel)" font "Helvetica,24"
+set output "plots/compare_gflops_simd_mul_sp_priv_iter_1024.svg"
+set title "SIMD Comparison - Mul SP (Priv 1024 kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
-set xlabel "Number of threads" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
 set style func linespoints
 set logscale x 2
-set format x '2^{%L}'
-#set format y '2^{%L}'
-set key top left font ",20"
+set format x '%3.0f'
+set key bottom right font ",20"
 
 set yrange [0:400]
-plot 'data/scalar_sp_mul_priv_iter_1024_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1 lc "#00000000", \
-	 'data/vect2_sp_mul_priv_iter_1024_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 1 lc "#88000000", \
-	 'data/vect4_sp_mul_priv_iter_1024_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 2 lc "#00000000", \
-	 'data/vect8_sp_mul_priv_iter_1024_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 2 lc "#88000000", \
-	 'data/vect16_sp_mul_priv_iter_1024_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 3 lc "#00000000"
+plot 'data/scalar_sp_mul_priv_iter_1024_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_mul_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_mul_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_mul_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_mul_priv_iter_1024_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
 
 
 
 
 set terminal   svg enhanced
-set output "plots/compare_gflops_simd_div_sp_priv.svg"
-set title "SIMD Comparison - Div SP (Simple kernel)" font "Helvetica,24"
+set output "plots/compare_gflops_simd_div_sp_priv_iter_1024.svg"
+set title "SIMD Comparison - Div SP (Priv 1024 kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
-set xlabel "Number of threads" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
 set style func linespoints
 set logscale x 2
-set format x '2^{%L}'
-#set format y '2^{%L}'
-set key top left font ",20"
+set format x '%3.0f'
+set key bottom right font ",20"
 
 set yrange [0:400]
-plot 'data/scalar_sp_div_priv_iter_1024_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1 lc "#00000000", \
-	 'data/vect2_sp_div_priv_iter_1024_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 1 lc "#88000000", \
-	 'data/vect4_sp_div_priv_iter_1024_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 2 lc "#00000000", \
-	 'data/vect8_sp_div_priv_iter_1024_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 2 lc "#88000000", \
-	 'data/vect16_sp_div_priv_iter_1024_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 3 lc "#00000000"
+plot 'data/scalar_sp_div_priv_iter_1024_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_div_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_div_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_div_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_div_priv_iter_1024_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
 
 
 
 set terminal   svg enhanced
-set output "plots/compare_gflops_simd_mad_sp_priv.svg"
-set title "SIMD Comparison - Mad SP (Simple kernel)" font "Helvetica,24"
+set output "plots/compare_gflops_simd_mad_sp_priv_iter_1024.svg"
+set title "SIMD Comparison - Mad SP (Priv 1024 kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
-set xlabel "Number of threads" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
 set style func linespoints
 set logscale x 2
-set format x '2^{%L}'
-#set format y '2^{%L}'
-set key top left font ",20"
+set format x '%3.0f'
+set key bottom right font ",20"
 
 set yrange [0:400]
-plot 'data/scalar_sp_mad_priv_iter_1024_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1 lc "#00000000", \
-	 'data/vect2_sp_mad_priv_iter_1024_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 1 lc "#88000000", \
-	 'data/vect4_sp_mad_priv_iter_1024_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 2 lc "#00000000", \
-	 'data/vect8_sp_mad_priv_iter_1024_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 2 lc "#88000000", \
-	 'data/vect16_sp_mad_priv_iter_1024_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 3 lc "#00000000"
+plot 'data/scalar_sp_mad_priv_iter_1024_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_mad_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_mad_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_mad_priv_iter_1024_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_mad_priv_iter_1024_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
 
- 
 
- 
- 
- 
- 
+
+
+
+
+
 ##################################################################
 ##                                                              ##
-##                           iter 8192                          ##
+##                       priv iter 8192                         ##
 ##                                                              ##
 ##################################################################
  
@@ -498,40 +468,215 @@ plot 'data/scalar_sp_mad_priv_iter_1024_kernel.csv' using 3:4 title "scalar" wit
  
 set terminal   svg enhanced
 set output "plots/compare_gflops_simd_add_sp_priv_iter_8192.svg"
-set title "SIMD Comparison - Add SP (Simple kernel)" font "Helvetica,24"
+set title "SIMD Comparison - Add SP (Priv 8192 kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
-set xlabel "Number of threads" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
 set style func linespoints
-#set logscale x 2
-#set format x '2^{%L}'
-#set format y '2^{%L}'
-set key top left font ",20"
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
 
 set yrange [0:400]
-plot 'data/scalar_sp_add_priv_iter_8192_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1 lc "#00000000", \
-	 'data/vect2_sp_add_priv_iter_8192_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 1 lc "#88000000", \
-	 'data/vect4_sp_add_priv_iter_8192_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 2 lc "#00000000", \
-	 'data/vect8_sp_add_priv_iter_8192_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 2 lc "#88000000", \
-	 'data/vect16_sp_add_priv_iter_8192_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 3 lc "#00000000"
+plot 'data/scalar_sp_add_priv_iter_8192_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_add_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_add_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_add_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_add_priv_iter_8192_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+
+
+if (0) {
+ 
+set terminal   svg enhanced
+set output "plots/compare_gflops_simd_sub_sp_priv_iter_8192.svg"
+set title "SIMD Comparison - Sub SP (Priv 8192 kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_sub_priv_iter_8192_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_sub_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_sub_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_sub_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_sub_priv_iter_8192_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+
+
+set terminal   svg enhanced
+set output "plots/compare_gflops_simd_mul_sp_priv_iter_8192.svg"
+set title "SIMD Comparison - Mul SP (Priv 8192 kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_mul_priv_iter_8192_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_mul_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_mul_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_mul_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_mul_priv_iter_8192_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+
+
+
+set terminal   svg enhanced
+set output "plots/compare_gflops_simd_div_sp_priv_iter_8192.svg"
+set title "SIMD Comparison - Div SP (Priv 8192 kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_div_priv_iter_8192_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_div_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_div_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_div_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_div_priv_iter_8192_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+
+}
 
 
 
 set terminal   svg enhanced
 set output "plots/compare_gflops_simd_mad_sp_priv_iter_8192.svg"
-set title "SIMD Comparison - Mad SP (Simple kernel)" font "Helvetica,24"
+set title "SIMD Comparison - Mad SP (Priv 8192 kernel)" font "Helvetica,24"
 set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
-set xlabel "Number of threads" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
 set style func linespoints
-#set logscale x 2
-#set format x '2^{%L}'
-#set format y '2^{%L}'
-set key top left font ",20"
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
 
 set yrange [0:400]
-plot 'data/scalar_sp_mad_priv_iter_8192_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1 lc "#00000000", \
-	 'data/vect2_sp_mad_priv_iter_8192_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 1 lc "#88000000", \
-	 'data/vect4_sp_mad_priv_iter_8192_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 2 lc "#00000000", \
-	 'data/vect8_sp_mad_priv_iter_8192_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 2 lc "#88000000", \
-	 'data/vect16_sp_mad_priv_iter_8192_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 3 lc "#00000000"
+plot 'data/scalar_sp_mad_priv_iter_8192_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_mad_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_mad_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_mad_priv_iter_8192_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_mad_priv_iter_8192_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+
+
+
+
+
+##################################################################
+##                                                              ##
+##                          power                               ##
+##                                                              ##
+##################################################################
+
+
+if (0) {
+
+
+
+set terminal   svg enhanced
+set output "plots/compare_gflops_simd_add_sp_power.svg"
+set title "SIMD Comparison - Add SP (Power kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_add_power_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_add_power_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_add_power_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_add_power_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_add_power_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+
+
+set terminal   svg enhanced
+set output "plots/compare_gflops_simd_sub_sp_power.svg"
+set title "SIMD Comparison - Sub SP (Power kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_sub_power_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_sub_power_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_sub_power_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_sub_power_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_sub_power_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+
+
+
+set terminal   svg enhanced
+set output "plots/compare_gflops_simd_mul_sp_power.svg"
+set title "SIMD Comparison - Mul SP (Power kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_mul_power_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_mul_power_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_mul_power_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_mul_power_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_mul_power_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+
+
+
+
+set terminal   svg enhanced
+set output "plots/compare_gflops_simd_div_sp_power.svg"
+set title "SIMD Comparison - Div SP (Power kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_div_power_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_div_power_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_div_power_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_div_power_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_div_power_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
+
+}
+
+
+
+set terminal   svg enhanced 
+set output "plots/compare_gflops_simd_mad_sp_power.svg"
+set title "SIMD Comparison - MAD SP (Power kernel)" font "Helvetica,24"
+set ylabel "Performance [GFLOP/s]" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
+set style func linespoints
+set logscale x 2
+set format x '%3.0f'
+set key bottom right font ",20"
+
+set yrange [0:400]
+plot 'data/scalar_sp_mad_power_kernel_gflops.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_mad_power_kernel_gflops.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_mad_power_kernel_gflops.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_mad_power_kernel_gflops.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_mad_power_kernel_gflops.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
 
  

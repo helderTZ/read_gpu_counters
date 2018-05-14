@@ -39,7 +39,7 @@
 	  <feComposite in='SourceGraphic' in2='grey' operator='atop'/>
 	</filter>
 </defs>
-<g fill="none" color="white" stroke="black" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+<g fill="none" color="white" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
 </g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<path stroke='black'  d='M63.6,422.4 M575.0,422.4  '/>	<g transform="translate(55.3,428.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="end">
@@ -87,6 +87,41 @@
 	</g>
 </g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='black'  d='M63.6,422.4 M63.6,72.1  '/>	<g transform="translate(63.6,446.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="middle">
+		<text><tspan font-family="Arial" > 23</tspan></text>
+	</g>
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='black'  d='M148.8,422.4 M148.8,72.1  '/>	<g transform="translate(148.8,446.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="middle">
+		<text><tspan font-family="Arial" > 23.5</tspan></text>
+	</g>
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='black'  d='M234.1,422.4 M234.1,72.1  '/>	<g transform="translate(234.1,446.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="middle">
+		<text><tspan font-family="Arial" > 24</tspan></text>
+	</g>
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='black'  d='M319.3,422.4 M319.3,72.1  '/>	<g transform="translate(319.3,446.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="middle">
+		<text><tspan font-family="Arial" > 24.5</tspan></text>
+	</g>
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='black'  d='M404.5,422.4 M404.5,72.1  '/>	<g transform="translate(404.5,446.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="middle">
+		<text><tspan font-family="Arial" > 25</tspan></text>
+	</g>
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='black'  d='M489.8,422.4 M489.8,72.1  '/>	<g transform="translate(489.8,446.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="middle">
+		<text><tspan font-family="Arial" > 25.5</tspan></text>
+	</g>
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='black'  d='M575.0,422.4 M575.0,72.1  '/>	<g transform="translate(575.0,446.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="middle">
+		<text><tspan font-family="Arial" > 26</tspan></text>
+	</g>
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
 </g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<path stroke='black'  d='M63.6,72.1 L63.6,422.4 L575.0,422.4 M575.0,72.1 M63.6,72.1  '/></g>
@@ -97,49 +132,57 @@
 </g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<g transform="translate(319.3,473.9)" stroke="none" fill="black" font-family="Helvetica" font-size="20.00"  text-anchor="middle">
-		<text><tspan font-family="Helvetica" >Number of threads</tspan></text>
+		<text><tspan font-family="Helvetica" >Number of Work Groups</tspan></text>
 	</g>
 </g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<g transform="translate(319.3,34.9)" stroke="none" fill="black" font-family="Helvetica" font-size="24.00"  text-anchor="middle">
-		<text><tspan font-family="Helvetica" >Energy Efficiency - Mad SP (Priv kernel)</tspan></text>
+		<text><tspan font-family="Helvetica" >Energy Efficiency - MAD SP (Priv kernel)</tspan></text>
 	</g>
 </g>
 	<g id="gnuplot_plot_1" ><title>scalar</title>
-<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+<g fill="none" color="white" stroke="black" stroke-width="4.00" stroke-linecap="butt" stroke-linejoin="miter">
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="4.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<g transform="translate(473.7,284.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="end">
 		<text><tspan font-family="Arial" >scalar</tspan></text>
 	</g>
 </g>
-<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
-	<path stroke='black'  d='M487.7,278.4 L552.7,278.4 M63.6,388.1 L119.2,422.4 M348.0,422.4 L404.5,387.2 L459.5,422.4  '/></g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="4.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='rgb(  0,   0,   0)'  d='M487.7,278.4 L552.7,278.4 M63.6,388.1 L119.2,422.4 M348.0,422.4 L404.5,387.2 L459.5,422.4  '/></g>
 	</g>
 	<g id="gnuplot_plot_2" ><title>vect2</title>
-<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+<g fill="none" color="white" stroke="rgb(  0,   0,   0)" stroke-width="3.00" stroke-linecap="butt" stroke-linejoin="miter">
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="3.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<g transform="translate(473.7,314.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="end">
 		<text><tspan font-family="Arial" >vect2</tspan></text>
 	</g>
 </g>
-<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
-	<path stroke='black' stroke-dasharray='2.5,4.0'  d='M487.7,308.4 L552.7,308.4 M63.6,395.0 L93.9,422.4  '/></g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="3.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='rgb(192, 192, 192)'  d='M487.7,308.4 L552.7,308.4 M63.6,395.0 L93.9,422.4  '/></g>
 	</g>
 	<g id="gnuplot_plot_3" ><title>vect4</title>
-<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+<g fill="none" color="white" stroke="rgb(192, 192, 192)" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
+</g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<g transform="translate(473.7,344.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="end">
 		<text><tspan font-family="Arial" >vect4</tspan></text>
 	</g>
 </g>
-<g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
-	<path stroke='black' stroke-dasharray='1.0,2.0'  d='M487.7,338.4 L552.7,338.4 M63.6,366.4 L234.1,237.2 L404.5,253.4 L575.0,355.0  '/></g>
+<g fill="none" color="black" stroke="currentColor" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
+	<path stroke='rgb(  0,   0,   0)'  d='M487.7,338.4 L552.7,338.4 M63.6,366.4 L234.1,237.2 L404.5,253.4 L575.0,355.0  '/></g>
 	</g>
 	<g id="gnuplot_plot_4" ><title>vect8</title>
+<g fill="none" color="white" stroke="rgb(  0,   0,   0)" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
+</g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
 	<g transform="translate(473.7,374.9)" stroke="none" fill="black" font-family="Arial" font-size="20.00"  text-anchor="end">
 		<text><tspan font-family="Arial" >vect8</tspan></text>
 	</g>
 </g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
-	<path stroke='black' stroke-dasharray='4.0,2.0,1.0,2.0'  d='M487.7,368.4 L552.7,368.4 M63.6,302.0 L234.1,294.6 L404.5,293.8 L575.0,274.8  '/></g>
+	<path stroke='rgb(192, 192, 192)'  d='M487.7,368.4 L552.7,368.4 M63.6,302.0 L234.1,294.6 L404.5,293.8 L575.0,274.8  '/></g>
 	</g>
 	<g id="gnuplot_plot_5" ><title>vect16</title>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
@@ -148,9 +191,9 @@
 	</g>
 </g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="1.00" stroke-linecap="butt" stroke-linejoin="miter">
-	<path stroke='black' stroke-dasharray='4.5,2.0,0.5,2.0,0.5,2.0'  d='M487.7,398.4 L552.7,398.4 M63.6,153.6 L234.1,146.0 L404.5,135.8 L575.0,128.6  '/></g>
+	<path stroke='rgb(  0,   0,   0)' stroke-dasharray='2.5,4.0'  d='M487.7,398.4 L552.7,398.4 M63.6,153.6 L234.1,146.0 L404.5,135.8 L575.0,128.6  '/></g>
 	</g>
-<g fill="none" color="white" stroke="black" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
+<g fill="none" color="white" stroke="rgb(  0,   0,   0)" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
 </g>
 <g fill="none" color="black" stroke="currentColor" stroke-width="2.00" stroke-linecap="butt" stroke-linejoin="miter">
 </g>

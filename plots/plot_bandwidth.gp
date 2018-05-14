@@ -55,24 +55,21 @@ plot 'data/scalar_sp_load_store_iter_1024_kernel.csv' using 3:4 title "scalar" w
 }
 
 set terminal   svg enhanced dashed
-set output "plots/compare_vector_bandwidth_gbs.svg"
+set output "plots/compare_simd_bandwidth_gbs.svg"
 set title "Vector Comparison - Bandwidth" font "Helvetica,24"
 set ylabel "Bandwidth [GB/s]" font "Helvetica,20"
-set xlabel "Number of threads" font "Helvetica,20"
+set xlabel "Number of Work Groups" font "Helvetica,20"
 set style func linespoints
 set logscale x 2
-set format x '2^{%L}'
-#set format y '2^{%L}'
-set key top left
-#set grid
+set format x '%3.0f'
+set key top center horizontal font ",20"
 
-
-#set ytics (0,2,4,8,16,32,64,128,256,512)
-#set yrange [0.1:600]
-plot 'data/scalar_sp_load_store_iter_1024_kernel.csv' using 3:4 title "scalar" with line lt -1 dashtype 1 lc "#00000000", \
-	 'data/vect2_sp_load_store_iter_1024_kernel.csv'  using 3:4 title "vect2"  with line lt -1 dashtype 1 lc "#88000000", \
-	 'data/vect4_sp_load_store_iter_1024_kernel.csv'  using 3:4 title "vect4"  with line lt -1 dashtype 2 lc "#00000000", \
-	 'data/vect8_sp_load_store_iter_1024_kernel.csv'  using 3:4 title "vect8"  with line lt -1 dashtype 2 lc "#88000000", \
-	 'data/vect16_sp_load_store_iter_1024_kernel.csv' using 3:4 title "vect16" with line lt -1 dashtype 3 lc "#00000000"
+set ytics (0,50,100,150,200)
+set yrange [0.1:250]
+plot 'data/scalar_sp_load_store_iter_1024_kernel.csv' using 1:4 title "scalar" with line lt -1 dashtype 1 lw 4 lc "black", \
+	 'data/vect2_sp_load_store_iter_1024_kernel.csv'  using 1:4 title "vect2"  with line lt -1 dashtype 1 lw 3 lc "grey",  \
+	 'data/vect4_sp_load_store_iter_1024_kernel.csv'  using 1:4 title "vect4"  with line lt -1 dashtype 1 lw 2 lc "black", \
+	 'data/vect8_sp_load_store_iter_1024_kernel.csv'  using 1:4 title "vect8"  with line lt -1 dashtype 1 lw 1 lc "grey",  \
+	 'data/vect16_sp_load_store_iter_1024_kernel.csv' using 1:4 title "vect16" with line lt -1 dashtype 2 lw 1 lc "black"
 
 
