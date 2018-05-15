@@ -10,7 +10,7 @@ set style line 2 lc rgb '#dd181f' lt 1 lw 2 pt 5 ps 1.5   # --- red
 
 
 set border 3
-set tics scale 0
+set tics scale 0 font ",20"
 unset grid
 
 
@@ -25,7 +25,7 @@ set terminal svg enhanced
 set output "plots/compare_power_mad_power.svg"
 set title "Power Comparison - SP MAD" font "Helvetica,24"
 set ylabel "Power [W]" font "Helvetica,20"
-set xlabel "Number of Work Groups" font "Helvetica,24"
+set xlabel "Number of Work Groups" font "Helvetica,20"
 set format x '%3.0f'
 set key bottom right font ",20"
 
