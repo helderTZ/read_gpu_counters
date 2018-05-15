@@ -40,24 +40,22 @@ plot './data/scalar_sp_mad_power_kernel_power.csv' using 1:4 every ::0::42 title
 
 
 
+set terminal   svg enhanced
+set output "plots/compare_power_mad_sp_power_max_power_kernels.svg"
+set title "Power - MAD SP (Power kernel)" font "Helvetica,24"
+set boxwidth 0.5 relative
+ set style fill pattern
+set format y '%2.0f'
+unset key
+set yrange [11:12]
+plot 'data/compare_max_power_power.csv' using 2:xtic(1) with boxes fill pattern 5 lc "black", '' using 0:2:2 with labels offset 0,1 font ",20"
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+set terminal   svg enhanced
+set output "plots/compare_power_mad_sp_power_max_priv_iter_8192_kernels.svg"
+set title "Power - MAD SP (Priv 8192 kernel)" font "Helvetica,24"
+set boxwidth 0.5 relative
+ set style fill pattern
+set format y '%2.0f'
+unset key
+set yrange [12:13]
+plot 'data/compare_max_power_priv_iter_8192.csv' using 2:xtic(1) with boxes fill pattern 5 lc "black", '' using 0:2:2 with labels offset 0,1 font ",20"
