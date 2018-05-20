@@ -9,7 +9,7 @@
 	float temp = a[i];
 	for(k = 0; k < 1024; k++) {
 		for(j = 0; j < 8192; j++) {
-			temp = temp + 0.5f;
+			temp = temp + 0.5;
 		}
 	}
 	a[i] = temp;

@@ -480,6 +480,8 @@ void read_counters_mmio(uint32_t custom_counter_dword);
 
 void profile_through_opencl();
 
+void read_counters_exp(cl_kernel kernel_warmup, cl_kernel kernel_work);
+
 
 
 #endif

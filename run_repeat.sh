@@ -3,7 +3,7 @@
 if [ $# -lt 3 ]
 then
 	echo "Usage: run_repeat <number of repetitions> <type of kernel> <exponent for number of blocks> <sleep status>"
-	echo "Available kernel types: flop mop power shm"
+	echo "Available kernel types: flop mop power shm mem_travel"
 	echo "Sleep status: 1 for on, 0 for off, default is off"
 	exit
 fi
@@ -42,7 +42,7 @@ if [[ $2 == "flop" ]]
 then
 	
 	reps=$1
-	for kernel in "scalar_sp_add_priv_iter_8192_kernel" "vect2_sp_add_priv_iter_8192_kernel" "vect4_sp_add_priv_iter_8192_kernel" "vect8_sp_add_priv_iter_8192_kernel" "vect16_sp_add_priv_iter_8192_kernel" 
+	for kernel in "scalar_dp_add_priv_iter_8192_kernel" "vect2_dp_add_priv_iter_8192_kernel" "vect4_dp_add_priv_iter_8192_kernel" "vect8_dp_add_priv_iter_8192_kernel" "vect16_dp_add_priv_iter_8192_kernel" "scalar_dp_sub_priv_iter_8192_kernel" "vect2_dp_sub_priv_iter_8192_kernel" "vect4_dp_sub_priv_iter_8192_kernel" "vect8_dp_sub_priv_iter_8192_kernel" "vect16_dp_sub_priv_iter_8192_kernel" "scalar_dp_mul_priv_iter_8192_kernel" "vect2_dp_mul_priv_iter_8192_kernel" "vect4_dp_mul_priv_iter_8192_kernel" "vect8_dp_mul_priv_iter_8192_kernel" "vect16_dp_mul_priv_iter_8192_kernel" "scalar_dp_div_priv_iter_8192_kernel" "vect2_dp_div_priv_iter_8192_kernel" "vect4_dp_div_priv_iter_8192_kernel" "vect8_dp_div_priv_iter_8192_kernel" "vect16_dp_div_priv_iter_8192_kernel" "scalar_dp_mad_priv_iter_8192_kernel" "vect2_dp_mad_priv_iter_8192_kernel" "vect4_dp_mad_priv_iter_8192_kernel" "vect8_dp_mad_priv_iter_8192_kernel" "vect16_dp_mad_priv_iter_8192_kernel" 
 	#"scalar_sp_div_priv_iter_1024_kernel" "vect2_sp_div_priv_iter_1024_kernel" "vect4_sp_div_priv_iter_1024_kernel" "vect8_sp_div_priv_iter_1024_kernel" "vect16_sp_div_priv_iter_1024_kernel" "scalar_sp_sub_priv_iter_1024_kernel" "vect2_sp_sub_priv_iter_1024_kernel" "vect4_sp_sub_priv_iter_1024_kernel" "vect8_sp_sub_priv_iter_1024_kernel" "vect16_sp_sub_priv_iter_1024_kernel" "scalar_sp_mul_priv_iter_1024_kernel" "vect2_sp_mul_priv_iter_1024_kernel" "vect4_sp_mul_priv_iter_1024_kernel" "vect8_sp_mul_priv_iter_1024_kernel" "vect16_sp_mul_priv_iter_1024_kernel" "scalar_sp_div_priv_iter_1024_kernel" "vect2_sp_div_priv_iter_1024_kernel" "vect4_sp_div_priv_iter_1024_kernel" "vect8_sp_div_priv_iter_1024_kernel" "vect16_sp_div_priv_iter_1024_kernel" "scalar_sp_mad_priv_iter_1024_kernel" "vect2_sp_mad_priv_iter_1024_kernel" "vect4_sp_mad_priv_iter_1024_kernel" "vect8_sp_mad_priv_iter_1024_kernel" "vect16_sp_mad_priv_iter_1024_kernel"
 	#"scalar_dp_div_kernel" "scalar_dp_sub_kernel" "scalar_dp_mul_kernel" "scalar_dp_div_kernel" "scalar_dp_mad_kernel" "vect2_dp_div_kernel" "vect2_dp_sub_kernel" "vect2_dp_mul_kernel" "vect2_dp_div_kernel" "vect2_dp_mad_kernel" "vect4_dp_div_kernel" "vect4_dp_sub_kernel" "vect4_dp_mul_kernel" "vect4_dp_div_kernel" "vect4_dp_mad_kernel" "vect8_dp_div_kernel" "vect8_dp_sub_kernel" "vect8_dp_mul_kernel" "vect8_dp_div_kernel" "vect8_dp_mad_kernel" "vect16_dp_div_kernel" "vect16_dp_sub_kernel" "vect16_dp_mul_kernel" "vect16_dp_div_kernel" "vect16_dp_mad_kernel" 
 	#"scalar_dp_div_iter_1024_kernel" "scalar_dp_sub_iter_1024_kernel" "scalar_dp_mul_iter_1024_kernel" "scalar_dp_div_iter_1024_kernel" "scalar_dp_mad_iter_1024_kernel" "vect2_dp_div_iter_1024_kernel" "vect2_dp_sub_iter_1024_kernel" "vect2_dp_mul_iter_1024_kernel" "vect2_dp_div_iter_1024_kernel" "vect2_dp_mad_iter_1024_kernel" "vect4_dp_div_iter_1024_kernel" "vect4_dp_sub_iter_1024_kernel" "vect4_dp_mul_iter_1024_kernel" "vect4_dp_div_iter_1024_kernel" "vect4_dp_mad_iter_1024_kernel" "vect8_dp_div_iter_1024_kernel" "vect8_dp_sub_iter_1024_kernel" "vect8_dp_mul_iter_1024_kernel" "vect8_dp_div_iter_1024_kernel" "vect8_dp_mad_iter_1024_kernel" "vect16_dp_div_iter_1024_kernel" "vect16_dp_sub_iter_1024_kernel" "vect16_dp_mul_iter_1024_kernel" "vect16_dp_div_iter_1024_kernel" "vect16_dp_mad_iter_1024_kernel"  "scalar_dp_div_iter_128_unroll_64_kernel" "scalar_dp_sub_iter_128_unroll_64_kernel" "scalar_dp_mul_iter_128_unroll_64_kernel" "scalar_dp_div_iter_128_unroll_64_kernel" "scalar_dp_mad_iter_128_unroll_64_kernel" "vect2_dp_div_iter_128_unroll_64_kernel"  "vect2_dp_sub_iter_128_unroll_64_kernel"  "vect2_dp_mul_iter_128_unroll_64_kernel"  "vect2_dp_div_iter_128_unroll_64_kernel"  "vect2_dp_mad_iter_128_unroll_64_kernel"  "vect4_dp_div_iter_128_unroll_64_kernel"  "vect4_dp_sub_iter_128_unroll_64_kernel"  "vect4_dp_mul_iter_128_unroll_64_kernel"  "vect4_dp_div_iter_128_unroll_64_kernel"  "vect4_dp_mad_iter_128_unroll_64_kernel"  "vect8_dp_div_iter_128_unroll_64_kernel"  "vect8_dp_sub_iter_128_unroll_64_kernel"  "vect8_dp_mul_iter_128_unroll_64_kernel"  "vect8_dp_div_iter_128_unroll_64_kernel"  "vect8_dp_mad_iter_128_unroll_64_kernel" "vect16_dp_div_iter_128_unroll_64_kernel" "vect16_dp_sub_iter_128_unroll_64_kernel" "vect16_dp_mul_iter_128_unroll_64_kernel" "vect16_dp_div_iter_128_unroll_64_kernel" "vect16_dp_mad_iter_128_unroll_64_kernel" 
@@ -91,7 +91,7 @@ if [[ $2 == "mop" ]]
 then
 	
 	reps=$1
-	for kernel in  "scalar_sp_load_iter_1024_kernel" "vect2_sp_load_iter_1024_kernel" "vect4_sp_load_iter_1024_kernel" "vect8_sp_load_iter_1024_kernel" "vect16_sp_load_iter_1024_kernel" "scalar_sp_store_iter_1024_kernel" "vect2_sp_store_iter_1024_kernel" "vect4_sp_store_iter_1024_kernel" "vect8_sp_store_iter_1024_kernel" "vect16_sp_store_iter_1024_kernel"
+	for kernel in  "scalar_sp_load_store_iter_1024_volatile_kernel" "vect2_sp_load_store_iter_1024_volatile_kernel" "vect4_sp_load_store_iter_1024_volatile_kernel" "vect8_sp_load_store_iter_1024_volatile_kernel" "vect16_sp_load_store_iter_1024_volatile_kernel" "scalar_dp_load_store_iter_1024_volatile_kernel" "vect2_dp_load_store_iter_1024_volatile_kernel" "vect4_dp_load_store_iter_1024_volatile_kernel" "vect8_dp_load_store_iter_1024_volatile_kernel" "vect16_dp_load_store_iter_1024_volatile_kernel"
 	#"scalar_sp_load_store_iter_1024_kernel" "vect2_sp_load_store_iter_1024_kernel" "vect4_sp_load_store_iter_1024_kernel" "vect8_sp_load_store_iter_1024_kernel" "vect16_sp_load_store_iter_1024_kernel"
 	#"scalar_sp_load_store_kernel" "vect2_sp_load_store_kernel" "vect4_sp_load_store_kernel" "vect8_sp_load_store_kernel" "vect16_sp_load_store_kernel"
 	#"scalar_dp_load_store_kernel" "vect2_dp_load_store_kernel" "vect4_dp_load_store_kernel" "vect8_dp_load_store_kernel" "vect16_dp_load_store_kernel"
@@ -135,7 +135,7 @@ if [[ $2 == "power" ]]
 then
 	
 	reps=$1
-	for kernel in  "scalar_sp_mad_power_kernel" "vect2_sp_mad_power_kernel" "vect4_sp_mad_power_kernel" "vect8_sp_mad_power_kernel" "vect16_sp_mad_power_kernel"
+	for kernel in  "scalar_dp_mad_power_kernel" "vect2_dp_mad_power_kernel" "vect4_dp_mad_power_kernel" "vect8_dp_mad_power_kernel" "vect16_dp_mad_power_kernel"
 	#"scalar_sp_mad_power_kernel" "vect2_sp_mad_power_kernel" "vect4_sp_mad_power_kernel" "vect8_sp_mad_power_kernel" "vect16_sp_mad_power_kernel"
 	#"scalar_sp_div_power_kernel" "scalar_sp_sub_power_kernel" "scalar_sp_mul_power_kernel" "scalar_sp_div_power_kernel" "scalar_sp_mad_power_kernel" "vect2_sp_div_power_kernel" "vect2_sp_sub_power_kernel" "vect2_sp_mul_power_kernel" "vect2_sp_div_power_kernel" "vect2_sp_mad_power_kernel" "vect4_sp_div_power_kernel" "vect4_sp_sub_power_kernel" "vect4_sp_mul_power_kernel" "vect4_sp_div_power_kernel" "vect4_sp_mad_power_kernel" "vect8_sp_div_power_kernel" "vect8_sp_sub_power_kernel" "vect8_sp_mul_power_kernel" "vect8_sp_div_power_kernel" "vect8_sp_mad_power_kernel" "vect16_sp_div_power_kernel" "vect16_sp_sub_power_kernel" "vect16_sp_mul_power_kernel" "vect16_sp_div_power_kernel" "vect16_sp_mad_power_kernel"
 	#"scalar_sp_div_power_kernel" "scalar_sp_sub_power_kernel" "scalar_sp_mul_power_kernel" "scalar_sp_div_power_kernel" "scalar_sp_mad_power_kernel"
@@ -153,7 +153,7 @@ then
 				nice -n -20 ./read_gpu_counters -d -c $kernel --blocks 1 --tpb $(($base**$j)) --power-smoothing > /dev/null 2>> errors.log
 				#nice -n -20 ./read_gpu_counters -d -c $kernel --blocks 1 --tpb $(($base**$j)) > /dev/null 2>> errors.log
 			done
-			for j in `seq 2 64`
+			for j in `seq 2 32`
 			do
 				echo "    # of blocks: $j threads per block: 256"
 				nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $j --tpb 256 --power-smoothing > /dev/null 2>> errors.log
@@ -207,6 +207,24 @@ then
 					nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $(($base**$j)) --tpb 256 > /dev/null 2>> errors.log
 				done
 			fi
+		done
+	done
+	
+fi
+
+
+
+if [[ $2 == "mem_travel" ]]
+then
+	
+	reps=$1
+	for kernel in  "mem_travel_1_ld_st" "mem_travel_2_ld_st" "mem_travel_4_ld_st" "mem_travel_8_ld_st" "mem_travel_16_ld_st" "mem_travel_32_ld_st" "mem_travel_64_ld_st" 
+	do
+		for i in `seq 1 $reps`
+		do
+			echo "Running rep $i of $kernel"
+			echo "    # of blocks: $exp  threads per block: 1"
+			nice -n -20 ./read_gpu_counters -d -c $kernel --blocks $exp --tpb 1 > /dev/null 2>> errors.log
 		done
 	done
 	

@@ -2723,3 +2723,45 @@ void profile_through_opencl() {
 
 
 
+/**************************************************************
+ * **************     MEMORY EXPERIMENTS     ******************
+ * ************************************************************
+ */
+
+void read_counters_exp(cl_kernel kernel_warmup, cl_kernel kernel_work) {
+	
+	cl_event event;
+	cl_ulong time_start;
+	cl_ulong time_end;
+	long long int ocl_nanoseconds;
+	int ret;
+	
+	printf("In read_counters_exp()\n");
+	fflush(stdout);
+	
+	// warmup
+    ret = clEnqueueNDRangeKernel(command_queue, kernel_warmup, 1, NULL, &global, &local, 0, NULL, NULL); clCheckError(ret, __LINE__);
+	//clFlush(command_queue); clCheckError(ret, __LINE__);
+	
+	//printf("between");
+	//fflush(stdout);
+	
+	// work
+    ret = clEnqueueNDRangeKernel(command_queue, kernel_work, 1, NULL, &global, &local, 0, NULL, &event); clCheckError(ret, __LINE__);
+    clFlush(command_queue); clCheckError(ret, __LINE__);
+    clFinish(command_queue); clCheckError(ret, __LINE__);
+	
+	printf("finished\n");
+	fflush(stdout);
+	
+	clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_START, sizeof(time_start), &time_start, NULL);
+	clGetEventProfilingInfo(event, CL_PROFILING_COMMAND_END, sizeof(time_end), &time_end, NULL);
+	ocl_nanoseconds = time_end-time_start;
+	
+	double nanoseconds = time_end-time_start;
+	
+	printf("Delta ocl timer: %lu\n", time_end-time_start);
+	printf("Time: %f [s]\n", nanoseconds/1.0e9);
+	
+}
+

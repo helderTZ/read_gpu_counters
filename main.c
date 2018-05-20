@@ -27,9 +27,14 @@
 #define CACHELINE_FLOAT 16384
 #define MULTIPLIER 100
 #define STD_SIZE_PTR_CHASE (CACHELINE_FLOAT*MULTIPLIER)
+//#define MEM_EXP2_VEC_SIZE 131072 // 512 KB in floats
+#define MEM_EXP2_VEC_SIZE 262144 // 1 MB in floats
+
+#define MEM_EXP5_MULTIPLIER 64
+#define MEM8_VECTOR 24*16*32
 
 
-//#define USE_ZERO_COPY
+#define USE_ZERO_COPY
 
 #if defined(USE_ZERO_COPY)
 	#define MALLOC(x) _mm_malloc(x, 4096)
@@ -38,16 +43,16 @@
 #else
 	#define MALLOC(x) _mm_malloc(x, 64)
 	#define FREE(x)   _mm_free(x)
-	#define MEM_ACCESS CL_MEM_READ_WRITE
+	#define MEM_ACCESS CL_MEM_READ_WRITE 
 #endif
 
 
 char kernel_choice[50] = "";
-int number_available_flop_kernels = 300;
-int number_available_mop_kernels = 40;
+int number_available_flop_kernels = 320;
+int number_available_mop_kernels = 50;
 int number_available_power_kernels = 50;
 int number_available_shared_mem_kernels = 15;
-int number_extra_kernels = 1;
+int number_extra_kernels = 17;
 
 char *available_flop_kernels[] = {
 	"scalar_sp_add_kernel", "scalar_sp_sub_kernel", "scalar_sp_mul_kernel", "scalar_sp_div_kernel", "scalar_sp_mad_kernel", 
@@ -101,11 +106,15 @@ char *available_flop_kernels[] = {
 	"vect8_sp_add_priv_iter_8192_kernel",  "vect8_sp_sub_priv_iter_8192_kernel",  "vect8_sp_mul_priv_iter_8192_kernel",  "vect8_sp_div_priv_iter_8192_kernel",  "vect8_sp_mad_priv_iter_8192_kernel", 
 	"vect16_sp_add_priv_iter_8192_kernel", "vect16_sp_sub_priv_iter_8192_kernel", "vect16_sp_mul_priv_iter_8192_kernel", "vect16_sp_div_priv_iter_8192_kernel", "vect16_sp_mad_priv_iter_8192_kernel", 
 	"scalar_dp_add_priv_iter_1024_kernel", "scalar_dp_sub_priv_iter_1024_kernel", "scalar_dp_mul_priv_iter_1024_kernel", "scalar_dp_div_priv_iter_1024_kernel", "scalar_dp_mad_priv_iter_1024_kernel", 
-	"scalar_dp_add_priv_iter_8192_kernel", "scalar_dp_sub_priv_iter_8192_kernel", "scalar_dp_mul_priv_iter_8192_kernel", "scalar_dp_div_priv_iter_8192_kernel", "scalar_dp_mad_priv_iter_8192_kernel", 
 	"vect2_dp_add_priv_iter_1024_kernel",  "vect2_dp_sub_priv_iter_1024_kernel",  "vect2_dp_mul_priv_iter_1024_kernel",  "vect2_dp_div_priv_iter_1024_kernel",  "vect2_dp_mad_priv_iter_1024_kernel", 
 	"vect4_dp_add_priv_iter_1024_kernel",  "vect4_dp_sub_priv_iter_1024_kernel",  "vect4_dp_mul_priv_iter_1024_kernel",  "vect4_dp_div_priv_iter_1024_kernel",  "vect4_dp_mad_priv_iter_1024_kernel", 
 	"vect8_dp_add_priv_iter_1024_kernel",  "vect8_dp_sub_priv_iter_1024_kernel",  "vect8_dp_mul_priv_iter_1024_kernel",  "vect8_dp_div_priv_iter_1024_kernel",  "vect8_dp_mad_priv_iter_1024_kernel", 
 	"vect16_dp_add_priv_iter_1024_kernel", "vect16_dp_sub_priv_iter_1024_kernel", "vect16_dp_mul_priv_iter_1024_kernel", "vect16_dp_div_priv_iter_1024_kernel", "vect16_dp_mad_priv_iter_1024_kernel", 
+	"scalar_dp_add_priv_iter_8192_kernel", "scalar_dp_sub_priv_iter_8192_kernel", "scalar_dp_mul_priv_iter_8192_kernel", "scalar_dp_div_priv_iter_8192_kernel", "scalar_dp_mad_priv_iter_8192_kernel", 
+	"vect2_dp_add_priv_iter_8192_kernel", "vect2_dp_sub_priv_iter_8192_kernel", "vect2_dp_mul_priv_iter_8192_kernel", "vect2_dp_div_priv_iter_8192_kernel", "vect2_dp_mad_priv_iter_8192_kernel", 
+	"vect4_dp_add_priv_iter_8192_kernel", "vect4_dp_sub_priv_iter_8192_kernel", "vect4_dp_mul_priv_iter_8192_kernel", "vect4_dp_div_priv_iter_8192_kernel", "vect4_dp_mad_priv_iter_8192_kernel", 
+	"vect8_dp_add_priv_iter_8192_kernel", "vect8_dp_sub_priv_iter_8192_kernel", "vect8_dp_mul_priv_iter_8192_kernel", "vect8_dp_div_priv_iter_8192_kernel", "vect8_dp_mad_priv_iter_8192_kernel", 
+	"vect16_dp_add_priv_iter_8192_kernel", "vect16_dp_sub_priv_iter_8192_kernel", "vect16_dp_mul_priv_iter_8192_kernel", "vect16_dp_div_priv_iter_8192_kernel", "vect16_dp_mad_priv_iter_8192_kernel", 
 };
 
 char *available_mop_kernels[] = {
@@ -113,6 +122,8 @@ char *available_mop_kernels[] = {
 	"scalar_dp_load_store_kernel", "vect2_dp_load_store_kernel", "vect4_dp_load_store_kernel", "vect8_dp_load_store_kernel", "vect16_dp_load_store_kernel",
 	"scalar_sp_load_store_iter_1024_kernel", "vect2_sp_load_store_iter_1024_kernel", "vect4_sp_load_store_iter_1024_kernel", "vect8_sp_load_store_iter_1024_kernel", "vect16_sp_load_store_iter_1024_kernel",
 	"scalar_dp_load_store_iter_1024_kernel", "vect2_dp_load_store_iter_1024_kernel", "vect4_dp_load_store_iter_1024_kernel", "vect8_dp_load_store_iter_1024_kernel", "vect16_dp_load_store_iter_1024_kernel",
+	"scalar_sp_load_store_iter_1024_volatile_kernel", "vect2_sp_load_store_iter_1024_volatile_kernel", "vect4_sp_load_store_iter_1024_volatile_kernel", "vect8_sp_load_store_iter_1024_volatile_kernel", "vect16_sp_load_store_iter_1024_volatile_kernel",
+	"scalar_dp_load_store_iter_1024_volatile_kernel", "vect2_dp_load_store_iter_1024_volatile_kernel", "vect4_dp_load_store_iter_1024_volatile_kernel", "vect8_dp_load_store_iter_1024_volatile_kernel", "vect16_dp_load_store_iter_1024_volatile_kernel",
 	"scalar_sp_load_iter_1024_kernel", "vect2_sp_load_iter_1024_kernel", "vect4_sp_load_iter_1024_kernel", "vect8_sp_load_iter_1024_kernel", "vect16_sp_load_iter_1024_kernel",
 	"scalar_sp_store_iter_1024_kernel", "vect2_sp_store_iter_1024_kernel", "vect4_sp_store_iter_1024_kernel", "vect8_sp_store_iter_1024_kernel", "vect16_sp_store_iter_1024_kernel",
 	"scalar_sp_load_iter_1024_kernel_better", "vect2_sp_load_iter_1024_kernel_better", "vect4_sp_load_iter_1024_kernel_better", "vect8_sp_load_iter_1024_kernel_better", "vect16_sp_load_iter_1024_kernel_better",
@@ -139,7 +150,7 @@ char *available_shared_mem_kernels[] = {
 };
 
 char *extra_kernels[] = {
-	"pointer_chasing_kernel"
+	"pointer_chasing_kernel", "mem_travel_1_ld_st", "mem_travel_2_ld_st", "mem_travel_4_ld_st", "mem_travel_1_ld_st", "mem_travel_8_ld_st", "mem_travel_16_ld_st", "mem_travel_32_ld_st", "mem_travel_64_ld_st", "mem_experiment", "mem_experiment2", "mem_experiment3", "mem_experiment4", "mem_experiment5", "mem_experiment6", "mem_experiment7", "mem_experiment8"
 };
 
 /* dumpBinaries
@@ -226,6 +237,18 @@ int main(int argc, char** argv, char **envp) {
 	int validate = 0;
 	int no_counters = 0;
 	int pointer_chase = 0;
+	int mem_travel = 0;
+	int mem_experiment = 0;
+	int mem_experiment2 = 0;
+	int mem_experiment3 = 0;
+	int mem_experiment4 = 0;
+	int mem_experiment5 = 0;
+	int mem_experiment6 = 0;
+	int mem_experiment7 = 0;
+	int mem_experiment8 = 0;
+	int mem_exp8_size = 0;
+	cl_kernel kernel_warmup;
+	cl_kernel kernel_workload;
 	char *app_name_args;
 	uint64_t clock_start, clock_end, clock_delta;
 	uint64_t build_clock_start, build_clock_end, build_clock_delta;
@@ -358,7 +381,30 @@ int main(int argc, char** argv, char **envp) {
 	for (int i = 0; i < number_available_mop_kernels; i++) 			{ if (strcmp(kernel_choice, available_mop_kernels[i]) == 0) 		{ match++; kernel_type = 'm'; } }
 	for (int i = 0; i < number_available_power_kernels; i++) 		{ if (strcmp(kernel_choice, available_power_kernels[i]) == 0) 		{ match++; kernel_type = 'p'; } }
 	for (int i = 0; i < number_available_shared_mem_kernels; i++) 	{ if (strcmp(kernel_choice, available_shared_mem_kernels[i]) == 0) 	{ match++; kernel_type = 's'; } }
-	for (int i = 0; i < number_extra_kernels; i++)					{ if (strcmp(kernel_choice, extra_kernels[i]) == 0) 				{ match++; kernel_type = 'e'; pointer_chase = 1; } }
+	for (int i = 0; i < number_extra_kernels; i++)					{ if (strcmp(kernel_choice, extra_kernels[i]) == 0) 				{ match++; kernel_type = 'e'; } }
+	
+	if (kernel_type == 'e') {
+		if (strcmp(kernel_choice, "pointer_chasing_kernel") == 0)
+			pointer_chase = 1;
+		else if (strstr(kernel_choice, "mem_travel") != NULL)
+			mem_travel = 1;
+		else if (strcmp(kernel_choice, "mem_experiment") == 0)
+			mem_experiment = 1;
+		else if (strcmp(kernel_choice, "mem_experiment2") == 0)
+			mem_experiment2 = 1;
+		else if (strcmp(kernel_choice, "mem_experiment3") == 0)
+			mem_experiment3 = 1;
+		else if (strcmp(kernel_choice, "mem_experiment4") == 0)
+			mem_experiment4 = 1;
+		else if (strcmp(kernel_choice, "mem_experiment5") == 0)
+			mem_experiment5 = 1;
+		else if (strcmp(kernel_choice, "mem_experiment6") == 0)
+			mem_experiment6 = 1;
+		else if (strcmp(kernel_choice, "mem_experiment7") == 0)
+			mem_experiment7 = 1;
+		else if (strcmp(kernel_choice, "mem_experiment8") == 0)
+			mem_experiment8 = 1;
+	}
 	
 	if (match == 0) {
 		printf(KRED "Chosen kernel not available. Choose from:\n" KNRM);
@@ -376,7 +422,7 @@ int main(int argc, char** argv, char **envp) {
 	else if (strstr(kernel_choice, "dp") != NULL) 	precision_type = 'd';	// double-precision
 	else 											precision_type = 'u';	// unknown precision / unused (for memory kernels as of yet)
 	
-	if (strstr(kernel_choice, "load_store") != NULL)	strcpy(mem_access , "ls");
+	if (strstr(kernel_choice, "load_store") != NULL || strstr(kernel_choice, "ld_st") != NULL)	strcpy(mem_access , "ls");
 	else if (strstr(kernel_choice, "load") != NULL)		mem_access[0] = 'l';
 	else if (strstr(kernel_choice, "store") != NULL)	mem_access[0] = 's';
 	
@@ -426,6 +472,12 @@ int main(int argc, char** argv, char **envp) {
 	cl_double16 *vect16_dp_A, *vect16_dp_B;
 	
 	float *pointer_chase_A;
+	
+	float *mem_travel_A;
+	float *mem_travel_B;
+	
+	float *mem_exp_A;
+	float *mem_exp_B;
 
 	// kernel source vars
 	FILE *f_source;
@@ -467,11 +519,76 @@ int main(int argc, char** argv, char **envp) {
 		for(int i=0; i<STD_SIZE_PTR_CHASE; i++) {
 			pointer_chase_A[i] = i;
 		}
+	}
+	
+	if (mem_travel) {
 		
+		mem_travel_A = (float*) MALLOC(sizeof(float) * global);
+		mem_travel_B = (float*) MALLOC(sizeof(float) * global);
+		if(mem_travel_A==NULL || mem_travel_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
+		for(int i=0; i<global; i++) {
+			mem_travel_A[i] = i;
+			mem_travel_B[i] = i;
+		}
+	}
+	
+	if (mem_experiment) {
+		
+		mem_exp_A = (float*) MALLOC(sizeof(float) * global>>2);
+		mem_exp_B = (float*) MALLOC(sizeof(float) * global>>2);
+		if(mem_exp_A==NULL || mem_exp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
+		for(int i=0; i<global>>2; i++) {
+			mem_exp_A[i] = i;
+			mem_exp_B[i] = i;
+		}
+	}
+	
+	if (mem_experiment2) {
+		
+		mem_exp_A = (float*) MALLOC(sizeof(float) * MEM_EXP2_VEC_SIZE);
+		mem_exp_B = (float*) MALLOC(sizeof(float) * MEM_EXP2_VEC_SIZE);
+		if(mem_exp_A==NULL || mem_exp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
+		for(int i=0; i<MEM_EXP2_VEC_SIZE; i++) {
+			mem_exp_A[i] = i;
+			mem_exp_B[i] = i;
+		}
+	}
+	
+	if (mem_experiment3 || mem_experiment4  || mem_experiment6 || mem_experiment7) {
+		
+		mem_exp_A = (float*) MALLOC(sizeof(float) * global);
+		mem_exp_B = (float*) MALLOC(sizeof(float) * global);
+		if(mem_exp_A==NULL || mem_exp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
+		for(int i=0; i<global; i++) {
+			mem_exp_A[i] = i;
+			mem_exp_B[i] = i;
+		}
+	}
+	
+	if (mem_experiment5) {
+		
+		mem_exp_A = (float*) MALLOC(sizeof(float) * global*MEM_EXP5_MULTIPLIER);
+		mem_exp_B = (float*) MALLOC(sizeof(float) * global*MEM_EXP5_MULTIPLIER);
+		if(mem_exp_A==NULL || mem_exp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
+		for(int i=0; i<global*MEM_EXP5_MULTIPLIER; i++) {
+			mem_exp_A[i] = i;
+			mem_exp_B[i] = i;
+		}
+	}
+	
+	if (mem_experiment8) {
+		
+		mem_exp_A = (float*) MALLOC(sizeof(float) * global*MEM8_VECTOR);
+		mem_exp_B = (float*) MALLOC(sizeof(float) * global*MEM8_VECTOR);
+		if(mem_exp_A==NULL || mem_exp_B==NULL) { fprintf(stderr, KRED "Error allocating! Line %d\n" KNRM, __LINE__); exit(1); }
+		for(int i=0; i<global*MEM8_VECTOR; i++) {
+			mem_exp_A[i] = i;
+			mem_exp_B[i] = i;
+		}
 	}
 	
 	// memory initialization
-	if (!external_app || !pointer_chase) {
+	if (!external_app || !pointer_chase || !mem_travel || !mem_experiment || !mem_experiment2 || !mem_experiment3 || !mem_experiment4 || !mem_experiment5 || !mem_experiment6 || !mem_experiment7 || !mem_experiment8) {
 		
 		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
 			scalar_sp_A = (float*) MALLOC(sizeof(float) * global);
@@ -657,12 +774,56 @@ int main(int argc, char** argv, char **envp) {
 		
 		
 		if(pointer_chase) {
-			
 			a = clCreateBuffer(context, MEM_ACCESS, STD_SIZE_PTR_CHASE*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
 			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, STD_SIZE_PTR_CHASE*sizeof(float), pointer_chase_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
-			
 		}
-			
+		if(mem_travel) {
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(float), mem_travel_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(float), mem_travel_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+		}
+		if(mem_experiment) {
+			a = clCreateBuffer(context, MEM_ACCESS, (global>>2)*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			b = clCreateBuffer(context, MEM_ACCESS, (global>>2)*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, (global>>2)*sizeof(float), mem_exp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, (global>>2)*sizeof(float), mem_exp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+		}
+		if(mem_experiment2) {
+			//a = clCreateBuffer(context, MEM_ACCESS, MEM_EXP2_VEC_SIZE*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			//b = clCreateBuffer(context, MEM_ACCESS, MEM_EXP2_VEC_SIZE*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			//ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			//ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_A, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			b = clCreateBuffer(context, MEM_ACCESS, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_B, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+		}
+		if(mem_experiment3 || mem_experiment4 || mem_experiment6 || mem_experiment7) {
+			a = clCreateBuffer(context, MEM_ACCESS, global*sizeof(float), mem_exp_A, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			b = clCreateBuffer(context, MEM_ACCESS, global*sizeof(float), mem_exp_B, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*sizeof(float), mem_exp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*sizeof(float), mem_exp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+		}
+		if(mem_experiment5) {
+			//a = clCreateBuffer(context, MEM_ACCESS, MEM_EXP2_VEC_SIZE*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			//b = clCreateBuffer(context, MEM_ACCESS, MEM_EXP2_VEC_SIZE*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			//ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			//ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*MEM_EXP5_MULTIPLIER*sizeof(float), mem_exp_A, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			b = clCreateBuffer(context, MEM_ACCESS, global*MEM_EXP5_MULTIPLIER*sizeof(float), mem_exp_B, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*MEM_EXP5_MULTIPLIER*sizeof(float), mem_exp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*MEM_EXP5_MULTIPLIER*sizeof(float), mem_exp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+		}if(mem_experiment8) {
+			//a = clCreateBuffer(context, MEM_ACCESS, MEM_EXP2_VEC_SIZE*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			//b = clCreateBuffer(context, MEM_ACCESS, MEM_EXP2_VEC_SIZE*sizeof(float), NULL, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			//ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			//ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, MEM_EXP2_VEC_SIZE*sizeof(float), mem_exp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			a = clCreateBuffer(context, MEM_ACCESS, global*MEM8_VECTOR*sizeof(float), mem_exp_A, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			b = clCreateBuffer(context, MEM_ACCESS, global*MEM8_VECTOR*sizeof(float), mem_exp_B, &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, a, CL_TRUE, 0, global*MEM8_VECTOR*sizeof(float), mem_exp_A, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clEnqueueWriteBuffer(command_queue, b, CL_TRUE, 0, global*MEM8_VECTOR*sizeof(float), mem_exp_B, 0, NULL, NULL); clCheckError(ocl_ret, __LINE__);
+		}
 		
 
 		if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
@@ -747,10 +908,12 @@ int main(int argc, char** argv, char **envp) {
 		else if (kernel_type == 'f' && precision_type == 'd' && unroll_flag) 	{ f_source = fopen("kernels/flop_dp_unroll_kernels.cl", "r"); 	sprintf(source_file, "flop_dp_unroll_kernels.cl"); 	}
 		else if (kernel_type == 'f' && precision_type == 'd' && !unroll_flag) 	{ f_source = fopen("kernels/flop_dp_kernels.cl", "r"); 			sprintf(source_file, "flop_dp_kernels.cl"); 		}
 		else if (kernel_type == 'p' && precision_type == 's') 	{ f_source = fopen("kernels/power_sp_kernels_v3.cl", "r"); sprintf(source_file, "power_sp_kernels_v3.cl"); 	}
-		else if (kernel_type == 'p' && precision_type == 'd') 	{ f_source = fopen("kernels/power_dp_kernels.cl", "r"); sprintf(source_file, "power_dp_kernels.cl"); 	}
+		else if (kernel_type == 'p' && precision_type == 'd') 	{ f_source = fopen("kernels/power_dp_kernels_v2.cl", "r"); sprintf(source_file, "power_dp_kernels_v2.cl"); 	}
 		else if (kernel_type == 'm') 						  	{ f_source = fopen("kernels/mop_kernels.cl", "r");		sprintf(source_file, "mop_kernels.cl"); 		}
 		else if (kernel_type == 's') 						  	{ f_source = fopen("kernels/shared_mem_kernels.cl", "r");	sprintf(source_file, "shared_mem_kernels.cl"); }
 		else if (kernel_type == 'e') 						  	{ f_source = fopen("kernels/extra_kernels.cl", "r");	sprintf(source_file, "extra_kernels.cl"); }
+		
+		printf("Kernel file: %s\n", source_file);
 		
 		if (dump_kernel) {
 			
@@ -842,12 +1005,36 @@ int main(int argc, char** argv, char **envp) {
 		free(binary_file);
 		
 		
-		kernel = clCreateKernel(program, kernel_choice, &ocl_ret); 		clCheckError(ocl_ret, __LINE__);
+		
+		if(mem_experiment8) {
+			mem_exp8_size = global*MEM8_VECTOR;
+		}
+		
+		if(!mem_experiment6) {
+			kernel = clCreateKernel(program, kernel_choice, &ocl_ret); 		clCheckError(ocl_ret, __LINE__);
+		} else {
+			kernel_warmup = clCreateKernel(program, "mem_experiment6_warmup", &ocl_ret); clCheckError(ocl_ret, __LINE__);
+			kernel_workload = clCreateKernel(program, "mem_experiment6_workload", &ocl_ret); clCheckError(ocl_ret, __LINE__);
+		}
 		printf("%s\n", kernel_choice);
+		
 		if (pointer_chase) {
-			//ocl_ret = clSetKernelArg(kernel, 0, sizeof(float), (void*)&pointer_chase_A[0]);
-			ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a);
-			clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+		} else if(mem_travel) {
+			ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+		} else if(mem_experiment || mem_experiment2 || mem_experiment3 || mem_experiment4 || mem_experiment5 || mem_experiment7) {
+			ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+		} else if(mem_experiment6) {
+			ocl_ret = clSetKernelArg(kernel_warmup, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clSetKernelArg(kernel_warmup, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clSetKernelArg(kernel_workload, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clSetKernelArg(kernel_workload, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+		} else if(mem_experiment8) {
+			ocl_ret = clSetKernelArg(kernel, 0, sizeof(cl_mem), (void*)&a); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clSetKernelArg(kernel, 1, sizeof(cl_mem), (void*)&b); clCheckError(ocl_ret, __LINE__);
+			ocl_ret = clSetKernelArg(kernel, 2, sizeof(int), (void*)&mem_exp8_size); clCheckError(ocl_ret, __LINE__);
 		} else if (strstr(kernel_choice, "priv") != NULL && strstr(kernel_choice, "args") != NULL) {
 			if (strstr(kernel_choice, "scalar") != NULL && strstr(kernel_choice, "sp") != NULL) {
 				ocl_ret = clSetKernelArg(kernel, 0, sizeof(float), (void*)&scalar_sp_A[0]);
@@ -897,13 +1084,19 @@ int main(int argc, char** argv, char **envp) {
 	}
 	
 	
-	size_t workgroup_size;
-	ocl_ret = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE, sizeof(size_t), &workgroup_size, NULL);
-	clCheckError(ocl_ret, __LINE__);
-	printf("Prefered work group size: %d\n", (int) workgroup_size);
-	ocl_ret = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(size_t), &workgroup_size, NULL);
-	clCheckError(ocl_ret, __LINE__);
-	printf("Work group size: %d\n", (int) workgroup_size);
+	if(!mem_experiment6) {
+		size_t workgroup_size;
+		ocl_ret = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE, sizeof(size_t), &workgroup_size, NULL);
+		clCheckError(ocl_ret, __LINE__);
+		printf("Prefered work group size: %d\n", (int) workgroup_size);
+		ocl_ret = clGetKernelWorkGroupInfo(kernel, device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(size_t), &workgroup_size, NULL);
+		clCheckError(ocl_ret, __LINE__);
+		printf("Work group size: %d\n", (int) workgroup_size);
+		cl_ulong avail_bytes;
+		ocl_ret = clGetDeviceInfo(device, CL_DEVICE_MAX_MEM_ALLOC_SIZE, sizeof(avail_bytes), &avail_bytes, NULL);
+		clCheckError(ocl_ret, __LINE__);
+		printf("Max allocation size: %ld B\n", avail_bytes);
+	}
 
 
 	/* ============================================================================================ */
@@ -951,6 +1144,14 @@ int main(int argc, char** argv, char **envp) {
 	fflush(stdout);
 	
 	//measure_overheads();
+	
+	
+	if (mem_experiment6) {
+		printf("mem6\n"); fflush(stdout);
+		read_counters_exp(kernel_warmup, kernel_workload);
+		printf("clean after mem6\n"); fflush(stdout);
+		goto CLEANUP;
+	}
 
 	// read counters, do work, read counters again and print deltas
 	for(j = 0; j < repeat; j++) {
@@ -1082,7 +1283,7 @@ int main(int argc, char** argv, char **envp) {
 	
 	
 	
-	
+	CLEANUP:
 	
 	
 	close(drm_fd);
@@ -1128,6 +1329,14 @@ int main(int argc, char** argv, char **envp) {
 	}
 	if (pointer_chase)
 		FREE(pointer_chase_A);
+	if (mem_travel) {
+		FREE(mem_travel_A);
+		FREE(mem_travel_B);
+	}
+	if (mem_experiment || mem_experiment2 || mem_experiment3 || mem_experiment4 || mem_experiment5 || mem_experiment6 | mem_experiment7 || mem_experiment8) {
+		FREE(mem_exp_A);
+		FREE(mem_exp_B);
+	}
 	
 	//if (app_name_args != NULL) free(app_name_args);
 	//if (quiet) fclose(stdout);
